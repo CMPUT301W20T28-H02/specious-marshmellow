@@ -7,6 +7,10 @@ public class Wallet {
         this.balance = 0;
     }
 
+    public Wallet(double balance) {
+        this.balance = balance;
+    }
+
     public double checkBalance() {
         // return the amount in the user wallet
         return this.balance;
