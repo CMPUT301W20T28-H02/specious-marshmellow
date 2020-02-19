@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Database Demo</string>
+    <string name="create_account_name">Create Account</string>
+    <string name="sign_in_name">Sign In</string>
+
+    <string name="sign_in_button">Sign In</string>
+    <string name="sign_out_button">Sign Out</string>
+    <string name="edit_info_button">Edit Account</string>
+    <string name="create_account_button">Create Account</string>
+    <string name="finish_create_button">Continue</string>
+    <string name="finish_edit_button">Continue</string>
+
+    <string name="input_username">Username</string>
+    <string name="input_password">Password</string>
+    <string name="input_email">Email</string>
+    <string name="input_phone">Phone</string>
+    <string name="input_address">Address</string>
+    <string name="input_driver_boolean">Driver</string>
+
+    <string name="new_email">Enter a new email address.\nCurrent email: %1$s</string>
+    <string name="new_phone">Enter a new phone number.\nCurrent number: %1$s</string>
+    
+    <string name="show_username">Username: %1$s</string>
+    <string name="show_email">Email: %1$s</string>
+    <string name="show_phone">Phone Number: %1$s</string>
+    <string name="show_address">Address: %1$s</string>
+    <string name="show_rating">Rating: %1$s</string>
+
+</resources>
