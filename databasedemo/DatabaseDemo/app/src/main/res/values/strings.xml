@@ -19,7 +19,7 @@
 
     <string name="new_email">Enter a new email address.\nCurrent email: %1$s</string>
     <string name="new_phone">Enter a new phone number.\nCurrent number: %1$s</string>
-    
+
     <string name="show_username">Username: %1$s</string>
     <string name="show_email">Email: %1$s</string>
     <string name="show_phone">Phone Number: %1$s</string>

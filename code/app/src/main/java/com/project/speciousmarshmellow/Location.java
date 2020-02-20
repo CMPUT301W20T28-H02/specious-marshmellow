@@ -1,4 +1,4 @@
-public class Location {
+/*public class Location {
 
   private double lat;
   private double long;
@@ -23,4 +23,4 @@ public class Location {
   }
 
 
-}
+}*/

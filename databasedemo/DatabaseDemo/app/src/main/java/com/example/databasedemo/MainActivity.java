@@ -2,49 +2,33 @@ package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.auth.FirebaseUser;
 
+public class MainActivity extends AppCompatActivity{
 
-public class MainActivity extends AppCompatActivity {
-    String TAG = "DISPLAY_USER_ACCOUNT_INFO";
-    TextView usernameText;
-    TextView emailText;
-    TextView phoneText;
-    TextView addressText;
-    TextView ratingText;
-    Button editAccount;
-    Button signOut;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
+    boolean riderOrDriver;
+    private static String TAG = "DISPLAY_USER_ACCOUNT_INFO";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        usernameText = findViewById(R.id.username_text);
-        emailText = findViewById(R.id.email_text);
-        phoneText = findViewById(R.id.phone_text);
-        addressText = findViewById(R.id.address_text);
-        ratingText = findViewById(R.id.rating_text);
-
-        editAccount = findViewById(R.id.edit_information);
-        signOut = findViewById(R.id.sign_out);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -55,36 +39,19 @@ public class MainActivity extends AppCompatActivity {
             // User is signed in
             String username = user.getDisplayName();
             String email = user.getEmail();
-            displayUser(username, email);
+
+            displayDriverOrRiderScreen(username, email);
+            Log.d(TAG, "When we do get here?");
+
         } else {
             // No user is signed in
             Intent intent = new Intent(getBaseContext(), SignInActivity.class);
             startActivity(intent);
         }
 
-        editAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getBaseContext(), EditContactInformation.class));
-            }
-        });
-
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                finish();
-                overridePendingTransition(0, 0);
-                startActivity(getIntent());
-                overridePendingTransition(0, 0);
-            }
-        });
-
     }
 
-    private void displayUser(String username, String email) {
-        usernameText.setText(getString(R.string.show_username, username));
-        emailText.setText(getString(R.string.show_email, email));
+    private boolean displayDriverOrRiderScreen(String username, String email){
         final DocumentReference docRef = db.collection("users").document(username);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -93,21 +60,15 @@ public class MainActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        if (document.getData().get("phone") != null) {
-                            String phone = document.getData().get("phone").toString();
-                            phoneText.setText(getString(R.string.show_phone, phone));
-                        }
-                        if (document.getData().get("address") != null) {
-                            String address = document.getData().get("address").toString();
-                            addressText.setText(getString(R.string.show_address, address));
-                        }
                         if (!document.getBoolean("driver")) {
                             //addDriverRating(document.getData().get("rating").toString());
-                            LinearLayout linearLayout = findViewById(R.id.main_layout);
-                            linearLayout.removeView((View) ratingText.getParent());
+                            Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+                            intent.putExtra("driver", false);
+                            startActivity(intent);
                         } else {
-                            String rating = document.getData().get("rating").toString();
-                            ratingText.setText(getString(R.string.show_rating, rating));
+                            Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+                            intent.putExtra("driver", true);
+                            startActivity(intent);
                         }
                     } else {
                         Log.d(TAG, "No such document");
@@ -115,8 +76,10 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.d(TAG, "get failed with ", task.getException());
                 }
+                Log.d(TAG, "We get here inside 1, " + riderOrDriver);
             }
         });
-
+        Log.d(TAG, "We get here inside 2, " + riderOrDriver);
+        return riderOrDriver;
     }
 }

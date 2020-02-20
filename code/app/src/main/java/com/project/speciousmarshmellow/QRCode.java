@@ -1,4 +1,4 @@
-package com.project.speciousmarshmellow;
+/*package com.project.speciousmarshmellow;
 
 public class QRCode {
 
@@ -9,4 +9,4 @@ public class QRCode {
     public double getAmount() {
         return 1.0;
     }
-}
+}*/
