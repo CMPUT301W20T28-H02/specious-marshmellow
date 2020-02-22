@@ -5,11 +5,13 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,6 +50,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         searchView2 = findViewById(R.id.sv2_location);
         mapFragment = ( SupportMapFragment ) getSupportFragmentManager()
                 .findFragmentById( R.id.map);
+        mapFragment.getMapAsync(this);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -62,7 +65,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     Address address = addressList.get(0);
                     latLng = new LatLng(address.getLatitude(),address.getLongitude());
-                    MarkerOptions p1 = new MarkerOptions().position(latLng2).title(location);
+                    MarkerOptions p1 = new MarkerOptions().position(latLng);
                     map.addMarker(p1);
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
 
@@ -90,8 +93,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                     Address address = addressList2.get(0);
                     latLng2 = new LatLng(address.getLatitude(),address.getLongitude());
-                    MarkerOptions p2 = new MarkerOptions().position(latLng).title(location2);
+                    MarkerOptions p2 = new MarkerOptions().position(latLng2);
+
+
+
                     map.addMarker(p2);
+
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2,10));
 
 
@@ -106,6 +113,24 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 return false;
             }
         });
+        btnGetDirection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                float results[]=new float[10];
+                Location.distanceBetween(latLng.latitude,latLng.longitude,latLng2.latitude,latLng2.longitude,results);
+                float res = results[0];
+                String dist = String.valueOf(res);
+                
+
+                Toast.makeText(getApplicationContext(),dist,Toast.LENGTH_LONG).show();
+
+
+
+
+            }
+        });
+
     }
 
 
@@ -133,6 +158,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+
     private String getUrl(LatLng origin, LatLng dest, String directionMode) {
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         // Destination of route
