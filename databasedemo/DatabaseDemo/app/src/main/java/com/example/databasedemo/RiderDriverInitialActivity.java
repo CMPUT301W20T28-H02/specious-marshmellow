@@ -5,6 +5,9 @@ import androidx.fragment.app.FragmentActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,6 +20,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
 
     GoogleMap map;
+    Button makeRequestButton;
     private static String TAG = "DISPLAY_USER_ACCOUNT_INFO";
 
     @Override
@@ -30,10 +34,23 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
             setContentView(R.layout.driver_initial);
         } else {
             setContentView(R.layout.rider_initial);
+            makeRequestButton = findViewById(R.id.make_request_button);
         }
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+
+        makeRequestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(RiderDriverInitialActivity.this, "Make Request", 10);
+                Log.i(TAG, "Request made");
+                Intent intent = new Intent(RiderDriverInitialActivity.this, RiderNewRequestActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
