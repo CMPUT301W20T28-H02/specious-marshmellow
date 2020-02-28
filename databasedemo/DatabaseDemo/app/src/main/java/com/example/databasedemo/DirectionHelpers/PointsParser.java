@@ -1,4 +1,4 @@
-package com.project.speciousmarshmellow.DirectionHelpers;
+package com.example.databasedemo.DirectionHelpers;
 
 import android.content.Context;
 import android.graphics.Color;

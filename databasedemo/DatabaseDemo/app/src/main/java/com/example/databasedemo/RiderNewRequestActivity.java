@@ -11,8 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.databasedemo.DirectionHelpers.TaskLoadedCallback;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -22,29 +24,33 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-// import com.project.speciousmarshmellow.DirectionHelpers.FetchURL;
-// import com.project.speciousmarshmellow.DirectionHelpers.TaskLoadedCallback;
+import com.example.databasedemo.DirectionHelpers.FetchURL;
+import com.example.databasedemo.DirectionHelpers.TaskLoadedCallback;
 
 import java.io.IOException;
 import java.util.List;
 
+// implements TaskLoadedCallback
 public class RiderNewRequestActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap map;
     SupportMapFragment mapFragment;
     SearchView searchView,searchView2;
-    Button btnGetDirection;
+    Button btnGetFare;
     Polyline currentPolyline;
     LatLng latLng2,latLng;
+    // MarkerOptions p1, p2;
+    TextView fareDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_new_request);
 
-        btnGetDirection = findViewById(R.id.btnGetDirection);
+        btnGetFare = findViewById(R.id.btnGetFare);
         searchView = findViewById(R.id.sv_location);
         searchView2 = findViewById(R.id.sv2_location);
+        fareDisplay = findViewById(R.id.fareDisplay);
         mapFragment = ( SupportMapFragment ) getSupportFragmentManager()
                 .findFragmentById( R.id.map);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
@@ -71,6 +77,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
             @Override
             public boolean onQueryTextChange(String s) {
+                map.clear();
                 return false;
             }
         });
@@ -90,8 +97,6 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                     latLng2 = new LatLng(address.getLatitude(),address.getLongitude());
                     MarkerOptions p2 = new MarkerOptions().position(latLng2);
 
-
-
                     map.addMarker(p2);
 
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2,10));
@@ -102,20 +107,29 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
             @Override
             public boolean onQueryTextChange(String s) {
+                map.clear();
                 return false;
             }
 
         });
-        btnGetDirection.setOnClickListener(new View.OnClickListener() {
+        btnGetFare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 float results[]=new float[10];
                 Location.distanceBetween(latLng.latitude,latLng.longitude,latLng2.latitude,latLng2.longitude,results);
                 float res = results[0];
-                String dist = String.valueOf(res);
+                float fare = 4.0f + (2.0f * res / 1000f);
+                String dist = String.valueOf(fare);
+                /*String url = getUrl(p1.getPosition(), p2.getPosition(), "driving");
+                new FetchURL(RiderNewRequestActivity.this).execute(url, "driving");*/
 
-                Toast.makeText(getApplicationContext(),dist,Toast.LENGTH_LONG).show();
+                fareDisplay.setVisibility(View.VISIBLE);
+                fareDisplay.setText("Calculated Fare: " + fare);
+
+
+
+                // Toast.makeText(getApplicationContext(),dist,Toast.LENGTH_LONG).show();
 
             }
         });
@@ -129,32 +143,34 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
     }
 
-    /*
-    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
-        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-        // Destination of route
-        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-        // Mode
-        String mode = "mode=" + directionMode;
-        // Building the parameters to the web service
-        String parameters = str_origin + "&" + str_dest + "&" + mode;
-        // Output format
-        String output = "json";
-        // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.map_key);
 
-        return url;
-    }
+//    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+//        // Destination of route
+//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+//        // Mode
+//        String mode = "mode=" + directionMode;
+//        // Building the parameters to the web service
+//        String parameters = str_origin + "&" + str_dest + "&" + mode;
+//        // Output format
+//        String output = "json";
+//        // Building the url to the web service
+//        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.map_key);
+//
+//        return url;
+//    }
 
 
 
-    @Override
-    public void onTaskDone(Object... values) {
-        //if(currentPolyline != null){
-        //    currentPolyline.remove();
-        //}
-
-        currentPolyline = map.addPolyline((PolylineOptions)values[0]);
-    }*/
+//    @Override
+//    public void onTaskDone(Object... values) {
+//        if(currentPolyline != null){
+//            currentPolyline.remove();
+//        }
+//        if (values[0] != null) {
+//            // currentPolyline = map.addPolyline((PolylineOptions) values[0]);
+//            map.addPolyline((PolylineOptions) values[0]);
+//        }
+//    }
 
 }

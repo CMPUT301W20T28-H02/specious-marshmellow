@@ -1,4 +1,4 @@
-package com.project.speciousmarshmellow.DirectionHelpers;
+package com.example.databasedemo.DirectionHelpers;
 
 import com.google.android.gms.maps.model.LatLng;
 

@@ -1,4 +1,4 @@
-package com.project.speciousmarshmellow.DirectionHelpers;
+package com.example.databasedemo.DirectionHelpers;
 
 public interface TaskLoadedCallback {
     void onTaskDone(Object... values);
