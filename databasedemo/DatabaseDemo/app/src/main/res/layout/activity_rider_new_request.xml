@@ -45,6 +45,37 @@
         android:textSize="20dp"
         android:visibility="invisible" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/offerDisplay"
+            android:layout_width="236dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="Offer:  "
+            android:textSize="20dp"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/minusTipButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:textSize="50dp"/>
+
+        <Button
+            android:id="@+id/addTipButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:textSize="50dp"/>
+
+    </LinearLayout>
+
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -2,6 +2,7 @@ package com.example.databasedemo;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
+import androidx.annotation.Nullable;
 
 import android.location.Address;
 import android.location.Geocoder;
@@ -31,16 +32,16 @@ import java.io.IOException;
 import java.util.List;
 
 // implements TaskLoadedCallback
-public class RiderNewRequestActivity extends FragmentActivity implements OnMapReadyCallback {
+public class RiderNewRequestActivity extends FragmentActivity implements OnMapReadyCallback, TaskLoadedCallback {
 
     private GoogleMap map;
     SupportMapFragment mapFragment;
     SearchView searchView,searchView2;
-    Button btnGetFare;
+    Button btnGetFare, btnAddTip, btnMinusTip;
     Polyline currentPolyline;
     LatLng latLng2,latLng;
-    // MarkerOptions p1, p2;
-    TextView fareDisplay;
+    MarkerOptions p1, p2;
+    TextView fareDisplay, offerDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +49,12 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         setContentView(R.layout.activity_rider_new_request);
 
         btnGetFare = findViewById(R.id.btnGetFare);
+        btnAddTip = findViewById(R.id.addTipButton);
+        btnMinusTip = findViewById(R.id.minusTipButton);
         searchView = findViewById(R.id.sv_location);
         searchView2 = findViewById(R.id.sv2_location);
         fareDisplay = findViewById(R.id.fareDisplay);
+        offerDisplay = findViewById(R.id.offerDisplay);
         mapFragment = ( SupportMapFragment ) getSupportFragmentManager()
                 .findFragmentById( R.id.map);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
@@ -66,9 +70,10 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
                     Address address = addressList.get(0);
                     latLng = new LatLng(address.getLatitude(),address.getLongitude());
-                    MarkerOptions p1 = new MarkerOptions().position(latLng);
+                    p1 = new MarkerOptions().position(latLng);
                     map.addMarker(p1);
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
                 }
@@ -95,7 +100,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                     }
                     Address address = addressList2.get(0);
                     latLng2 = new LatLng(address.getLatitude(),address.getLongitude());
-                    MarkerOptions p2 = new MarkerOptions().position(latLng2);
+                    p2 = new MarkerOptions().position(latLng2);
 
                     map.addMarker(p2);
 
@@ -121,11 +126,13 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 float res = results[0];
                 float fare = 4.0f + (2.0f * res / 1000f);
                 String dist = String.valueOf(fare);
-                /*String url = getUrl(p1.getPosition(), p2.getPosition(), "driving");
-                new FetchURL(RiderNewRequestActivity.this).execute(url, "driving");*/
+                String url = getUrl(p1.getPosition(), p2.getPosition(), "driving");
+                new FetchURL(RiderNewRequestActivity.this).execute(url, "driving");
 
                 fareDisplay.setVisibility(View.VISIBLE);
+                offerDisplay.setVisibility(View.VISIBLE);
                 fareDisplay.setText("Calculated Fare: " + fare);
+                offerDisplay.setText("Offer: " + fare);
 
 
 
@@ -144,33 +151,32 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
     }
 
 
-//    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
-//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-//        // Destination of route
-//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-//        // Mode
-//        String mode = "mode=" + directionMode;
-//        // Building the parameters to the web service
-//        String parameters = str_origin + "&" + str_dest + "&" + mode;
-//        // Output format
-//        String output = "json";
-//        // Building the url to the web service
-//        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.map_key);
-//
-//        return url;
-//    }
+    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        // Destination of route
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        // Mode
+        String mode = "mode=" + directionMode;
+        // Building the parameters to the web service
+        String parameters = str_origin + "&" + str_dest + "&" + mode;
+        // Output format
+        String output = "json";
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.map_key);
+
+        return url;
+    }
 
 
 
-//    @Override
-//    public void onTaskDone(Object... values) {
-//        if(currentPolyline != null){
-//            currentPolyline.remove();
-//        }
-//        if (values[0] != null) {
-//            // currentPolyline = map.addPolyline((PolylineOptions) values[0]);
-//            map.addPolyline((PolylineOptions) values[0]);
-//        }
-//    }
+    @Override
+    public void onTaskDone(Object... values) {
+        if(currentPolyline != null){
+            currentPolyline.remove();
+        }
+        //if (values[0] != null) {
+        currentPolyline = map.addPolyline((PolylineOptions) values[0]);
+            //map.addPolyline((PolylineOptions) values[0]);
+    }
 
 }
