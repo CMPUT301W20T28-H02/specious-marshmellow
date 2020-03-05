@@ -1,27 +1,37 @@
 package com.example.databasedemo;
 
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class RiderDriverInitialActivity extends FragmentActivity implements OnMapReadyCallback {
 
 
     GoogleMap map;
     Button makeRequestButton;
+    FusedLocationProviderClient fusedLocationProviderClient;
     private static String TAG = "DISPLAY_USER_ACCOUNT_INFO";
+    LatLng latLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +50,28 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+
+        requestPermission();
+
+        if(ActivityCompat.checkSelfPermission(RiderDriverInitialActivity.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null){
+                    latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                    MarkerOptions p3 = new MarkerOptions().position(latLng);
+                    map.addMarker(p3);
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+
+                }
+
+            }
+        });
+
 
         makeRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,12 +85,17 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
     }
 
+    private void requestPermission(){
+        ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION},1);
+    }
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
+        /*LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
         map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
-        map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin
+        map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
     }
 }
