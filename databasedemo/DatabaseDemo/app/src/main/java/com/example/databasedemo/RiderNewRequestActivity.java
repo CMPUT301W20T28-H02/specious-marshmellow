@@ -51,6 +51,8 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
     LatLng latLng,latLng2, latLng3;
     MarkerOptions p1, p2;
     TextView fareDisplay, offerDisplay;
+    TextView tipAmount;
+    float fare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +61,11 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
         btnGetFare = findViewById(R.id.btnGetFare);
         btnAddTip = findViewById(R.id.addTipButton);
-        btnMinusTip = findViewById(R.id.minusTipButton);
         searchView = findViewById(R.id.sv_location);
         searchView2 = findViewById(R.id.sv2_location);
         fareDisplay = findViewById(R.id.fareDisplay);
         offerDisplay = findViewById(R.id.offerDisplay);
+        tipAmount = findViewById(R.id.tipAmount);
         mapFragment = ( SupportMapFragment ) getSupportFragmentManager()
                 .findFragmentById( R.id.map);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
@@ -113,7 +115,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
             @Override
             public boolean onQueryTextChange(String s) {
-                map.clear();
+
                 return false;
             }
         });
@@ -143,7 +145,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
             @Override
             public boolean onQueryTextChange(String s) {
-                map.clear();
+
                 return false;
             }
 
@@ -155,7 +157,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 float results[]=new float[10];
                 Location.distanceBetween(latLng.latitude,latLng.longitude,latLng2.latitude,latLng2.longitude,results);
                 float res = results[0];
-                float fare = 4.0f + (2.0f * res / 1000f);
+                fare = 4.0f + (2.0f * res / 1000f);
                 String dist = String.valueOf(fare);
                 // String url = getUrl(p1.getPosition(), p2.getPosition(), "driving");
                 // new FetchURL(RiderNewRequestActivity.this).execute(url, "driving");
@@ -172,11 +174,26 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
             }
         });
 
+
+        btnAddTip.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String tipToAdd = tipAmount.getText().toString();
+                fare += Float.valueOf(tipToAdd);
+                offerDisplay.setText("Offer: " + fare);
+            }
+        }));
+
+
     }
+
+
 
     private void requestPermission(){
         ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION},1);
     }
+
+
 
 
     @Override
