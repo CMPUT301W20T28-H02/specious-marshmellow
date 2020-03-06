@@ -182,7 +182,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 float tempTip = Float.valueOf(tipToAdd);
                 if( tempTip >= 0 )
                 {
-                    fare += tempTip
+                    fare += tempTip;
                 }
                 // can put a "Toast" saying invalid tip amount
                 offerDisplay.setText("Offer: " + fare);
