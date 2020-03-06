@@ -179,7 +179,12 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
             @Override
             public void onClick(View view) {
                 String tipToAdd = tipAmount.getText().toString();
-                fare += Float.valueOf(tipToAdd);
+                float tempTip = Float.valueOf(tipToAdd);
+                if( tempTip >= 0 )
+                {
+                    fare += tempTip
+                }
+                // can put a "Toast" saying invalid tip amount
                 offerDisplay.setText("Offer: " + fare);
             }
         }));
