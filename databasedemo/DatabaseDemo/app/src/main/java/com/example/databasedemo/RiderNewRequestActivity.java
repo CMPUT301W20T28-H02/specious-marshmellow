@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.annotation.Nullable;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -45,7 +46,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
     private GoogleMap map;
     SupportMapFragment mapFragment;
     SearchView searchView,searchView2;
-    Button btnGetFare, btnAddTip, btnMinusTip;
+    Button btnGetFare, btnAddTip, btnConfirmRequest;
     Polyline currentPolyline;
     FusedLocationProviderClient fusedLocationProviderClient;
     LatLng latLng,latLng2, latLng3;
@@ -61,6 +62,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
         btnGetFare = findViewById(R.id.btnGetFare);
         btnAddTip = findViewById(R.id.addTipButton);
+        btnConfirmRequest = findViewById(R.id.btnConfirmRequest);
         searchView = findViewById(R.id.sv_location);
         searchView2 = findViewById(R.id.sv2_location);
         fareDisplay = findViewById(R.id.fareDisplay);
@@ -69,6 +71,10 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         mapFragment = ( SupportMapFragment ) getSupportFragmentManager()
                 .findFragmentById( R.id.map);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
+
+
+        btnConfirmRequest.setVisibility(View.INVISIBLE);
+
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -90,6 +96,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
             }
         });
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -119,6 +126,8 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 return false;
             }
         });
+
+
         searchView2.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -150,6 +159,8 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
             }
 
         });
+
+
         btnGetFare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,11 +179,24 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 offerDisplay.setText("Offer: " + fare);
 
 
+                btnConfirmRequest.setVisibility(View.VISIBLE);
 
                 // Toast.makeText(getApplicationContext(),dist,Toast.LENGTH_LONG).show();
 
             }
         });
+
+
+
+        btnConfirmRequest.setOnClickListener((new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent ConfirmedRequest = new Intent(RiderNewRequestActivity.this,currentRequest.class );
+//                ConfirmedRequest.putExtra("Latitude", latLng.latitude);
+//                ConfirmedRequest.putExtra("Longitude", latLng.longitude);
+                startActivity(ConfirmedRequest);
+            }
+        }));
 
 
         btnAddTip.setOnClickListener((new View.OnClickListener() {
