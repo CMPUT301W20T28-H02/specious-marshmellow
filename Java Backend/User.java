@@ -1,9 +1,12 @@
+package com.example.databasedemo;
+
 public class User {
 	private String username;
 	private String password;
 	private String email;
 	private Wallet wallet;	// Should be private? Or move getPaid() and pay() up to User?
 	private String phone;
+	private boolean driver;
 	private double rating;
 	private double numOfRatings; 	// Need this to generate an average rating
 	private Location location;
