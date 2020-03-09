@@ -2,26 +2,26 @@ package com.example.databasedemo;
 
 public class User {
 	private String username;
-	private String password;
 	private String email;
 	private Wallet wallet;	// Should be private? Or move getPaid() and pay() up to User?
 	private String phone;
-	private boolean driver;
 	private double rating;
 	private double numOfRatings; 	// Need this to generate an average rating
-	private Location location;
+	private boolean driver;
 
-	User(String username, String password, String email,
-		Wallet wallet, String phone, double rating, double numOfRatings, Location location){
+	public User(){
+
+	}
+
+	public User(String username, String email,
+		Wallet wallet, String phone, double rating, double numOfRatings, boolean driver){
 		this.username = username;
-		this.password = password;
 		this.email = email;
 		this.wallet = wallet;
 		this.phone = phone;
 		this.rating = rating;
 		this.numOfRatings = numOfRatings;
-		this.location = location;
-
+		this.driver = driver;
 	}
 
 	// What are these two supposed to do?
@@ -51,10 +51,6 @@ public class User {
 		return this.username;
 	}
 
-	public String getPassword() {
-		return this.password;
-	}
-
 	public String getEmail() {
 		return this.email;
 	}
@@ -75,17 +71,13 @@ public class User {
 		return this.numOfRatings;
 	}
 
-	public Location getLocation() {
-		return this.location;
+	public boolean getDriver() {
+		return this.driver;
 	}
 
 	// Setters
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 
 	public void setEmail(String email) {
@@ -108,8 +100,8 @@ public class User {
 		this.numOfRatings = numOfRatings;
 	}
 
-	public void setLocation(Location location) {
-		this.location = location;
+	public void setDriver(boolean driver) {
+		this.driver = driver;
 	}
 
 }

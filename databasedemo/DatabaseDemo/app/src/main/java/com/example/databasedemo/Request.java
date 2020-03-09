@@ -1,5 +1,7 @@
 package com.example.databasedemo;
 
+import java.util.ArrayList;
+
 public class Request
 {
     private Rider rider;
@@ -13,6 +15,8 @@ public class Request
 
     private boolean riderConfirmation = false;
     private boolean driverConfirmation = false;
+
+    private static ArrayList<Request> requests = new ArrayList<Request>();
 
 
     public Request() {
@@ -85,7 +89,14 @@ public class Request
             && endLocation.equals(request.getEndLocation());
     }
 
+    @Override
+    public String toString(){
+        String str = "" + this.getRider().getUsername() + " Distance: " +
+                this.getDistance(this.getStartLocation(), this.getEndLocation()) + " Fare: " +
+                this.getFare();
+        return str;
 
+    }
 
   // Getters
 	public Rider getRider() {

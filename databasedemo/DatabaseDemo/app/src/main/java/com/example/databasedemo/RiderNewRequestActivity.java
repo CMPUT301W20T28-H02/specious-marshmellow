@@ -1,5 +1,6 @@
 package com.example.databasedemo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -36,7 +37,16 @@ import java.io.IOException;
 import java.util.List;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -59,6 +69,9 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_new_request);
+
+        Intent intent = getIntent();
+        final String username = intent.getStringExtra("username");
 
         btnGetFare = findViewById(R.id.btnGetFare);
         btnAddTip = findViewById(R.id.addTipButton);
@@ -191,10 +204,26 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         btnConfirmRequest.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent ConfirmedRequest = new Intent(RiderNewRequestActivity.this,currentRequest.class );
-//                ConfirmedRequest.putExtra("Latitude", latLng.latitude);
-//                ConfirmedRequest.putExtra("Longitude", latLng.longitude);
-                startActivity(ConfirmedRequest);
+                //Rider.requestRide(new com.example.databasedemo.Location(latLng.latitude, latLng.longitude), new com.example.databasedemo.Location(latLng2.latitude, latLng2.longitude));
+
+                // Add to the database
+                FirebaseFirestore database = FirebaseFirestore.getInstance();
+
+                DocumentReference myRef = FirebaseFirestore.getInstance().collection("users").document(username);
+
+                myRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            Rider currentRider = task.getResult().toObject(Rider.class);
+                            Request request = new Request(currentRider,
+                                    new com.example.databasedemo.Location(latLng.latitude, latLng.longitude),
+                                    new com.example.databasedemo.Location(latLng2.latitude, latLng2.longitude));
+                            addRequest(request, username);
+                        }
+                    }
+                });
+
             }
         }));
 
@@ -214,6 +243,17 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         }));
 
 
+    }
+
+    public void addRequest (Request request, String username){
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+
+        database.collection("requests").document(username).set(request);
+
+        Intent ConfirmedRequest = new Intent(RiderNewRequestActivity.this,currentRequest.class );
+//                ConfirmedRequest.putExtra("Latitude", latLng.latitude);
+//                ConfirmedRequest.putExtra("Longitude", latLng.longitude);
+        startActivity(ConfirmedRequest);
     }
 
 

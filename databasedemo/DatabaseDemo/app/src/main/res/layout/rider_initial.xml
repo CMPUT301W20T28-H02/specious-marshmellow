@@ -13,10 +13,16 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="1" />
 
-
-        />
+    <ListView
+        android:id="@+id/requestListView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="98dp"
+        android:visibility="invisible"/>
 
     <Button
         android:id="@+id/make_request_button"

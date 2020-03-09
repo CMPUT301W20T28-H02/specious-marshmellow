@@ -122,13 +122,16 @@ public class CreateAccount extends AppCompatActivity {
         final String username = usernameEditText.getText().toString();
         final String email = emailEditText.getText().toString();
 
+        Log.d(TAG, "We are in create user");
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(CreateAccount.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "We complete something");
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Log.d(TAG, "We get the current user");
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(username)
                                     .build();
@@ -146,6 +149,9 @@ public class CreateAccount extends AppCompatActivity {
 
                             Toast.makeText(CreateAccount.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
+                        else{
+                            Log.d(TAG, "Task not successful");
+                        }
                     }
                 });
 
@@ -161,18 +167,22 @@ public class CreateAccount extends AppCompatActivity {
         }
         final boolean driverBoolean = driverTemp;
 
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("username", username);
-        userData.put("email", email);
-        userData.put("phone", phone);
-        userData.put("address", address);
-        userData.put("driver", driverBoolean);
-        if (driverBoolean) {
-            userData.put("rating", "0");
-        }
+        User currentUser = new User(username, email, new Wallet(0), phone, 5.0, 1, driverBoolean);
+
+//        Map<String, User> userData = new HashMap<>();
+//        userData.put("username", username);
+//        userData.put("username", username);
+//        userData.put("email", email);
+//        userData.put("wallet", new Wallet(0));
+//        userData.put("phone", phone);
+//        userData.put("rating", 5.0);
+//        userData.put("numRatings", 1);
+//        userData.put("address", address);
+//        userData.put("driver", driverBoolean);
+
         db.collection("users")
                 .document(username)
-                .set(userData)
+                .set(currentUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

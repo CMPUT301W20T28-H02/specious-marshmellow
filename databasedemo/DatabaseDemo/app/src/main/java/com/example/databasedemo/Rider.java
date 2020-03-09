@@ -6,13 +6,18 @@ public class Rider extends User {
 
   private static ArrayList<Request> requests = new ArrayList<Request>();
 
-  public Rider(String username, String password, String email, Wallet wallet, String phone, double rating, double numOfRatings, Location location) {
-    super(username, password, email, wallet, phone, rating, numOfRatings, location);
+  public Rider(){
+
+  }
+
+  public Rider(String username, String email, Wallet wallet, String phone, double rating, double numOfRatings, boolean driver) {
+    super(username, email, wallet, phone, rating, numOfRatings, driver);  // driver should be false
   }
 
   public Request requestRide(Location startLocation, Location endLocation) {
     Request request = new Request(this, startLocation, endLocation);
     requests.add(request);
+
     // TODO: Need to add this request to the database
     return request;
   }
