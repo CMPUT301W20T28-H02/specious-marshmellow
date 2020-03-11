@@ -25,5 +25,6 @@
     <string name="show_phone">Phone Number: %1$s</string>
     <string name="show_address">Address: %1$s</string>
     <string name="show_rating">Rating: %1$s</string>
+    <string name="make_request">Make Request</string>
 
 </resources>
