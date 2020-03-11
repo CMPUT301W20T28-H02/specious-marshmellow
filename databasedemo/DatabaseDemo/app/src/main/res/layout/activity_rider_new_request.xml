@@ -6,25 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:orientation="vertical"
-    >
+    android:background="@color/common_google_signin_btn_text_light_default">
+
     <SearchView
         android:id="@+id/sv_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-
         android:background="@drawable/bg_round"
-
+        android:backgroundTint="@color/common_google_signin_btn_text_light"
         android:iconifiedByDefault="false"
         android:queryHint="Search.." />
     <SearchView
         android:id="@+id/sv2_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-
         android:background="@drawable/bg_round"
-
+        android:backgroundTint="@color/common_google_signin_btn_text_light"
         android:iconifiedByDefault="false"
         android:queryHint="Search.." />
     <fragment
@@ -93,7 +90,8 @@
         android:id="@+id/btnConfirmRequest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CONFIRM REQUEST" />
+        android:text="CONFIRM REQUEST"
+        android:outlineSpotShadowColor="@color/common_google_signin_btn_text_dark"/>
 
 
 </LinearLayout>
