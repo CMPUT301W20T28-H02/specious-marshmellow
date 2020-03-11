@@ -65,6 +65,7 @@
         android:layout_marginTop="64dp"
         android:text="Marshmellow"
         android:textAlignment="center"
+        android:textColor="#FFFFFF"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

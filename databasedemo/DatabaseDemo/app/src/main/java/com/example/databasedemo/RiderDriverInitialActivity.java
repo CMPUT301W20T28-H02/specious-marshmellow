@@ -123,30 +123,17 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
         CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
 
-        myRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                    for (DocumentSnapshot document : task.getResult()){
-//                        Double itemName = document.getDouble("fare");
-//                        endLatTextView.setText(document.toString());
-                        Request request = document.toObject(Request.class);
-                        if (!request.getRequestStatus()) {
-                            addRequest(request);
-                        }
-                    }
-                }
-            }
-        });
-
-
         myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 requestArrayList.clear();
                 for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
-                    requestArrayList.add(doc.toObject(Request.class));
+                    Request request = doc.toObject(Request.class);
+                    if (!request.getRequestStatus()) {
+                        requestArrayList.add(request);
+                    }
                 }
+                // TODO: Need to sort array here
                 requestArrayAdapter.notifyDataSetChanged();
             }
         });
@@ -181,9 +168,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
     }
 
     private void requestPermission(){
-        Log.i(TAG, "We are before permissions");
         ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION},1);
-        Log.i(TAG, "We are after permissions");
     }
 
 
