@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -29,6 +30,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,7 +48,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
     GoogleMap map;
     Button makeRequestButton;
     FusedLocationProviderClient fusedLocationProviderClient;
-    private static String TAG = "DISPLAY_USER_ACCOUNT_INFO";
+    private static String TAG = "Hello";
     LatLng latLng;
     ListView requestListView;
     ArrayAdapter<Request> requestArrayAdapter;
@@ -83,29 +85,27 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-
-        if(ActivityCompat.checkSelfPermission(RiderDriverInitialActivity.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if(location != null){
-                    latLng = new LatLng(location.getLatitude(),location.getLongitude());
-                    MarkerOptions p3 = new MarkerOptions().position(latLng);
-                    map.addMarker(p3);
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
-
-                }
-
-            }
-        });
-
         requestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Intent i = new Intent(getBaseContext(), DriverRideScreen.class);  // Directions to start location and confirm pickup button
-                //startActivity(i);
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                final Request request = requestArrayList.get(position);
+                // Need to get the current driver, then call request.isAcceptedBy(driver)
+                DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            Driver driver = task.getResult().toObject(Driver.class);
+                            request.isAcceptedBy(driver);
+                            DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(request.getRider().getUsername());
+                            docRef.set(request);
+                            Intent i = new Intent(getBaseContext(), DriverConfirmActivity.class);  // Directions to start location and confirm pickup button
+                            i.putExtra("riderUsername", request.getRider().getUsername());
+                            i.putExtra("driverUsername",username);
+                            startActivity(i);
+                        }
+                    }
+                });
             }
         });
 
@@ -131,7 +131,9 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 //                        Double itemName = document.getDouble("fare");
 //                        endLatTextView.setText(document.toString());
                         Request request = document.toObject(Request.class);
-                        addRequest(request);
+                        if (!request.getRequestStatus()) {
+                            addRequest(request);
+                        }
                     }
                 }
             }
@@ -149,6 +151,28 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
             }
         });
 
+        // Code should work without this code -- give it three days from March 11
+        // If no more complaints of bugs, then delete this code on Friday, March 13 before uploading
+        /*if(ActivityCompat.checkSelfPermission(RiderDriverInitialActivity.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "We are without permissions");
+            return;
+        }
+        Log.i(TAG, "We are with permissions");
+
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null){
+                    latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                    MarkerOptions p3 = new MarkerOptions().position(latLng);
+                    map.addMarker(p3);
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+
+                }
+
+            }
+        });*/
+
     }
 
     public void addRequest(Request request){
@@ -157,7 +181,9 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
     }
 
     private void requestPermission(){
+        Log.i(TAG, "We are before permissions");
         ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION},1);
+        Log.i(TAG, "We are after permissions");
     }
 
 
@@ -169,4 +195,27 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
         map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (permissions[0].equals(ACCESS_FINE_LOCATION)) {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        MarkerOptions p3 = new MarkerOptions().position(latLng);
+                        map.addMarker(p3);
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+
+                    }
+
+                }
+            });
+        }
+
+    }
 }
+

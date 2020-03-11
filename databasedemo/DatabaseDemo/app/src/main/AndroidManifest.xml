@@ -15,8 +15,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat">
-        <!--if you have theme problems change the line above-->
-        <activity android:name=".currentRequest"></activity>
+        <activity android:name=".DriverConfirmActivity"></activity>
+        <!-- if you have theme problems change the line above -->
+        <activity android:name=".currentRequest" />
         <activity android:name=".RiderNewRequestActivity" />
         <activity android:name=".RiderDriverInitialActivity" />
 

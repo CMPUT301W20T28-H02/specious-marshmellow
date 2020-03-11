@@ -9,7 +9,7 @@ public class Request
     private Location startLocation;
     private Location endLocation;
     private double fare;
-    private Boolean requestStatus = false;  // False when open, becomes true when driver matches with rider
+    private Boolean requestStatus;  // False when open, becomes true when driver matches with rider
                                             // True means the request is in progress
     private static double fareMultiplier = 2;
     private static double fareScaler = 5.0;
@@ -26,9 +26,11 @@ public class Request
 
     public Request (Rider rider, Location startLocation, Location endLocation) {
       this.rider = rider;
+      this.driver = new Driver();
       this.startLocation = startLocation;
       this.endLocation = endLocation;
       this.fare = calculateFare(getDistance(startLocation, endLocation));
+      this.requestStatus = false;
     }
 
     // Taken care of by Sirjan, Goggle Maps API and LatLng object
