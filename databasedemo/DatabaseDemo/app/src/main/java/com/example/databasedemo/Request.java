@@ -11,7 +11,8 @@ public class Request
     private double fare;
     private Boolean requestStatus = false;  // False when open, becomes true when driver matches with rider
                                             // True means the request is in progress
-    private double fareMultiplier = 2;
+    private static double fareMultiplier = 2;
+    private static double fareScaler = 5.0;
 
     private boolean riderConfirmation = false;
     private boolean driverConfirmation = false;
@@ -32,13 +33,16 @@ public class Request
 
     // Taken care of by Sirjan, Goggle Maps API and LatLng object
     // Left in for now so the code still works
-    public double getDistance(Location startLocation, Location endLocation){
+    public static double getDistance(Location startLocation, Location endLocation){
        // Get distance between start and end location using Maps API, or some other formula
-       return 10.0;
+        float results[]=new float[10];
+        android.location.Location.distanceBetween(startLocation.getLatitude(),startLocation.getLongitude(),endLocation.getLatitude(),endLocation.getLongitude(),results);
+        double result = (double)results[0];
+        return result/1000;
     }
 
-    public double calculateFare(double distance){
-      return distance*fareMultiplier;
+    public static double calculateFare(double distance){
+      return distance*fareMultiplier + fareScaler;
     }
 
     // Adds a driver associated with the request

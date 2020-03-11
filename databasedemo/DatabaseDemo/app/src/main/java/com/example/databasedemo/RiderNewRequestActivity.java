@@ -12,6 +12,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListAdapter;
@@ -63,7 +64,9 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
     MarkerOptions p1, p2;
     TextView fareDisplay, offerDisplay;
     TextView tipAmount;
-    float fare;
+    double fare;
+
+    private static String TAG = "Hello";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,11 +181,14 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
             @Override
             public void onClick(View view) {
 
-                float results[]=new float[10];
-                Location.distanceBetween(latLng.latitude,latLng.longitude,latLng2.latitude,latLng2.longitude,results);
-                float res = results[0];
-                fare = 4.0f + (2.0f * res / 1000f);
-                String dist = String.valueOf(fare);
+                com.example.databasedemo.Location startLocation = new com.example.databasedemo.Location(latLng.latitude,latLng.longitude);
+                com.example.databasedemo.Location endLocation = new com.example.databasedemo.Location(latLng2.latitude,latLng2.longitude);
+                double distance = Request.getDistance(startLocation, endLocation);
+                Log.i(TAG, "the distance is" + distance);
+
+                fare = Request.calculateFare(distance);
+                Log.i(TAG, "the fare is " + fare);
+                // String dist = String.valueOf(fare);
                 // String url = getUrl(p1.getPosition(), p2.getPosition(), "driving");
                 // new FetchURL(RiderNewRequestActivity.this).execute(url, "driving");
 
@@ -251,6 +257,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         database.collection("requests").document(username).set(request);
 
         Intent ConfirmedRequest = new Intent(RiderNewRequestActivity.this,currentRequest.class );
+        ConfirmedRequest.putExtra("username", username);
 //                ConfirmedRequest.putExtra("Latitude", latLng.latitude);
 //                ConfirmedRequest.putExtra("Longitude", latLng.longitude);
         startActivity(ConfirmedRequest);

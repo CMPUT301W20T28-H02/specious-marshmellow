@@ -22,10 +22,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,9 +46,10 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_current_request);
 
+        Intent intent = getIntent();
+        final String username = intent.getStringExtra("username");
+
         can_Request = findViewById(R.id.can_request);
-
-
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -75,8 +78,25 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
         can_Request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CollectionReference innerRef = FirebaseFirestore.getInstance().collection("requests");
+                innerRef.document(username)//Not actually being removed from the database, only from the display
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // Log.i(TAG, "Data deletion successful");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Log.i(TAG, "Data deletion unsuccessful");
+                            }
+                        });
+
                 Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
                 intent.putExtra("driver", false);
+                intent.putExtra("username", username);
                 startActivity(intent);
 
 

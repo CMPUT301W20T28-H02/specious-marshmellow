@@ -23,9 +23,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +45,7 @@ public class CreateAccount extends AppCompatActivity {
     Button finishCreateButton;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
+    boolean returnVal = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,6 +104,9 @@ public class CreateAccount extends AppCompatActivity {
                         }
                     });
                 }
+                else{
+                    Log.i(TAG, "Check input returns false");
+                }
 
             }
         });
@@ -114,6 +120,36 @@ public class CreateAccount extends AppCompatActivity {
                 return false;
             }
         }
+        if (passwordEditText.getText().toString().length() < 6){
+            passwordEditText.setError("Password must be at least 6 characters");
+            return false;
+        }
+
+        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+        CollectionReference collectionRef = rootRef.collection("users");
+        collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    List<User> users = task.getResult().toObjects(User.class);
+                    for (User user : users){
+                        if (user.getEmail().equals(emailEditText.getText().toString())){
+                            emailEditText.setError("Email is in use by another user");
+                            returnVal = false;
+                            // checkInputReturnsFalse()
+                        }
+                    }
+                    // checkInputReturnsTrue()
+
+                }
+            }
+        });
+
+        if(returnVal == false){
+            returnVal = true;
+            return false;
+        }
+
         return true;
     }
 
@@ -146,11 +182,10 @@ public class CreateAccount extends AppCompatActivity {
                                             }
                                         }
                                     });
-
-                            Toast.makeText(CreateAccount.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                         else{
                             Log.d(TAG, "Task not successful");
+                            Toast.makeText(CreateAccount.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

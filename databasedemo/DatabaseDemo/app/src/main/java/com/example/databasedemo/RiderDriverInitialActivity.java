@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -58,6 +59,8 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         boolean driver = intent.getBooleanExtra("driver", true);
         final String username = intent.getStringExtra("username");
 
+        requestPermission();
+
         if (driver) {
             Log.i(TAG, "We are here");
             setContentView(R.layout.driver_initial);
@@ -68,9 +71,11 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         makeRequestButton = findViewById(R.id.make_request_button);
         requestListView = findViewById(R.id.requestListView);
         requestArrayList = new ArrayList<>();
-        requestArrayAdapter = new ArrayAdapter<>(this, R.layout.content, requestArrayList);
+        requestArrayAdapter = new RequestAdapter(this, requestArrayList);
 
         requestListView.setAdapter(requestArrayAdapter);
+
+        requestListView.setBackgroundColor(0xFFFFFF);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -78,8 +83,6 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-
-        requestPermission();
 
         if(ActivityCompat.checkSelfPermission(RiderDriverInitialActivity.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
             return;
@@ -98,6 +101,13 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
             }
         });
 
+        requestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //Intent i = new Intent(getBaseContext(), DriverRideScreen.class);  // Directions to start location and confirm pickup button
+                //startActivity(i);
+            }
+        });
 
         makeRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
