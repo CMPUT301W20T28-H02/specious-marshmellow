@@ -4,25 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-    tools:context=".RiderDriverInitialActivity">
+    android:orientation="vertical"
+    tools:context=".RiderDriverInitialActivity"
+    >
 
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
 
 
-        />
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
 
-    <Button
-        android:id="@+id/make_request_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/make_request" />
 
+            />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/make_request_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/dialog_holo_dark_frame"
+            android:text="@string/make_request"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
