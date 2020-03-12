@@ -23,9 +23,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +45,7 @@ public class CreateAccount extends AppCompatActivity {
     Button finishCreateButton;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
+    boolean returnVal = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,6 +104,9 @@ public class CreateAccount extends AppCompatActivity {
                         }
                     });
                 }
+                else{
+                    Log.i(TAG, "Check input returns false");
+                }
 
             }
         });
@@ -114,6 +120,36 @@ public class CreateAccount extends AppCompatActivity {
                 return false;
             }
         }
+        if (passwordEditText.getText().toString().length() < 6){
+            passwordEditText.setError("Password must be at least 6 characters");
+            return false;
+        }
+
+        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+        CollectionReference collectionRef = rootRef.collection("users");
+        collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()){
+                    List<User> users = task.getResult().toObjects(User.class);
+                    for (User user : users){
+                        if (user.getEmail().equals(emailEditText.getText().toString())){
+                            emailEditText.setError("Email is in use by another user");
+                            returnVal = false;
+                            // checkInputReturnsFalse()
+                        }
+                    }
+                    // checkInputReturnsTrue()
+
+                }
+            }
+        });
+
+        if(returnVal == false){
+            returnVal = true;
+            return false;
+        }
+
         return true;
     }
 
@@ -122,13 +158,16 @@ public class CreateAccount extends AppCompatActivity {
         final String username = usernameEditText.getText().toString();
         final String email = emailEditText.getText().toString();
 
+        Log.d(TAG, "We are in create user");
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(CreateAccount.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "We complete something");
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Log.d(TAG, "We get the current user");
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                     .setDisplayName(username)
                                     .build();
@@ -143,7 +182,9 @@ public class CreateAccount extends AppCompatActivity {
                                             }
                                         }
                                     });
-
+                        }
+                        else{
+                            Log.d(TAG, "Task not successful");
                             Toast.makeText(CreateAccount.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -161,18 +202,22 @@ public class CreateAccount extends AppCompatActivity {
         }
         final boolean driverBoolean = driverTemp;
 
-        Map<String, Object> userData = new HashMap<>();
-        userData.put("username", username);
-        userData.put("email", email);
-        userData.put("phone", phone);
-        userData.put("address", address);
-        userData.put("driver", driverBoolean);
-        if (driverBoolean) {
-            userData.put("rating", "0");
-        }
+        User currentUser = new User(username, email, new Wallet(0), phone, 5.0, 1, driverBoolean);
+
+//        Map<String, User> userData = new HashMap<>();
+//        userData.put("username", username);
+//        userData.put("username", username);
+//        userData.put("email", email);
+//        userData.put("wallet", new Wallet(0));
+//        userData.put("phone", phone);
+//        userData.put("rating", 5.0);
+//        userData.put("numRatings", 1);
+//        userData.put("address", address);
+//        userData.put("driver", driverBoolean);
+
         db.collection("users")
                 .document(username)
-                .set(userData)
+                .set(currentUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

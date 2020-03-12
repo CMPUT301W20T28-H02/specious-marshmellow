@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity{
 
     FirebaseAuth mAuth;
     FirebaseFirestore db;
-    boolean riderOrDriver;
     private static String TAG = "DISPLAY_USER_ACCOUNT_INFO";
 
     @Override
@@ -51,35 +50,72 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    private boolean displayDriverOrRiderScreen(String username, String email){
+    private void displayDriverOrRiderScreen(String username, String email) {
         final DocumentReference docRef = db.collection("users").document(username);
+
+
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
+                if(task.isSuccessful()){
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                        if (!document.getBoolean("driver")) {
-                            //addDriverRating(document.getData().get("rating").toString());
-                            Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
-                            intent.putExtra("driver", false);
-                            startActivity(intent);
-                        } else {
-                            Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+                        User currentUser = document.toObject(User.class);
+                        Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+                        if (currentUser.getDriver()) {
                             intent.putExtra("driver", true);
-                            startActivity(intent);
+                        } else {
+                            intent.putExtra("driver", false);
                         }
-                    } else {
-                        Log.d(TAG, "No such document");
+                        intent.putExtra("username", currentUser.getUsername());
+                        startActivity(intent);
                     }
-                } else {
-                    Log.d(TAG, "get failed with ", task.getException());
                 }
-                Log.d(TAG, "We get here inside 1, " + riderOrDriver);
             }
         });
-        Log.d(TAG, "We get here inside 2, " + riderOrDriver);
-        return riderOrDriver;
+
+
+
+
+//        User currentUser = docRef.get().getResult().toObject(User.class);
+//        Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+//        if (currentUser.getDriver()) {
+//            intent.putExtra("driver", true);
+//        } else {
+//            intent.putExtra("driver", false);
+//        }
+//        return true;
+
     }
+
+//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+//                        if (!document.getBoolean("driver")) {
+//                            //addDriverRating(document.getData().get("rating").toString());
+//                            Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+//                            intent.putExtra("driver", false);
+//                            startActivity(intent);
+//                        } else {
+//                            Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+//                            intent.putExtra("driver", true);
+//                            startActivity(intent);
+//                        }
+//                    } else {
+//                        Log.d(TAG, "No such document");
+//                    }
+//                } else {
+//                    Log.d(TAG, "get failed with ", task.getException());
+//                }
+//                Log.d(TAG, "We get here inside 1, " + riderOrDriver);
+//            }
+//        });
+//        Log.d(TAG, "We get here inside 2, " + riderOrDriver);
+//        return riderOrDriver;
+//    }
+
 }

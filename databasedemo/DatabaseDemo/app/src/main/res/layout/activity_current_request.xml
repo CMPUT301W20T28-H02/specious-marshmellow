@@ -5,6 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
+    android:orientation="vertical"
+    tools:context=".currentRequest"
+    android:background="@color/common_google_signin_btn_text_light_default">
+
+
     android:fitsSystemWindows="true"
     tools:context=".currentRequest"
     tools:openDrawer="start">
@@ -19,9 +24,10 @@
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="1"/>
 
-            />
+
+            
 
         <TextView
             android:id="@+id/textView2"
@@ -50,3 +56,4 @@
         app:menu="@menu/drawer_menu"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
+

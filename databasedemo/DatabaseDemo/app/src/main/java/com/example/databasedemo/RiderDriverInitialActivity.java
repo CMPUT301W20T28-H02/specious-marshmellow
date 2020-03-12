@@ -1,9 +1,14 @@
 package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
+
+
+import androidx.annotation.Nullable;
+
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -12,7 +17,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -24,8 +32,23 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.android.material.navigation.NavigationView;
+
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -35,8 +58,11 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
     GoogleMap map;
     Button makeRequestButton;
     FusedLocationProviderClient fusedLocationProviderClient;
-    private static String TAG = "DISPLAY_USER_ACCOUNT_INFO";
+    private static String TAG = "Hello";
     LatLng latLng;
+    ListView requestListView;
+    ArrayAdapter<Request> requestArrayAdapter;
+    ArrayList<Request> requestArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +79,9 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
 
         boolean driver = intent.getBooleanExtra("driver", true);
+        final String username = intent.getStringExtra("username");
+
+        requestPermission();
 
         if (driver) {
             Log.i(TAG, "We are here");
@@ -61,22 +90,85 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 //            makeRequestButton = findViewById(R.id.make_request_button);
         } else {
             setContentView(R.layout.rider_initial);
-            makeRequestButton = findViewById(R.id.make_request_button);
-//            navi.setNavigationItemSelectedListener(this);
 
         }
+
+        makeRequestButton = findViewById(R.id.make_request_button);
+        requestListView = findViewById(R.id.requestListView);
+        requestArrayList = new ArrayList<>();
+        requestArrayAdapter = new RequestAdapter(this, requestArrayList);
+
+        requestListView.setAdapter(requestArrayAdapter);
+
+        requestListView.setBackgroundColor(0xFFFFFF);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        requestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                final Request request = requestArrayList.get(position);
+                // Need to get the current driver, then call request.isAcceptedBy(driver)
+                DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            Driver driver = task.getResult().toObject(Driver.class);
+                            request.isAcceptedBy(driver);
+                            DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(request.getRider().getUsername());
+                            docRef.set(request);
+                            Intent i = new Intent(getBaseContext(), DriverConfirmActivity.class);  // Directions to start location and confirm pickup button
+                            i.putExtra("riderUsername", request.getRider().getUsername());
+                            i.putExtra("driverUsername",username);
+                            startActivity(i);
+                        }
+                    }
+                });
+            }
+        });
 
-        requestPermission();
+        makeRequestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(RiderDriverInitialActivity.this, "Make Request", 10);
+                Log.i(TAG, "Request made");
+                Intent intent = new Intent(RiderDriverInitialActivity.this, RiderNewRequestActivity.class);
+                intent.putExtra("username", username);
+                startActivity(intent);
+            }
+        });
 
-        if(ActivityCompat.checkSelfPermission(RiderDriverInitialActivity.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+
+        CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
+
+        myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                requestArrayList.clear();
+                for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
+                    Request request = doc.toObject(Request.class);
+                    if (!request.getRequestStatus()) {
+                        requestArrayList.add(request);
+                    }
+                }
+                // TODO: Need to sort array here
+                requestArrayAdapter.notifyDataSetChanged();
+            }
+        });
+
+        // Code should work without this code -- give it three days from March 11
+        // If no more complaints of bugs, then delete this code on Friday, March 13 before uploading
+        /*if(ActivityCompat.checkSelfPermission(RiderDriverInitialActivity.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+            Log.i(TAG, "We are without permissions");
             return;
         }
+        Log.i(TAG, "We are with permissions");
+
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
@@ -89,19 +181,13 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                 }
 
             }
-        });
+        });*/
 
+    }
 
-        makeRequestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Toast.makeText(RiderDriverInitialActivity.this, "Make Request", 10);
-                Log.i(TAG, "Request made");
-                Intent intent = new Intent(RiderDriverInitialActivity.this, RiderNewRequestActivity.class);
-                startActivity(intent);
-            }
-        });
-
+    public void addRequest(Request request){
+        requestArrayList.add(request);
+        requestArrayAdapter.notifyDataSetChanged();
     }
 
     private void requestPermission(){
@@ -135,5 +221,29 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
 
         return false;
+	
+    }
+    
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (permissions[0].equals(ACCESS_FINE_LOCATION)) {
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if (location != null) {
+                        latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        MarkerOptions p3 = new MarkerOptions().position(latLng);
+                        map.addMarker(p3);
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+
+                    }
+
+                }
+            });
+        }
+
+
     }
 }
+

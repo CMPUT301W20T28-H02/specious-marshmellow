@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:layout_marginTop="16dp"
     android:showDividers="middle"
-    android:divider="@drawable/empty_tall_divider">
+    android:divider="@drawable/empty_tall_divider"
+    android:background="@color/common_google_signin_btn_text_light_default">
 
     <TextView
         android:id="@+id/username_text"
