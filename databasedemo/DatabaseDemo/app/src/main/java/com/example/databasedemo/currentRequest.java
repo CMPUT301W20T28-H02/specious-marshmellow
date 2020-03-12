@@ -1,6 +1,7 @@
 package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -30,7 +31,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -39,6 +44,8 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
      LatLng latLng;
      FusedLocationProviderClient fusedLocationProviderClient;
      Button can_Request;
+     FirebaseFirestore db;
+     CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
 
 
     @Override
@@ -102,6 +109,40 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
 
             }
         });
+
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
+
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if(documentSnapshot.exists()){
+                    Request request = documentSnapshot.toObject(Request.class);
+                    if(request.getRequestStatus() == true){
+                        // Change this line so that it switches to Rider on a ride activity
+                        Log.d("Database", "here");
+                        Intent i = new Intent(getBaseContext(),RiderDriverInitialActivity.class);
+                        startActivity(i);
+                    }
+
+                }
+            }
+        });
+//        myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+//                for(QueryDocumentSnapshot document: queryDocumentSnapshots ){
+//                    Request request = document.toObject(Request.class);
+//
+//                    if (username.equals(request.getRider().getUsername())){
+//                        if(request.getRequestStatus() == true){
+//                            // Change this line so that it switches to Rider on a ride activity
+//                            Intent i = new Intent(getBaseContext(),RiderDriverInitialActivity.class);
+//                        }
+//                    }
+//
+//                }
+//            }
+//        });
 
 //        String longitudeString = getIntent().getStringExtra("Longitude");
 //        String latitudeString = getIntent().getStringExtra("Latitude");
