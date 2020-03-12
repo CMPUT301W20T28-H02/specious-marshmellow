@@ -75,9 +75,10 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
     FusedLocationProviderClient fusedLocationProviderClient;
     LatLng latLng,latLng2, latLng3;
     MarkerOptions p1, p2;
-    TextView fareDisplay, offerDisplay;
+    TextView fareDisplay, offerDisplay,usrNameText,usrEmailText;
     TextView tipAmount;
     double fare;
+    FirebaseAuth mAuth;
 
     private static String TAG = "Hello";
 
@@ -92,14 +93,18 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
             setActionBar(toolbar);
         }
         NavigationView navi = findViewById(R.id.nav_view);
+        View headerView = navi.getHeaderView(0);
         navi.setNavigationItemSelectedListener(this);
+        mAuth = FirebaseAuth.getInstance();
 
 
         Intent intent = getIntent();
         final String username = intent.getStringExtra("username");
+        final String email = intent.getStringExtra("email");
 
 
         btnGetFare = findViewById(R.id.btnGetFare);
+
         btnAddTip = findViewById(R.id.addTipButton);
         btnConfirmRequest = findViewById(R.id.btnConfirmRequest);
         searchView = findViewById(R.id.sv_location);
@@ -107,6 +112,12 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         fareDisplay = findViewById(R.id.fareDisplay);
         offerDisplay = findViewById(R.id.offerDisplay);
         tipAmount = findViewById(R.id.tipAmount);
+        usrNameText = headerView.findViewById(R.id.usrNameText);
+        usrEmailText=headerView.findViewById(R.id.usrEmailText);
+        usrNameText.setText(username);
+        usrEmailText.setText(email);
+
+
         mapFragment = ( SupportMapFragment ) getSupportFragmentManager()
                 .findFragmentById( R.id.map);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
@@ -249,7 +260,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                             Request request = new Request(currentRider,
                                     new com.example.databasedemo.Location(latLng.latitude, latLng.longitude),
                                     new com.example.databasedemo.Location(latLng2.latitude, latLng2.longitude));
-                            addRequest(request, username);
+                            addRequest(request, username, email);
                         }
                     }
                 });
@@ -277,13 +288,14 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
     }
 
-    public void addRequest (Request request, String username){
+    public void addRequest (Request request, String username, String email){
         FirebaseFirestore database = FirebaseFirestore.getInstance();
 
         database.collection("requests").document(username).set(request);
 
         Intent ConfirmedRequest = new Intent(RiderNewRequestActivity.this,currentRequest.class );
         ConfirmedRequest.putExtra("username", username);
+        ConfirmedRequest.putExtra("email", email);
 //                ConfirmedRequest.putExtra("Latitude", latLng.latitude);
 //                ConfirmedRequest.putExtra("Longitude", latLng.longitude);
         startActivity(ConfirmedRequest);
@@ -313,6 +325,8 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 startActivity(intent);
                 break;
             case R.id.sign_out_tab:
+                mAuth.signOut();
+                finish();
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
 
                 startActivity(intent_2);

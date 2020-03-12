@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity{
                             intent.putExtra("driver", false);
                         }
                         intent.putExtra("username", currentUser.getUsername());
+                        intent.putExtra("email", currentUser.getEmail());
                         startActivity(intent);
                     }
                 }

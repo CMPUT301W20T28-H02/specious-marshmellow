@@ -52,7 +52,7 @@ import java.util.ArrayList;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class RiderDriverInitialActivity extends FragmentActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
+public class RiderDriverInitialActivity extends FragmentActivity implements OnMapReadyCallback{
 
 
     GoogleMap map;
@@ -75,11 +75,12 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setActionBar(toolbar);
         }
-        NavigationView navi = findViewById(R.id.nav_view);
+        //NavigationView navi = findViewById(R.id.nav_view);
 
 
         boolean driver = intent.getBooleanExtra("driver", true);
         final String username = intent.getStringExtra("username");
+        final String email = intent.getStringExtra("email");
 
         requestPermission();
 
@@ -139,6 +140,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                 Log.i(TAG, "Request made");
                 Intent intent = new Intent(RiderDriverInitialActivity.this, RiderNewRequestActivity.class);
                 intent.putExtra("username", username);
+                intent.putExtra("email", email );
                 startActivity(intent);
             }
         });
@@ -204,25 +206,25 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.nav_money:
-                Intent intent = new Intent(getBaseContext(), moneyScreen.class);
-
-                startActivity(intent);
-                break;
-            case R.id.sign_out_tab:
-                Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
-
-                startActivity(intent_2);
-                break;
-        }
-
-
-        return false;
-	
-    }
+//    @Override
+//    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+//        switch (menuItem.getItemId()) {
+//            case R.id.nav_money:
+//                Intent intent = new Intent(getBaseContext(), moneyScreen.class);
+//
+//                startActivity(intent);
+//                break;
+//            case R.id.sign_out_tab:
+//                Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
+//
+//                startActivity(intent_2);
+//                break;
+//        }
+//
+//
+//        return false;
+//
+//    }
     
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
