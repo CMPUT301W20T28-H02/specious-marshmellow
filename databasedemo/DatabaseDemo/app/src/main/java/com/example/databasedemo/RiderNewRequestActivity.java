@@ -1,6 +1,9 @@
 package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
+
+import androidx.annotation.RequiresApi;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -11,14 +14,20 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+
+import android.view.MenuItem;
+
 import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.databasedemo.DirectionHelpers.TaskLoadedCallback;
 import com.google.android.gms.location.LocationServices;
@@ -40,6 +49,9 @@ import java.util.List;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+
+import com.google.android.material.navigation.NavigationView;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,10 +61,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 // implements TaskLoadedCallback
-public class RiderNewRequestActivity extends FragmentActivity implements OnMapReadyCallback{
+public class RiderNewRequestActivity extends FragmentActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private GoogleMap map;
     SupportMapFragment mapFragment;
@@ -70,11 +83,21 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_new_request);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setActionBar(toolbar);
+        }
+        NavigationView navi = findViewById(R.id.nav_view);
+        navi.setNavigationItemSelectedListener(this);
+
+
         Intent intent = getIntent();
         final String username = intent.getStringExtra("username");
+
 
         btnGetFare = findViewById(R.id.btnGetFare);
         btnAddTip = findViewById(R.id.addTipButton);
@@ -128,6 +151,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                     }
 
                     Address address = addressList.get(0);
+
                     latLng = new LatLng(address.getLatitude(),address.getLongitude());
                     p1 = new MarkerOptions().position(latLng);
                     map.addMarker(p1);
@@ -237,14 +261,16 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         btnAddTip.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String tipToAdd = tipAmount.getText().toString();
                 float tempTip = Float.valueOf(tipToAdd);
+                float tempFare = fare;
                 if( tempTip >= 0 )
                 {
-                    fare += tempTip;
+                    tempFare += tempTip;
                 }
                 // can put a "Toast" saying invalid tip amount
-                offerDisplay.setText("Offer: " + fare);
+                offerDisplay.setText("Offer: " + tempFare);
             }
         }));
 
@@ -276,6 +302,25 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.nav_money:
+                Intent intent = new Intent(getBaseContext(), moneyScreen.class);
+
+                startActivity(intent);
+                break;
+            case R.id.sign_out_tab:
+                Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
+
+                startActivity(intent_2);
+                break;
+        }
+
+
+        return false;
     }
 
 

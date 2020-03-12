@@ -109,6 +109,10 @@ public class Request
 		return this.rider;
 	}
 
+	public Driver getDriver(){
+        return this.driver;
+    }
+
 	public Location getStartLocation() {
 		return this.startLocation;
 	}
@@ -141,6 +145,10 @@ public class Request
 	public void setRider(Rider rider) {
 		this.rider = rider;
 	}
+
+	public void setDriver(Driver driver){
+        this.driver = driver;
+    }
 
 	public void setStartLocation(Location startLocation) {
 		this.startLocation = startLocation;

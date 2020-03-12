@@ -5,8 +5,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".RiderDriverInitialActivity"
     android:background="@color/common_google_signin_btn_text_light_default">
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -35,8 +37,13 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent" 
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="98dp" />
+            tools:layout_editor_absoluteY="98dp"/>
+
+            
+
 
         <Button
             android:id="@+id/make_request_button"
@@ -46,5 +53,6 @@
             android:visibility="invisible"/>
 
     </LinearLayout>>
+
 
 </LinearLayout>

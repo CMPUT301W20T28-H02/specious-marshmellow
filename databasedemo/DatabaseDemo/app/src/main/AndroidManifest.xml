@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.databasedemo">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -13,12 +14,19 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
+        android:supportsRtl="true" 
         android:theme="@style/Theme.AppCompat">
+
         <activity android:name=".RiderConfirmPickup"></activity>
         <activity android:name=".DriverConfirmActivity" /> <!-- if you have theme problems change the line above -->
+=======
+	<activity android:name=".moneyScreen"></activity>
+        <!-- if you have theme problems change the line above -->
+>>>>>>> c2737d0fe54fc074f7ab5e39d5a3226da866bf86
         <activity android:name=".currentRequest" />
-        <activity android:name=".RiderNewRequestActivity" />
+        <activity android:name=".RiderNewRequestActivity"
+		android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity android:name=".RiderDriverInitialActivity" />
 
         <meta-data
@@ -28,7 +36,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_key" />
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

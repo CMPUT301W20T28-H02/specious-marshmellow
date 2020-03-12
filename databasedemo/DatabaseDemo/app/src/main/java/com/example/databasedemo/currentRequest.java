@@ -9,10 +9,20 @@ import androidx.fragment.app.FragmentActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toolbar;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -23,12 +33,20 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -39,7 +57,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class currentRequest extends FragmentActivity implements OnMapReadyCallback {
+
+public class currentRequest extends FragmentActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
+
+
      GoogleMap map;
      LatLng latLng;
      FusedLocationProviderClient fusedLocationProviderClient;
@@ -53,10 +74,22 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_current_request);
 
+
+        can_Request = findViewById(R.id.can_request);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            setActionBar(toolbar);
+        }
+        NavigationView navi = findViewById(R.id.nav_view);
+        navi.setNavigationItemSelectedListener(this);
+
+
+
         Intent intent = getIntent();
         final String username = intent.getStringExtra("username");
 
         can_Request = findViewById(R.id.can_request);
+
 
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -85,6 +118,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
         can_Request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 CollectionReference innerRef = FirebaseFirestore.getInstance().collection("requests");
                 innerRef.document(username)//Not actually being removed from the database, only from the display
                         .delete()
@@ -104,6 +138,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
                 intent.putExtra("driver", false);
                 intent.putExtra("username", username);
+
                 startActivity(intent);
 
 
@@ -173,5 +208,22 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
         map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.nav_money:
+                Intent intent = new Intent(getBaseContext(), moneyScreen.class);
 
+                startActivity(intent);
+                break;
+            case R.id.sign_out_tab:
+                Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
+
+                startActivity(intent_2);
+                break;
+        }
+
+
+        return false;
+    }
 }
