@@ -263,8 +263,8 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
             public void onClick(View view) {
 
                 String tipToAdd = tipAmount.getText().toString();
-                float tempTip = Float.valueOf(tipToAdd);
-                float tempFare = fare;
+                double tempTip = Double.valueOf(tipToAdd);
+                double tempFare = fare;
                 if( tempTip >= 0 )
                 {
                     tempFare += tempTip;

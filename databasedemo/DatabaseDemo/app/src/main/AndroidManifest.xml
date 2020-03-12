@@ -19,13 +19,10 @@
 
         <activity android:name=".RiderConfirmPickup"></activity>
         <activity android:name=".DriverConfirmActivity" /> <!-- if you have theme problems change the line above -->
-=======
 	<activity android:name=".moneyScreen"></activity>
         <!-- if you have theme problems change the line above -->
->>>>>>> c2737d0fe54fc074f7ab5e39d5a3226da866bf86
         <activity android:name=".currentRequest" />
-        <activity android:name=".RiderNewRequestActivity"
-		android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".RiderNewRequestActivity" />
 
         <activity android:name=".RiderDriverInitialActivity" />
 
