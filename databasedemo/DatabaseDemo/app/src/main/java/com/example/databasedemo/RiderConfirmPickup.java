@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -43,6 +44,7 @@ public class RiderConfirmPickup extends AppCompatActivity {
                     Request request = task.getResult().toObject(Request.class);
                     Driver driver = request.getDriver();
                     String driver_name= driver.getUsername();
+                    Log.d("driver_username", driver_name);
 
                     driver_username.setText("" + driver_name);
 

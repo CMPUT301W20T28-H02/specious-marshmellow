@@ -16,6 +16,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import android.os.Bundle;
@@ -65,8 +67,10 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
      LatLng latLng;
      FusedLocationProviderClient fusedLocationProviderClient;
      Button can_Request;
+     TextView usrNameText,usrEmailText;
      FirebaseFirestore db;
      CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
+     /*FirebaseAuth mAuth;*/
 
 
     @Override
@@ -81,12 +85,20 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
             setActionBar(toolbar);
         }
         NavigationView navi = findViewById(R.id.nav_view);
+        View headerview = navi.getHeaderView(0);
         navi.setNavigationItemSelectedListener(this);
+        /*mAuth = FirebaseAuth.getInstance();*/
+
 
 
 
         Intent intent = getIntent();
         final String username = intent.getStringExtra("username");
+        final String email = intent.getStringExtra("email");
+        usrNameText = headerview.findViewById(R.id.usrNameText);
+        usrEmailText=headerview.findViewById(R.id.usrEmailText);
+        usrNameText.setText(username);
+        usrEmailText.setText(email);
 
         can_Request = findViewById(R.id.can_request);
 
@@ -218,9 +230,13 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 startActivity(intent);
                 break;
             case R.id.sign_out_tab:
+                /*mAuth.signOut();
+                finish();
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
 
-                startActivity(intent_2);
+                startActivity(intent_2);*/
+                Toast.makeText(this, "Action restricted, Request Created ", Toast.LENGTH_LONG).show();
+
                 break;
         }
 
