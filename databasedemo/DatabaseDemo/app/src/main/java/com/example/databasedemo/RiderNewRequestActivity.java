@@ -44,6 +44,7 @@ import com.example.databasedemo.DirectionHelpers.FetchURL;
 import com.example.databasedemo.DirectionHelpers.TaskLoadedCallback;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -140,29 +141,58 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                Log.i("Hello", "We get right here");
                 String location = searchView.getQuery().toString();
-                List<Address> addressList = null;
-                if(location != null || !location.equals("")){
+                ArrayList<Address> addressList = new ArrayList<Address>();
+                Log.i("Hello", "We get right here 1");
+                if(location != null && !location.equals("")){
+                    Log.i("Hello", "We get right here 2");
                     Geocoder geocoder = new Geocoder(RiderNewRequestActivity.this);
+                    boolean goodNews = true;
                     try {
-                        addressList = geocoder.getFromLocationName(location,1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        long start = System.currentTimeMillis();
+                        while (addressList.size() < 1) {
+                            addressList = (ArrayList<Address>) geocoder.getFromLocationName(location, 1);
+                            long current = System.currentTimeMillis();
+                            if ((current - start)/1000 > 2){          // Waits for two seconds
+                                Log.i("Hello", "2 seconds passed ");
+                                goodNews = false;
+                                break;
+                            }
+                        }
+                        Log.i("Hello", "This is address list 1 " + addressList.toString());
+                    } catch (Exception e) {
+                        System.out.print(e.getMessage());
+                        Log.i("Hello", "Does this throw an IOException? 1" + addressList.toString());
                     }
 
-                    Address address = addressList.get(0);
+                    //if (addressList.size()>0) {
+                    //    Address address = addressList.get(0);
+                    //}
 
-                    latLng = new LatLng(address.getLatitude(),address.getLongitude());
-                    p1 = new MarkerOptions().position(latLng);
-                    map.addMarker(p1);
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                    Address address;
+
+                    if (goodNews) {
+                        address = addressList.get(0);
+                        latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        p1 = new MarkerOptions().position(latLng);
+                        map.addMarker(p1);
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                    } else {
+                        searchView.setQuery("Please Enter a Valid Location", false);
+                        searchView.clearFocus();
+                        Log.i("Hello", "Bad News");
+                    }
                 }
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-
+                String errorString = searchView.getQuery().toString();
+                if (errorString.equals("Please Enter a Valid Location")) {
+                    //searchView.setQuery("", false);
+                }
                 return false;
             }
         });
@@ -172,21 +202,40 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
             @Override
             public boolean onQueryTextSubmit(String s) {
                 String location2 = searchView2.getQuery().toString();
-                List<Address> addressList2 = null;
-                if(location2 != null || !location2.equals("")){
+                ArrayList<Address> addressList2 = new ArrayList<Address>();
+                if(location2 != null && !location2.equals("")){
                     Geocoder geocoder = new Geocoder(RiderNewRequestActivity.this);
+                    boolean goodNews = true;
                     try {
-                        addressList2 = geocoder.getFromLocationName(location2,1);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        long start = System.currentTimeMillis();
+                        while (addressList2.size() < 1) {
+                            addressList2 = (ArrayList<Address>) geocoder.getFromLocationName(location2, 1);
+                            long current = System.currentTimeMillis();
+                            if ((current - start)/1000 > 2){          // Waits for two seconds
+                                Log.i("Hello", "2 seconds passed ");
+                                goodNews = false;
+                                break;
+                            }
+                        }
+                        Log.i("Hello", "This is address list 2 " + addressList2.toString());
+                    } catch (Exception e) {
+                        System.out.print(e.getMessage());
+                        Log.i("Hello", "Does this throw an IOException? 2" + addressList2.toString());
                     }
-                    Address address = addressList2.get(0);
-                    latLng2 = new LatLng(address.getLatitude(),address.getLongitude());
-                    p2 = new MarkerOptions().position(latLng2);
 
-                    map.addMarker(p2);
+                    Address address;
 
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2,10));
+                    if (goodNews) {
+                        address = addressList2.get(0);
+                        latLng2 = new LatLng(address.getLatitude(), address.getLongitude());
+                        p2 = new MarkerOptions().position(latLng2);
+                        map.addMarker(p2);
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2, 10));
+                    } else {
+                        searchView2.setQuery("Please Enter a Valid Location", false);
+                        searchView2.clearFocus();
+                        Log.i("Hello", "Bad News");
+                    }
 
                 }
                 return false;
@@ -194,7 +243,6 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
             @Override
             public boolean onQueryTextChange(String s) {
-
                 return false;
             }
 
