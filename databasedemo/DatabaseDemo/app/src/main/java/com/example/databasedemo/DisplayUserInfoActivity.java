@@ -53,6 +53,7 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
         Intent i = getIntent();
         final String username = i.getStringExtra("username");
 
+        // get the user object from the database and determine if it is a rider or driver
         final DocumentReference docRef = db.collection("users").document(username);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
