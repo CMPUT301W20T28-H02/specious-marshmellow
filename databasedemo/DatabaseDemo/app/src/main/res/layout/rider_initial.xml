@@ -24,6 +24,13 @@
         tools:layout_editor_absoluteY="98dp"
         android:visibility="invisible"/>
 
+    <EditText
+        android:id="@+id/global_bounds_EditText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:ems="10"
+        android:inputType="number"
+        android:visibility="invisible"/>
 
     <Button
         android:id="@+id/make_request_button"

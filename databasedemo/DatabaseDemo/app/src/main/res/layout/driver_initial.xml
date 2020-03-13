@@ -32,6 +32,44 @@
             android:layout_margin="10dp"
             android:textAlignment="center"/>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/within_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:text="Within: "
+                android:textSize="16sp"
+                android:layout_margin="10dp"
+                android:textAlignment="center" />
+
+            <EditText
+                android:id="@+id/global_bounds_EditText"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:focusedByDefault="false"/>
+
+            <TextView
+                android:id="@+id/km_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:text="km "
+                android:textSize="16sp"
+                android:layout_margin="10dp"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
         <ListView
             android:id="@+id/requestListView"
             android:layout_width="match_parent"

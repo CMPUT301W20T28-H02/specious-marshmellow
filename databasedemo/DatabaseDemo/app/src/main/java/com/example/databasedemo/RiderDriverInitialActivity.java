@@ -14,12 +14,15 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -59,12 +62,14 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
     GoogleMap map;
     Button makeRequestButton;
+    EditText globalBoundsEditText;
     FusedLocationProviderClient fusedLocationProviderClient;
     private static String TAG = "Hello";
-    LatLng latLng;
+    LatLng latLng, latLngDriver;
     ListView requestListView;
     ArrayAdapter<Request> requestArrayAdapter;
     ArrayList<Request> requestArrayList;
+    double globalBound = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +102,8 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         }
 
         makeRequestButton = findViewById(R.id.make_request_button);
+        globalBoundsEditText = findViewById(R.id.global_bounds_EditText);
+        globalBoundsEditText.setText(String.valueOf((int)globalBound));
         requestListView = findViewById(R.id.requestListView);
         requestArrayList = new ArrayList<>();
         requestArrayAdapter = new RequestAdapter(this, requestArrayList);
@@ -110,6 +117,53 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         mapFragment.getMapAsync(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        globalBoundsEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                requestArrayList.clear();
+                if(!charSequence.toString().equals("")) {
+                    globalBound = Double.valueOf(globalBoundsEditText.getText().toString());
+                    CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
+                    myRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()){
+                                for (QueryDocumentSnapshot doc : task.getResult()) {
+                                    final Request request = doc.toObject(Request.class);
+                                    if (!request.getRequestStatus()) {
+                                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
+                                            @Override
+                                            public void onSuccess(Location location) {
+                                                if(location != null){
+                                                    double distance = Request.getDistance(new com.example.databasedemo.Location(location.getLatitude(),location.getLongitude()),
+                                                            request.getStartLocation());
+                                                    Log.i("Hello", "Even Better! Distance: " + distance + "Global Bound: " + globalBound);
+                                                    if (distance < globalBound){
+                                                        Log.i("Hello", "Is this getting run?");
+                                                        addRequest(request);
+                                                    } else{
+                                                        requestArrayAdapter.notifyDataSetChanged();
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         requestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -161,20 +215,23 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 requestArrayList.clear();
                 for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
-                    Request request = doc.toObject(Request.class);
+                    final Request request = doc.toObject(Request.class);
                     if (!request.getRequestStatus()) {
-                        requestArrayList.add(request);
+                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if(location != null){
+                                    double distance = Request.getDistance(new com.example.databasedemo.Location(location.getLatitude(),location.getLongitude()),
+                                            request.getStartLocation());
+                                    Log.i("Hello", "Even Better! Distance: " + distance);
+                                    if (distance < globalBound){
+                                        addRequest(request);
+                                    }
+                                }
+                            }
+                        });
                     }
                 }
-                Collections.sort(requestArrayList, new Comparator<Request>() {
-                    @Override
-                    public int compare(Request request, Request request2) {
-                        return request.getFare() < request2.getFare() ? 1
-                                : request.getFare() > request2.getFare() ? -1
-                                : 0;
-                    }
-                });
-                requestArrayAdapter.notifyDataSetChanged();
             }
         });
 
@@ -204,6 +261,14 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
     public void addRequest(Request request){
         requestArrayList.add(request);
+        Collections.sort(requestArrayList, new Comparator<Request>() {
+            @Override
+            public int compare(Request request, Request request2) {
+                return request.getFare() < request2.getFare() ? 1
+                        : request.getFare() > request2.getFare() ? -1
+                        : 0;
+            }
+        });
         requestArrayAdapter.notifyDataSetChanged();
     }
 

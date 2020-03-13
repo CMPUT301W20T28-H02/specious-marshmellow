@@ -30,6 +30,7 @@
 
     <string name="driver_confirm_rider_username">Rider Username: %1$s</string>
     <string name="driver_confirm_ride_fare">Ride Fare: %1$s Dollars</string>
+    <string name="driver_to_rider_distance">Distance to Rider From Current Location:\n %1$s Kilometers</string>
     <string name="driver_confirm_ride_distance">Ride Distance: %1$s Kilometers</string>
 
     <string name="show_username">Username: %1$s</string>

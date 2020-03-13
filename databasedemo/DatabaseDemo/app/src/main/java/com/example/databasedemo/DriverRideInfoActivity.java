@@ -2,6 +2,7 @@ package com.example.databasedemo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,6 +21,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,8 +40,10 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
     Button cancelRequestButton;
     TextView riderUsernameTextView;
     TextView rideFareTextView;
+    TextView distanceToRiderTextView;
     TextView rideDistanceTextView;
     LatLng startPoint, endPoint;
+    FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,10 +64,13 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
 
         rideFareTextView = findViewById(R.id.ride_fare_TextView);
 
+        distanceToRiderTextView = findViewById(R.id.distance_to_rider_TextView);
         rideDistanceTextView = findViewById(R.id.ride_distance_TextView);
 
         confirmRequestButton = findViewById(R.id.confirm_request_button);
         cancelRequestButton = findViewById(R.id.cancel_request_button);
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         riderUsernameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,10 +87,10 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     // for two decimal places
-                    DecimalFormat numberFormat = new DecimalFormat("#.00");
+                    final DecimalFormat numberFormat = new DecimalFormat("#.00");
 
                     // get the fare and the start and end locations from the database
-                    Request request = task.getResult().toObject(Request.class);
+                    final Request request = task.getResult().toObject(Request.class);
                     String fare = String.valueOf(numberFormat.format(request.getFare()));
 
 
@@ -91,6 +100,19 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
                     // get the distance and convert to string
                     double doubleDistance = Request.getDistance(startLocation, endLocation);
                     String distance = String.valueOf(numberFormat.format(doubleDistance));
+
+                    // Get distance to rider from driver's current location
+                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(DriverRideInfoActivity.this, new OnSuccessListener<android.location.Location>() {
+                        @Override
+                        public void onSuccess(android.location.Location location) {
+                            if(location != null){
+                                double doubleDistanceToRider = Request.getDistance(new com.example.databasedemo.Location(location.getLatitude(),location.getLongitude()),
+                                        request.getStartLocation());
+                                String distanceToRider = String.valueOf(numberFormat.format(doubleDistanceToRider));
+                                distanceToRiderTextView.setText(getString(R.string.driver_to_rider_distance, distanceToRider));
+                            }
+                        }
+                    });
 
                     // display the fare and distance
                     rideFareTextView.setText(getString(R.string.driver_confirm_ride_fare, fare));

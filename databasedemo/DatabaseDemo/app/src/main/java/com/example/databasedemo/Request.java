@@ -35,8 +35,11 @@ public class Request
       this.requestStatus = false;
     }
 
-    // Taken care of by Sirjan, Goggle Maps API and LatLng object
-    // Left in for now so the code still works
+    /**
+     * @param startLocation
+     * @param endLocation
+     * @return Distance between two Locations in kilometers
+     */
     public static double getDistance(Location startLocation, Location endLocation){
        // Get distance between start and end location using Maps API, or some other formula
         float results[]=new float[10];
