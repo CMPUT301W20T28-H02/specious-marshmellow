@@ -1,3 +1,8 @@
+/*
+RiderEndAndPay
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,11 +18,21 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
+/**
+ * Activity shown while ride is ongoing, asks rider to click on button once the ride is done
+ * @author Michael Antifaoff, Hussein Warsame, Rafaella Graña
+ */
 public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallback {
 
     GoogleMap map;
     Button riderEndAndPayButton;
 
+    /**
+     * Called when activity is created
+     * shows rider the ride on the map and a button to indicate if ride has ended. then redirects
+     * to {@link GenerateQR GenerateQR}
+     * @param {@code Bundle} savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +59,10 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
 
     }
 
+    /**
+     * when map is loaded, assign it to the map attribute
+     * @param {@code GoogleMap}googleMap Map Object
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;

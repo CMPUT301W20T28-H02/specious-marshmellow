@@ -1,9 +1,15 @@
+/*
+BarcodeFormat
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+/** Format used to read QR code
+ * @author Hussein Warsame */
 public class BarcodeFormat {
     private int mId;
     private String mName;
@@ -44,19 +50,37 @@ public class BarcodeFormat {
         ALL_FORMATS.add(BarcodeFormat.CODE128);
     }
 
+    /**
+     * constructor
+     * @param {@code int}id
+     * @param {@code String}name
+     */
     public BarcodeFormat(int id, String name) {
         mId = id;
         mName = name;
     }
 
+    /**
+     * gets id
+     * @return {@code int} id
+     */
     public int getId() {
         return mId;
     }
 
+    /**
+     * gets name
+     * @return {@code String} name
+     */
     public String getName() {
         return mName;
     }
 
+    /**
+     * returns specified formats
+     * @param {@code int}id
+     * @return {@code BarcodeFormat} format
+     */
     public static BarcodeFormat getFormatById(int id) {
         for(BarcodeFormat format : ALL_FORMATS) {
             if(format.getId() == id) {

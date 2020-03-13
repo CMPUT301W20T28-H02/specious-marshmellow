@@ -1,3 +1,8 @@
+/*
+RiderDriverInitialActivity
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
@@ -57,6 +62,9 @@ import java.util.Comparator;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
+/**
+ *
+ */
 public class RiderDriverInitialActivity extends FragmentActivity implements OnMapReadyCallback{
 
 
@@ -71,6 +79,12 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
     ArrayList<Request> requestArrayList;
     double globalBound = 10000;
 
+    /**
+     * Called when activity is created
+     * Displays intial activity for rider and driver. For rider, lets rider define pickup locations
+     * for driver, displays requests based on distance and lets choose one
+     * @param {@code Bundle}savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -259,6 +273,10 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
     }
 
+    /**
+     * add request to request array sorted by distance
+     * @param {@code Request}request
+     */
     public void addRequest(Request request){
         requestArrayList.add(request);
         Collections.sort(requestArrayList, new Comparator<Request>() {
@@ -272,11 +290,18 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         requestArrayAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * requests permission to access location services
+     */
     private void requestPermission(){
         ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION},1);
     }
 
 
+    /**
+     * when map is loaded, assign it to the map attribute
+     * @param {@code GoogleMap}googleMap Map Object
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -305,7 +330,13 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 //        return false;
 //
 //    }
-    
+
+    /**
+     * update map once permission is granted
+     * @param {@code int}requestCode
+     * @param {@code String[]}permissions
+     * @param {@code int[]}grantResults
+     */
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 

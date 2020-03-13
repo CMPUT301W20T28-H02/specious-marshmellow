@@ -1,3 +1,8 @@
+/*
+moneyScreen
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
@@ -21,10 +26,19 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import org.w3c.dom.Text;
 
+/**
+ * Displays available money and allows user to add more
+ * @author Sirjan Chawla
+ */
 public class moneyScreen extends AppCompatActivity {
     Button btn5, btn25, btn50, makeReq;
     TextView bal, bal_setter;
 
+    /**
+     *  Shows current balance and three buttons that allow user to add more money to their wallet
+     *  balance is taken from database as well as updated when user adds more
+     * @param {@code Bundle}savedInstanceState Information passed from the caller activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

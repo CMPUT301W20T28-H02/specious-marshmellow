@@ -1,3 +1,8 @@
+/*
+GenerateQRCode
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
@@ -37,6 +42,11 @@ import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 import androidmads.library.qrgenearator.QRGSaver;
 
+/**
+ *
+ * Generates QR code and displays it on screen
+ * @author Michael Antifaoff, Hussein Warsame
+ */
 public class GenerateQR extends AppCompatActivity{
     String TAG = "GenerateQRCode";
     TextView thankYouTextView;
@@ -46,6 +56,12 @@ public class GenerateQR extends AppCompatActivity{
     String inputValue;
     Button start, save;
     String savePath = Environment.getExternalStorageDirectory().getPath() + "/QRCode/";
+
+    /**
+     * Called when activity is created
+     * Generates the QR code and displays it on the rider's screen
+     * @param {@code Bundle}savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,3 +1,8 @@
+/*
+RiderConfirmPickup
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
@@ -20,12 +25,21 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * ConfirmPickup from the rider side
+ * @author Hussein Warsame, Michael Antifaoff
+ */
 public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyCallback {
 
     GoogleMap map;
     Button riderConfirmPickupButton;
 
 
+    /**
+     * Called when activity is created
+     * shows screen before pickup, displays pick up button which confirms pick up when pressed
+     * @param {@code Bundle}savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +81,10 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
 
     }
 
+    /**
+     * when map is loaded, assign it to the map attribute
+     * @param {@code GoogleMap}googleMap Map Object
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;

@@ -1,3 +1,8 @@
+/*
+SignInActivity
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import android.content.Intent;
@@ -16,6 +21,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * Allows user to sign in using email and password or create account
+ * @author Marcus Blair
+ */
 public class SignInActivity extends AppCompatActivity {
     Button signInButton;
     Button createAccountButton;
@@ -23,6 +32,12 @@ public class SignInActivity extends AppCompatActivity {
     EditText enterPasswordEditText;
     FirebaseAuth mAuth;
 
+    /**
+     * Called when activity is created
+     * Displays email and password text edit fields as well as two buttons
+     * for sign in or create account
+     * @param {@code Bundle}savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

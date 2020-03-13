@@ -1,5 +1,14 @@
+/*
+Ride
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
+/**
+ * @deprecated Not part of the final
+ * @author Michael Antifaoff
+ */
 public class Ride{
 	private Driver driver;
 	private Rider rider;
@@ -12,6 +21,14 @@ public class Ride{
 
 	}
 
+	/**
+	 * constructor for Ride
+	 * @param driver
+	 * @param rider
+	 * @param startLocation
+	 * @param endLocation
+	 * @param fare
+	 */
 	// This is created when both have hit the Confirm Pickup button
 	public Ride(Driver driver, Rider rider, Location startLocation, Location endLocation, double fare){
 		this.driver = driver;
@@ -21,6 +38,10 @@ public class Ride{
 		this.fare = fare;
 	}
 
+	/**
+	 * ends ride, includes tip
+	 * @param amount
+	 */
 	// Called by the driver, amount comes from the QR Code AND includes the tip (so we can't simply use fare)
 	public void endRide(double amount){
 		rider.pay(amount);

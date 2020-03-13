@@ -1,3 +1,8 @@
+/*
+DriverConfirmActivity
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
@@ -17,12 +22,21 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * Shows map to driver and asks to confirm pickup
+ * @author Michael Antifaoff
+ */
 public class DriverConfirmActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     GoogleMap map;
     Button driverConfirmPickupButton;
 
-
+    /**
+     * Called when activity is created
+     * displays map and confirm button
+     * {@link RiderNewRequestActivity#addRequest(Request, String, String) addRequest}
+     * @param {@code Bundle}savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +76,10 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
 
     }
 
+    /**
+     * when map is loaded, assign it to the map attribute
+     * @param {@code GoogleMap}googleMap Map Object
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;

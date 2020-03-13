@@ -1,3 +1,8 @@
+/*
+DisplayUserInfoActivity
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
@@ -20,7 +25,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseUser;
 
-
+/**
+ * Displays user information
+ * @author Michael Antifaoff, Marcus Blair
+ */
 public class DisplayUserInfoActivity extends AppCompatActivity {
     String TAG = "DISPLAY_USER_ACCOUNT_INFO";
     TextView usernameText;
@@ -31,6 +39,11 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
+    /**
+     * Called when activity is created
+     * Displays user info, checks if username is the same as current user
+     * @param {@code Bundle}savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // display user info
@@ -73,6 +86,11 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Display user information depending on whether they are a driver or rider
+     * allows user to sign out
+     * @param {@code User}user
+     */
     private void displayUser(final User user) {
         // display the user information
         final String username = user.getUsername();

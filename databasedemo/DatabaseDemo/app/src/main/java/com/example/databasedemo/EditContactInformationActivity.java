@@ -1,3 +1,8 @@
+/*
+EditContactInformation
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import android.content.Intent;
@@ -29,6 +34,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Shows current info and allows user to edit their information
+ * @author Marcus Blair
+ */
 public class EditContactInformationActivity extends AppCompatActivity {
     String TAG = "EDIT_CONTACT_INFO";
     TextView currentEmail;
@@ -40,6 +49,11 @@ public class EditContactInformationActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
+    /**
+     *  Called when activity is created
+     *  Displays current information and allows it to be edited
+     * @param {@code Bundle}savedInstanceState contains the username of the account to be edited
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         // pass username of the account that should be editted in intent
@@ -77,6 +91,10 @@ public class EditContactInformationActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * reauthorize user to the database in order to update email
+     * @param {@code User}user
+     */
     private void reAuthUser(final User user) {
         // edit the account info
         mAuth = FirebaseAuth.getInstance();
@@ -109,6 +127,11 @@ public class EditContactInformationActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Updates user, on success goes to {@link MainActivity MainActivity}
+     * @param {@code User} user
+     * @param {@code FirebaseUser} authUser
+     */
     private void updateUser(final User user, final FirebaseUser authUser) {
         // update the user
         final String username = user.getUsername();

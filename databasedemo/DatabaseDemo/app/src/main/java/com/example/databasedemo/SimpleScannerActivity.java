@@ -1,3 +1,8 @@
+/*
+SimpleScannerActivity
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,10 +17,19 @@ import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
+/**
+ * Scans code using the camera
+ * @author Hussein Warsame
+ */
 public class SimpleScannerActivity extends BaseScannerActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     private String TAG = "message";
 
+    /**
+     * Called when activity is created
+     * sets up camera
+     * @param {@code Bundle}savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +39,11 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZXingS
         ViewGroup contentFrame = findViewById(R.id.content_frame);
         contentFrame.addView(mScannerView);
     }
+
+    /**
+     * called when activity resumes
+     * sets itself as handler and starts camera again
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -32,12 +51,21 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZXingS
         mScannerView.startCamera();          // Start camera on resume
     }
 
+    /**
+     * called when activity pauses
+     * stops camera
+     */
     @Override
     public void onPause() {
         super.onPause();
         mScannerView.stopCamera();           // Stop camera on pause
     }
 
+    /**
+     * called when result is complete
+     * delays for 2 seconds to resume preview, gets format for encoded image
+     * @param rawResult
+     */
     @Override
     public void handleResult(Result rawResult) {
         Toast.makeText(this, "Contents = " + rawResult.getText() +
