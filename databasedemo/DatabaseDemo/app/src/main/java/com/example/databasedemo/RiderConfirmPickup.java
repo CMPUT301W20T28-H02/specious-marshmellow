@@ -6,8 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -15,48 +20,57 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class RiderConfirmPickup extends AppCompatActivity {
-    Intent i;
-    FirebaseFirestore db;
-    CollectionReference colRef;
-    DocumentReference docRef;
-    TextView driver_username;
+public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyCallback {
+
+    GoogleMap map;
+    Button riderConfirmPickupButton;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_confirm_pickup);
+        riderConfirmPickupButton = findViewById(R.id.rider_confirm_pickup_button);
 
-        i = getIntent();
-        final String username = i.getStringExtra("username");
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.rider_pickup_map);
+        mapFragment.getMapAsync(this);
 
-        driver_username = findViewById(R.id.driverstuff);
+        Intent i = getIntent();
+        final String riderUsername = i.getStringExtra("riderUsername");
+        final String driverUsername = i.getStringExtra("driverusername");
 
-        db = FirebaseFirestore.getInstance();
-        colRef = db.collection("requests");
-        docRef = colRef.document(username);
-
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        riderConfirmPickupButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
-                    Request request = task.getResult().toObject(Request.class);
-                    Driver driver = request.getDriver();
-                    String driver_name= driver.getUsername();
-                    Log.d("driver_username", driver_name);
+            public void onClick(View view) {
+                final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(riderUsername);
 
-                    driver_username.setText("" + driver_name);
-
-                }
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            Request request = task.getResult().toObject(Request.class);
+                            request.riderConfirmation();
+                            docRef.set(request);
+                            Intent i = new Intent(getBaseContext(), DriverEndAndPay.class);
+                            i.putExtra("riderUsername", riderUsername);
+                            i.putExtra("driverUusername", driverUsername);
+                            startActivity(i);
+                        }
+                    }
+                });
             }
         });
-
-        Intent i = new Intent(getBaseContext(),RiderEndAndPay.class);
-        startActivity(i);
-
 
 
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+
+        /*LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
+        map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
+        map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
+    }
 }

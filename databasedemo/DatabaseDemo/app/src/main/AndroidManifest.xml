@@ -16,6 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat">
+
+        <activity android:name=".DriverEndAndPay"></activity>
         <activity android:name=".RiderEndAndPay"></activity>
         <activity android:name=".RiderConfirmPickup" />
         <activity android:name=".DriverConfirmActivity" /> <!-- if you have theme problems change the line above -->
@@ -24,6 +26,8 @@
         <activity android:name=".RiderNewRequestActivity" />
         <activity android:name=".RiderDriverInitialActivity" />
         <activity android:name = ".GenerateQR"/>
+        <activity android:name=".DriverScannerActivity"/>
+
 
         <meta-data
             android:name="com.google.android.gms.version"

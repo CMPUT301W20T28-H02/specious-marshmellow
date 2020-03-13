@@ -10,63 +10,85 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="70dp"
-        android:text="ADD MONEY:"
+        android:text="ADD MONEY"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         android:textSize="40dp" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="26dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="63dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/balance"
+            android:layout_width="173dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="BALANCE IN WALLET:"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textSize="27sp" />
+
+        <TextView
+            android:id="@+id/balance_set"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textSize="27sp" />
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/add_5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="145dp"
+        android:layout_height="77dp"
+        android:layout_gravity="center_horizontal"
         android:background="@android:drawable/dialog_holo_dark_frame"
         android:paddingBottom="20dp"
         android:text="ADD $5"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
 
-    <Button
-        android:id="@+id/add_20"
+    <Space
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/dialog_holo_dark_frame"
-        android:paddingBottom="20dp"
-        android:text="ADD $20"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp" />
+        android:layout_weight="1" />
 
     <Button
         android:id="@+id/add_25"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="145dp"
+        android:layout_height="77dp"
+        android:layout_gravity="center_horizontal"
         android:background="@android:drawable/dialog_holo_dark_frame"
         android:paddingBottom="20dp"
         android:text="ADD $25"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
 
-    <EditText
-        android:id="@+id/addMoney"
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="ADD AMOUNT"
-        android:inputType="textPersonName"
-        android:paddingBottom="40dp"
-        android:textColor="#020202"
-        android:textColorHint="#000000"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <Button
-        android:id="@+id/add_money"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/add_50"
+        android:layout_width="145dp"
+        android:layout_height="77dp"
         android:layout_gravity="center_horizontal"
         android:background="@android:drawable/dialog_holo_dark_frame"
-        android:text="addMoney"
+        android:paddingBottom="20dp"
+        android:text="ADD $50"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <Button
         android:id="@+id/back_home"
