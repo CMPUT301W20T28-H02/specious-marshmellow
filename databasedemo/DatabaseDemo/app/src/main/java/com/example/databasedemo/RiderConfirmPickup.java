@@ -52,6 +52,9 @@ public class RiderConfirmPickup extends AppCompatActivity {
             }
         });
 
+        Intent i = new Intent(getBaseContext(),RiderEndAndPay.class);
+        startActivity(i);
+
 
 
     }
