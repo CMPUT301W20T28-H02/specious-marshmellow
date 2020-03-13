@@ -28,13 +28,15 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
     TextView phoneText;
     TextView numRatingsText;
     TextView ratingText;
-    //Button editAccount;
-    //Button signOut;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // display user info
+        // takes username through intent
+        // checks if the username is the same as the current user
+        // if so adds additional functionality
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_user_info);
 
@@ -43,10 +45,6 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
         phoneText = findViewById(R.id.phone_text);
         ratingText = findViewById(R.id.rating_text);
         numRatingsText = findViewById(R.id.num_ratings_text);
-
-
-        //editAccount = findViewById(R.id.edit_information);
-        //signOut = findViewById(R.id.sign_out);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -74,17 +72,24 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
 
     }
 
-    private void displayUser(User user) {
-        usernameText.setText(user.getUsername());
-        emailText.setText(user.getEmail());
-        phoneText.setText(user.getPhone());
+    private void displayUser(final User user) {
+        // display the user information
+        final String username = user.getUsername();
+        usernameText.setText(getString(R.string.current_username, username));
+        emailText.setText(getString(R.string.current_email, user.getEmail()));
+        phoneText.setText(getString(R.string.current_phone, user.getPhone()));
+
+        // if the user is a driver display their rating and number of ratings
         if (user.getDriver()) {
             String rating = String.valueOf(user.getRating());
-            ratingText.setText(rating);
+            ratingText.setText(getString(R.string.current_rating, rating));
             String numRatings = String.valueOf(user.getNumOfRatings());
-            numRatingsText.setText(numRatings);
+            numRatingsText.setText(getString(R.string.current_number_of_ratings, numRatings));
 
         }
+
+        // if this is the current user allow them to edit their account of sign out
+        // add these buttons programmatically
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser.getDisplayName().equals(user.getUsername())) {
             LinearLayout layout = (LinearLayout) findViewById(R.id.button_linear_layout);
@@ -93,19 +98,22 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
             Button editAccount = new Button(this);
             Button signOut = new Button(this);
 
-            editAccount.setText("Edit Account");
+            // edit account button
+            editAccount.setText(getString(R.string.edit_info_button));
             editAccount.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            //editAccount.setGravity(Gravity.CENTER_HORIZONTAL);
             editAccount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //Toast.makeText(MainActivity.this, R.string.welcome_message, Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getBaseContext(), EditContactInformationActivity.class);
+                    intent.putExtra("username", username);
+                    startActivity(intent);
                 }
             });
 
-            signOut.setText("Sign Out");
+            // sign out button
+            signOut.setText(getString(R.string.sign_out_button));
             signOut.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,  ViewGroup.LayoutParams.WRAP_CONTENT));
-            //signOut.setGravity(Gravity.CENTER_HORIZONTAL);
             signOut.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -118,7 +126,7 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
                 }
             });
 
-            // Add Button to LinearLayout
+            // Add Buttons to LinearLayout
             if (layout != null) {
                 layout.addView(editAccount);
                 layout.addView(signOut);
@@ -127,106 +135,3 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
         }
     }
 }
-
-//        FirebaseUser user = mAuth.getCurrentUser();
-//
-//        if (user != null) {
-//            // User is signed in
-//            String username = user.getDisplayName();
-//            String email = user.getEmail();
-//
-//
-//
-//            displayUser(username, email);
-//        } else {
-//            // No user is signed in
-//            Intent intent = new Intent(getBaseContext(), SignInActivity.class);
-//            startActivity(intent);
-//        }
-//
-//        editAccount.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(getBaseContext(), EditContactInformation.class));
-//            }
-//        });
-//
-//        signOut.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mAuth.signOut();
-//                finish();
-//                overridePendingTransition(0, 0);
-//                startActivity(getIntent());
-//                overridePendingTransition(0, 0);
-//            }
-//        });
-//
-//    }
-//
-//    private void displayDriverOrRiderScreen(String username, String email){
-//        final DocumentReference docRef = db.collection("users").document(username);
-//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-//                        if (!document.getBoolean("driver")) {
-//                            //addDriverRating(document.getData().get("rating").toString());
-//                            LinearLayout linearLayout = findViewById(R.id.main_layout);
-//                            linearLayout.removeView((View) ratingText.getParent());
-//                        } else {
-//                            String rating = document.getData().get("rating").toString();
-//                            ratingText.setText(getString(R.string.show_rating, rating));
-//                        }
-//                    } else {
-//                        Log.d(TAG, "No such document");
-//                    }
-//                } else {
-//                    Log.d(TAG, "get failed with ", task.getException());
-//                }
-//            }
-//        });
-//    }
-//
-//
-//    private void displayUser(String username, String email) {
-//        usernameText.setText(getString(R.string.show_username, username));
-//        emailText.setText(getString(R.string.show_email, email));
-//        final DocumentReference docRef = db.collection("users").document(username);
-//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()) {
-//                    DocumentSnapshot document = task.getResult();
-//                    if (document.exists()) {
-//                        Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-//                        if (document.getData().get("phone") != null) {
-//                            String phone = document.getData().get("phone").toString();
-//                            phoneText.setText(getString(R.string.show_phone, phone));
-//                        }
-//                        if (document.getData().get("address") != null) {
-//                            String address = document.getData().get("address").toString();
-//                            addressText.setText(getString(R.string.show_address, address));
-//                        }
-//                        if (!document.getBoolean("driver")) {
-//                            //addDriverRating(document.getData().get("rating").toString());
-//                            LinearLayout linearLayout = findViewById(R.id.main_layout);
-//                            linearLayout.removeView((View) ratingText.getParent());
-//                        } else {
-//                            String rating = document.getData().get("rating").toString();
-//                            ratingText.setText(getString(R.string.show_rating, rating));
-//                        }
-//                    } else {
-//                        Log.d(TAG, "No such document");
-//                    }
-//                } else {
-//                    Log.d(TAG, "get failed with ", task.getException());
-//                }
-//            }
-//        });
-//
-//    }
-//}
