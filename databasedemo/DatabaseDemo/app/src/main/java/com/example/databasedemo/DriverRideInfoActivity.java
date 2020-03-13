@@ -25,6 +25,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DecimalFormat;
+
 
 public class DriverRideInfoActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -70,21 +72,25 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
             }
         });
         // get the ride
-        DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(riderUsername);
+        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(riderUsername);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
+                    // for two decimal places
+                    DecimalFormat numberFormat = new DecimalFormat("#.00");
+
                     // get the fare and the start and end locations from the database
                     Request request = task.getResult().toObject(Request.class);
-                    String fare = String.valueOf(request.getFare());
+                    String fare = String.valueOf(numberFormat.format(request.getFare()));
+
 
                     com.example.databasedemo.Location startLocation = request.getStartLocation();
                     com.example.databasedemo.Location endLocation = request.getEndLocation();
 
                     // get the distance and convert to string
                     double doubleDistance = Request.getDistance(startLocation, endLocation);
-                    String distance = String.valueOf(doubleDistance);
+                    String distance = String.valueOf(numberFormat.format(doubleDistance));
 
                     // display the fare and distance
                     rideFareTextView.setText(getString(R.string.driver_confirm_ride_fare, fare));
@@ -117,10 +123,36 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
         confirmRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), DriverConfirmActivity.class);
-                intent.putExtra("riderUsername", riderUsername);
-                intent.putExtra("driverUsername", driverUsername);
-                startActivity(intent);
+                DocumentReference docRefDriver = FirebaseFirestore.getInstance().collection("users").document(driverUsername);
+                final DocumentReference docRefRequest = FirebaseFirestore.getInstance().collection("requests").document(riderUsername);
+                docRefDriver.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            final Driver driver = task.getResult().toObject(Driver.class);
+                            docRefRequest.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()){
+                                        Request request = task.getResult().toObject(Request.class);
+                                        request.isAcceptedBy(driver);
+                                        DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(request.getRider().getUsername());
+                                        docRef.set(request);
+                                        Intent i = new Intent(getBaseContext(), DriverConfirmActivity.class);  // Directions to start location and confirm pickup button
+                                        i.putExtra("riderUsername", riderUsername);
+                                        i.putExtra("driverUsername",driverUsername);
+                                        startActivity(i);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+
+//                Intent intent = new Intent(getBaseContext(), DriverConfirmActivity.class);
+//                intent.putExtra("riderUsername", riderUsername);
+//                intent.putExtra("driverUsername", driverUsername);
+//                startActivity(intent);
             }
         });
 

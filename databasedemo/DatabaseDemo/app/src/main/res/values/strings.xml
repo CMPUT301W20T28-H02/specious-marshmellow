@@ -29,8 +29,8 @@
     <string name="cancel_request">Cancel Request</string>
 
     <string name="driver_confirm_rider_username">Rider Username: %1$s</string>
-    <string name="driver_confirm_ride_fare">Ride Fare: %1$s</string>
-    <string name="driver_confirm_ride_distance">Ride Distance: %1$s</string>
+    <string name="driver_confirm_ride_fare">Ride Fare: %1$s Dollars</string>
+    <string name="driver_confirm_ride_distance">Ride Distance: %1$s Kilometers</string>
 
     <string name="show_username">Username: %1$s</string>
     <string name="show_email">Email: %1$s</string>

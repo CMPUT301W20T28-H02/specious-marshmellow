@@ -8,7 +8,7 @@ public class Driver extends User {
 
   }
 
-  public Driver(String username, String email, Wallet wallet, String phone, double rating, double numOfRatings, boolean driver) {
+  public Driver(String username, String email, Wallet wallet, String phone, double rating, int numOfRatings, boolean driver) {
     super(username, email, wallet, phone, rating, numOfRatings, driver);
   }
 

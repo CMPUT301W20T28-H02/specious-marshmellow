@@ -44,7 +44,7 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         riderDistance.setText(numberFormat.format(distance)+"km");
 
         TextView fare=  listItem.findViewById(R.id.rider_fare_TextView);
-        double fareAmount = Request.calculateFare(distance);
+        double fareAmount = currentRequest.getFare();
         fare.setText("$" + numberFormat.format(fareAmount));
 
         return listItem;

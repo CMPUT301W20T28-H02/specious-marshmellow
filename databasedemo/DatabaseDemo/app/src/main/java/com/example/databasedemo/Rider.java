@@ -10,7 +10,7 @@ public class Rider extends User {
 
   }
 
-  public Rider(String username, String email, Wallet wallet, String phone, double rating, double numOfRatings, boolean driver) {
+  public Rider(String username, String email, Wallet wallet, String phone, double rating, int numOfRatings, boolean driver) {
     super(username, email, wallet, phone, rating, numOfRatings, driver);  // driver should be false
   }
 

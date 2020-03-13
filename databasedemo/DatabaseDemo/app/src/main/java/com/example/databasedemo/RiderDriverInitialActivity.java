@@ -115,6 +115,12 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 final Request request = requestArrayList.get(position);
+                Intent i = new Intent(getBaseContext(), DriverRideInfoActivity.class);  // Directions to start location and confirm pickup button
+                i.putExtra("riderUsername", request.getRider().getUsername());
+                i.putExtra("driverUsername",username);
+                startActivity(i);
+
+                /*final Request request = requestArrayList.get(position);
                 // Need to get the current driver, then call request.isAcceptedBy(driver)
                 DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -125,13 +131,13 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                             request.isAcceptedBy(driver);
                             DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(request.getRider().getUsername());
                             docRef.set(request);
-                            Intent i = new Intent(getBaseContext(), DriverConfirmActivity.class);  // Directions to start location and confirm pickup button
+                            Intent i = new Intent(getBaseContext(), DriverRideInfoActivity.class);  // Directions to start location and confirm pickup button
                             i.putExtra("riderUsername", request.getRider().getUsername());
                             i.putExtra("driverUsername",username);
                             startActivity(i);
                         }
                     }
-                });
+                });*/
             }
         });
 
@@ -163,8 +169,8 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                 Collections.sort(requestArrayList, new Comparator<Request>() {
                     @Override
                     public int compare(Request request, Request request2) {
-                        return request.getFare() < request2.getFare() ? -1
-                                : request.getFare() > request2.getFare() ? 1
+                        return request.getFare() < request2.getFare() ? 1
+                                : request.getFare() > request2.getFare() ? -1
                                 : 0;
                     }
                 });
