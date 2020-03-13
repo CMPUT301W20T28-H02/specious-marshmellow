@@ -53,11 +53,49 @@ public class MainActivity extends AppCompatActivity{
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             // User is signed in
-            String username = user.getDisplayName();
-            String email = user.getEmail();
+            final String username = user.getDisplayName();
+            final String email = user.getEmail();
 
-            displayDriverOrRiderScreen(username, email);
-            Log.d(TAG, "When we do get here?");
+            DocumentReference docRef = db.collection("requests").document(username);
+
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()){
+                        DocumentSnapshot doc = task.getResult();
+                        if (doc.exists()) {
+                            Request request = doc.toObject(Request.class);
+                            if (request.getRequestStatus())
+                            { // If rider has already been matched with a driver
+                                // If rider has already confirmed pickup
+                                if (request.getRiderConfirmation()){
+                                    Intent startRiderEndandPay = new Intent(getBaseContext(), RiderEndAndPay.class);
+                                    // Activity expects: final String username = i.getStringExtra("username");
+                                    startRiderEndandPay.putExtra("username",username);
+                                    startActivity(startRiderEndandPay);
+                                } else { // If rider has not yet confirmed pickup
+                                    Intent startRiderConfirmPickup = new Intent(getBaseContext(), RiderConfirmPickup.class);
+                                    // Activity expects: final String username = i.getStringExtra("username");
+                                    startRiderConfirmPickup.putExtra("username", username);
+                                    startActivity(startRiderConfirmPickup);
+                                }
+                            } else { // If rider has not yet been matched with a driver
+                                Intent startCurrentRequest = new Intent(getBaseContext(), currentRequest.class);
+                                // Activity expects:    final String username = intent.getStringExtra("username");
+                                //                      final String email = intent.getStringExtra("email");
+                                startCurrentRequest.putExtra("username", username);
+                                startCurrentRequest.putExtra("email", email);
+                                startActivity(startCurrentRequest);
+                            }
+                        }
+                        else {
+                            // Rider does not have an open request, or it is a driver
+                            displayDriverOrRiderScreen(username, email);
+                            Log.d(TAG, "When we do get here?");
+                        }
+                    }
+                }
+            });
 
         } else {
             // No user is signed in

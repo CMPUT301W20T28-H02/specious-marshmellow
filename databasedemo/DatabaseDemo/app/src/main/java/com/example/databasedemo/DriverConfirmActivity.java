@@ -51,7 +51,6 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
         Intent i = getIntent();
         final String riderUsername = i.getStringExtra("riderUsername");
         final String driverUsername = i.getStringExtra("driverUsername");
-        Toast.makeText(this, "Driver = " + driverUsername, Toast.LENGTH_SHORT).show();
 
         driverConfirmPickupButton.setOnClickListener(new View.OnClickListener() {
             @Override

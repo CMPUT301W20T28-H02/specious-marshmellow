@@ -76,66 +76,92 @@ public class GenerateQR extends AppCompatActivity{
 
         DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
 
+        // Add a snapshot listener to the rider username in the user database
+        // If the payment is complete, displ
+
+
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                Request request = documentSnapshot.toObject(Request.class);
+                final Request request = documentSnapshot.toObject(Request.class);
 
+                final DocumentReference riderRef = FirebaseFirestore.getInstance().collection("users").document(username);
 
+                riderRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            Rider rider = task.getResult().toObject(Rider.class);
+                            if (rider.getPaymentComplete()){
+                                Log.i("Hello", "We are here 1");
+                                thankYouTextView.setText("Thank you for riding with Marshmellow!");
+                                rider.setPaymentComplete(false);
+                                riderRef.set(rider).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
 
-                if (request.getRider().getPaymentComplete() && request.getDriver().getPaymentComplete()){
+                                        Log.i("Hello", "We are here 2");
 
-                    Log.i("Hello", "We are here 1");
+                                        final Intent i = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+                                        i.putExtra("username", username);
+                                        i.putExtra("driver", false);
+                                        i.putExtra("email", request.getRider().getEmail());
+                                        startActivity(i);
 
-                    thankYouTextView.setText("Thank you for riding with Marshmellow!");
+                                        /*try {
+                                            TimeUnit.SECONDS.sleep(3);
+                                        } catch(InterruptedException interrupted){
+                                            Log.e("Hello", interrupted.toString());
+                                        }*/
 
-                    Log.i("Hello", "We are here 2");
+                                        Log.i("Hello", "We are here 3");
+                                        final Runnable r = new Runnable() {
+                                            public void run() {
+                                                startActivity(i);
+                                            }
+                                        };
 
-                    final Intent i = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
-                    i.putExtra("username", username);
-                    i.putExtra("driver", false);
-                    i.putExtra("email", request.getRider().getEmail());
+                                        final Handler handler = new Handler();
+                                        //handler.postDelayed(r,5000);
+                                    }
+                                });
 
-                    /*try {
-                        TimeUnit.SECONDS.sleep(3);
-                    } catch(InterruptedException interrupted){
-                        Log.e("Hello", interrupted.toString());
-                    }*/
-                    Log.i("Hello", "We are here 3");
-
-
-                    final Runnable r = new Runnable() {
-                        public void run() {
-                            startActivity(i);
+                            }
                         }
-                    };
 
-                    final Handler handler = new Handler();
-                    handler.postDelayed(r,5000);
-
-
-                }
-                else {
-                    WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-                    Display display = manager.getDefaultDisplay();
-                    Point point = new Point();
-                    display.getSize(point);
-                    int width = point.x;
-                    int height = point.y;
-                    int smallerDimension = width < height ? width : height;
-                    smallerDimension = smallerDimension * 3 / 4;
-
-                    qrgEncoder = new QRGEncoder(
-                            String.valueOf(request.getFare()), null,
-                            QRGContents.Type.TEXT,
-                            smallerDimension);
-                    try {
-                        bitmap = qrgEncoder.encodeAsBitmap();
-                        qrImage.setImageBitmap(bitmap);
-                    } catch (WriterException error) {
-                        Log.v(TAG, error.toString());
                     }
+                });
+
+//                final Runnable r = new Runnable() {
+//                    public void run() {
+//                        startActivity(i);
+//                    }
+//                };
+//
+//                final Handler handler = new Handler();
+//                handler.postDelayed(r,5000);
+
+
+                WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+                Display display = manager.getDefaultDisplay();
+                Point point = new Point();
+                display.getSize(point);
+                int width = point.x;
+                int height = point.y;
+                int smallerDimension = width < height ? width : height;
+                smallerDimension = smallerDimension * 3 / 4;
+
+                qrgEncoder = new QRGEncoder(
+                        String.valueOf(request.getFare()), null,
+                        QRGContents.Type.TEXT,
+                        smallerDimension);
+                try {
+                    bitmap = qrgEncoder.encodeAsBitmap();
+                    qrImage.setImageBitmap(bitmap);
+                } catch (WriterException error) {
+                    Log.v(TAG, error.toString());
                 }
+
 
             }
         });
