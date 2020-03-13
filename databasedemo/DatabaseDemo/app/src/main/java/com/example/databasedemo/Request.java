@@ -17,6 +17,8 @@ public class Request
     private boolean riderConfirmation = false;
     private boolean driverConfirmation = false;
 
+    private boolean paymentComplete = false;
+
     private static ArrayList<Request> requests = new ArrayList<Request>();
 
 
@@ -133,13 +135,17 @@ public class Request
 		return this.fareMultiplier;
 	}
 
-  public boolean getRiderConfirmation() {
+    public boolean getRiderConfirmation() {
 		return this.riderConfirmation;
 	}
 
-  public boolean getDriverConfirmation() {
+    public boolean getDriverConfirmation() {
 		return this.driverConfirmation;
 	}
+
+	public boolean getPaymentComplete(){
+        return this.paymentComplete;
+    }
 
   // Setters
 	public void setRider(Rider rider) {
@@ -169,5 +175,9 @@ public class Request
 	public void setFareMultiplier(double fareMultiplier) {
 		this.fareMultiplier = fareMultiplier;
 	}
+
+	public void setPaymentComplete(boolean paymentComplete){
+        this.paymentComplete = paymentComplete;
+    }
 
 }

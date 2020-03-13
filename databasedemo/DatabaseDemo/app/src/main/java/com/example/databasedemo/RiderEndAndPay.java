@@ -34,8 +34,9 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
         riderEndAndPayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getBaseContext(), RiderEndAndPay.class);
+                Intent i = new Intent(RiderEndAndPay.this, GenerateQR.class);
                 i.putExtra("username", username);
+                startActivity(i);
 
             }
         });

@@ -48,6 +48,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -158,7 +160,14 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                         requestArrayList.add(request);
                     }
                 }
-                // TODO: Need to sort array here
+                Collections.sort(requestArrayList, new Comparator<Request>() {
+                    @Override
+                    public int compare(Request request, Request request2) {
+                        return request.getFare() < request2.getFare() ? -1
+                                : request.getFare() > request2.getFare() ? 1
+                                : 0;
+                    }
+                });
                 requestArrayAdapter.notifyDataSetChanged();
             }
         });

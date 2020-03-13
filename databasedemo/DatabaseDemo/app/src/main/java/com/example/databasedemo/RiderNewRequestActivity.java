@@ -44,6 +44,7 @@ import com.example.databasedemo.DirectionHelpers.FetchURL;
 import com.example.databasedemo.DirectionHelpers.TaskLoadedCallback;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -115,6 +116,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         tipAmount = findViewById(R.id.tipAmount);
         usrNameText = headerView.findViewById(R.id.usrNameText);
         usrEmailText=headerView.findViewById(R.id.usrEmailText);
+        searchView.setQuery("Current Location", false);
         usrNameText.setText(username);
         usrEmailText.setText(email);
 
@@ -263,6 +265,14 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         btnGetFare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(latLng == null){
+                    searchView.setQuery("Please Enter a Valid Location", false);
+                    return;
+                }
+                if(latLng2 == null){
+                    searchView2.setQuery("Please Enter a Valid Location", false);
+                    return;
+                }
 
                 com.example.databasedemo.Location startLocation = new com.example.databasedemo.Location(latLng.latitude,latLng.longitude);
                 com.example.databasedemo.Location endLocation = new com.example.databasedemo.Location(latLng2.latitude,latLng2.longitude);
@@ -270,15 +280,16 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 Log.i(TAG, "the distance is" + distance);
 
                 fare = Request.calculateFare(distance);
-                Log.i(TAG, "the fare is " + fare);
+                DecimalFormat numberFormat = new DecimalFormat("#.00");
+                Log.i(TAG, "the fare is " + numberFormat.format(fare));
                 // String dist = String.valueOf(fare);
                 // String url = getUrl(p1.getPosition(), p2.getPosition(), "driving");
                 // new FetchURL(RiderNewRequestActivity.this).execute(url, "driving");
 
                 fareDisplay.setVisibility(View.VISIBLE);
                 offerDisplay.setVisibility(View.VISIBLE);
-                fareDisplay.setText("Calculated Fare: " + fare);
-                offerDisplay.setText("Offer: " + fare);
+                fareDisplay.setText("Calculated Fare: " + numberFormat.format(fare));
+                offerDisplay.setText("Offer: " + numberFormat.format(fare));
 
 
                 btnConfirmRequest.setVisibility(View.VISIBLE);

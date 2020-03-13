@@ -16,25 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/empty_tall_divider" />
 
-    <Button
-        android:id="@+id/start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="92dp"
-        android:text="CONVERT"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/QR_Image" />
-
-    <EditText
-        android:id="@+id/edt_value"
-        android:layout_width="95dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="88dp"
-        android:layout_marginTop="56dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/QR_Image" />
-
     <TextView
         android:id="@+id/rider_pay_textview"
         android:layout_width="208dp"
@@ -46,4 +27,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/thank_you_TextView"
+        android:layout_width="208dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="60dp"
+        android:gravity="center_vertical"
+        android:textSize="18dp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/QR_Image"
+        app:layout_constraintVertical_bias="0.202" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

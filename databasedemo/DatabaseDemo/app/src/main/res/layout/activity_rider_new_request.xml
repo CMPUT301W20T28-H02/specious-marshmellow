@@ -40,7 +40,7 @@
 	        android:background="@drawable/bg_round"
 	        android:backgroundTint="@color/common_google_signin_btn_text_light"
 	        android:iconifiedByDefault="false"
-	        android:queryHint="Search.." />
+	        android:queryHint="Start Location" />
 	    <SearchView
 	        android:id="@+id/sv2_location"
 	        android:layout_width="match_parent"
@@ -48,7 +48,7 @@
 	        android:background="@drawable/bg_round"
 	        android:backgroundTint="@color/common_google_signin_btn_text_light"
 	        android:iconifiedByDefault="false"
-	        android:queryHint="Search.." />
+	        android:queryHint="End Location" />
 	    <fragment
 	        android:id="@+id/map"
 	        android:name="com.google.android.gms.maps.SupportMapFragment"

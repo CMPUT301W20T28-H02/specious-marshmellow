@@ -50,10 +50,14 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                         if(task.isSuccessful()){
                             Request request = task.getResult().toObject(Request.class);
                             request.riderConfirmation();
-                            docRef.set(request);
-                            Intent i = new Intent(getBaseContext(), RiderEndAndPay.class);
-                            i.putExtra("username", username);
-                            startActivity(i);
+                            docRef.set(request).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Intent i = new Intent(RiderConfirmPickup.this, RiderEndAndPay.class);
+                                    i.putExtra("username", username);
+                                    startActivity(i);
+                                }
+                            });
                         }
                     }
                 });
