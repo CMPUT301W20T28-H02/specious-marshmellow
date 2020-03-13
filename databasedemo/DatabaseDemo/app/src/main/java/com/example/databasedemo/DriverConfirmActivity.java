@@ -1,14 +1,21 @@
 package com.example.databasedemo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class DriverConfirmActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -27,8 +34,30 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
         mapFragment.getMapAsync(this);
 
         Intent i = getIntent();
-        String riderUsername = i.getStringExtra("riderUsername");
-        String driverUsername = i.getStringExtra("driverusername");
+        final String riderUsername = i.getStringExtra("riderUsername");
+        final String driverUsername = i.getStringExtra("driverusername");
+
+        driverConfirmPickupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(riderUsername);
+
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            Request request = task.getResult().toObject(Request.class);
+                            request.driverConfirmation();
+                            docRef.set(request);
+                            Intent i = new Intent(getBaseContext(), DriverEndAndPay.class);
+                            i.putExtra("riderUsername", riderUsername);
+                            i.putExtra("driverUusername", driverUsername);
+                            startActivity(i);
+                        }
+                    }
+                });
+            }
+        });
 
 
     }
