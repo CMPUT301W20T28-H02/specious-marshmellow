@@ -223,10 +223,13 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+        String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
         switch (menuItem.getItemId()) {
             case R.id.nav_money:
                 Intent intent = new Intent(getBaseContext(), moneyScreen.class);
-
+                intent.putExtra("username", username);
                 startActivity(intent);
                 break;
             case R.id.sign_out_tab:
