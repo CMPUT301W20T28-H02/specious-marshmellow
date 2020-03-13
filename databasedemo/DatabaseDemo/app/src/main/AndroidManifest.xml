@@ -55,6 +55,12 @@
         <activity
             android:name=".QRCodeGenerator"
             android:label="QR Code Generator" />
+        <activity
+            android:name=".DriverRideInfoActivity"
+            android:label="Ride Confirmation"/>
+        <activity
+            android:name=".DisplayUserInfoActivity"
+            android:label="User Information"/>
     </application>
 
 </manifest>
