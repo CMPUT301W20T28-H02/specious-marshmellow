@@ -6,7 +6,7 @@ Date March 13 2020
 package com.example.databasedemo;
 
 /**
- *
+ * Handles and recognized what kind of barcode format is received
  * @author Hussein Warsame
  */
 public class Result {
