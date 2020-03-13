@@ -6,7 +6,7 @@ public class User {
 	private Wallet wallet;	// Should be private? Or move getPaid() and pay() up to User?
 	private String phone;
 	private double rating;
-	private double numOfRatings; 	// Need this to generate an average rating
+	private int numOfRatings; 	// Need this to generate an average rating
 	private boolean driver;
 
 	public User(){
@@ -14,7 +14,7 @@ public class User {
 	}
 
 	public User(String username, String email,
-		Wallet wallet, String phone, double rating, double numOfRatings, boolean driver){
+		Wallet wallet, String phone, double rating, int numOfRatings, boolean driver){
 		this.username = username;
 		this.email = email;
 		this.wallet = wallet;
@@ -29,7 +29,7 @@ public class User {
 	// public void viewRequest(Request request){} 	// For offline viewing of the request, not backend
 
 	// Do we need a boolean to implement this? No, implement in requestWithDriver class
-	public void confirmPickup(Location location){}
+	//public void confirmPickup(Location location){}
 
 	// Add a rating for a user (Rider or Driver)
 	public void rateUser(double givenRating){
@@ -96,7 +96,7 @@ public class User {
 		this.rating = rating;
 	}
 
-	public void setNumOfRatings(double numOfRatings) {
+	public void setNumOfRatings(int numOfRatings) {
 		this.numOfRatings = numOfRatings;
 	}
 
