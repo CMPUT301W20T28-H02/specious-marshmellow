@@ -48,7 +48,7 @@
             android:name=".SignInActivity"
             android:label="@string/sign_in_name" />
         <activity
-            android:name=".EditContactInformation"
+            android:name=".EditContactInformationActivity"
             android:label="Edit Account" />
         <activity
             android:name=".QRCodeGenerator"
