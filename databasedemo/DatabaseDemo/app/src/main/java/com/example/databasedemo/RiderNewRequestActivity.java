@@ -339,8 +339,9 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 {
                     tempFare += tempTip;
                 }
+                DecimalFormat numberFormat = new DecimalFormat("#.00");
                 // can put a "Toast" saying invalid tip amount
-                offerDisplay.setText("Offer: " + tempFare);
+                offerDisplay.setText("Offer: " + numberFormat.format(tempFare));
             }
         }));
 
