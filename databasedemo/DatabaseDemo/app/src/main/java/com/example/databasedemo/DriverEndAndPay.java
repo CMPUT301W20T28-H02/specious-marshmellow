@@ -49,7 +49,7 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
 
         Intent i = getIntent();
         final String riderUsername = i.getStringExtra("riderUsername");
-        final String driverUsername = i.getStringExtra("driverusername");
+        final String driverUsername = i.getStringExtra("driverUsername");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.driver_ride_map);

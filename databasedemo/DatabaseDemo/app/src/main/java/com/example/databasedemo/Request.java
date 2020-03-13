@@ -26,8 +26,6 @@ public class Request
     private boolean riderConfirmation = false;
     private boolean driverConfirmation = false;
 
-    private boolean paymentComplete = false;
-
     private static ArrayList<Request> requests = new ArrayList<Request>();
 
 
@@ -118,6 +116,16 @@ public class Request
     public Ride createRide(){
       Ride ride = new Ride(driver, rider, startLocation, endLocation, fare);
       return ride;
+    }
+
+    /**
+     * ends ride, includes tip
+     * @param amount
+     */
+    // Called by the driver, amount comes from the QR Code AND includes the tip (so we can't simply use fare)
+    public void endRide(double amount){
+        rider.pay(amount);
+        driver.getPaid(amount);
     }
 
     // Please ignore this comment:
@@ -238,14 +246,6 @@ public class Request
 		return this.driverConfirmation;
 	}
 
-    /**
-     * gets payment complete
-     * @return {@code boolean} paymentComplete
-     */
-	public boolean getPaymentComplete(){
-        return this.paymentComplete;
-    }
-
   // Setters
 
     /**
@@ -303,13 +303,5 @@ public class Request
 	public void setFareMultiplier(double fareMultiplier) {
 		this.fareMultiplier = fareMultiplier;
 	}
-
-    /**
-     * sets paymentComplete
-     * @param {@code boolean}paymentComplete
-     */
-	public void setPaymentComplete(boolean paymentComplete){
-        this.paymentComplete = paymentComplete;
-    }
 
 }

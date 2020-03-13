@@ -88,7 +88,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
     MarkerOptions p1, p2;
     TextView fareDisplay, offerDisplay,usrNameText,usrEmailText;
     TextView tipAmount;
-    double fare;
+    double fare, globalTip;
     FirebaseAuth mAuth;
 
     private static String TAG = "Hello";
@@ -336,6 +336,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                             Request request = new Request(currentRider,
                                     new com.example.databasedemo.Location(latLng.latitude, latLng.longitude),
                                     new com.example.databasedemo.Location(latLng2.latitude, latLng2.longitude));
+                            request.setFare(request.getFare()+globalTip);
                             addRequest(request, username, email);
                         }
                     }
@@ -351,14 +352,15 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
                 String tipToAdd = tipAmount.getText().toString();
                 double tempTip = Double.valueOf(tipToAdd);
-                double tempFare = fare;
+                double farePlusTip = fare;
                 if( tempTip >= 0 )
                 {
-                    tempFare += tempTip;
+                    farePlusTip += tempTip;
                 }
+                globalTip = tempTip;
                 DecimalFormat numberFormat = new DecimalFormat("#.00");
                 // can put a "Toast" saying invalid tip amount
-                offerDisplay.setText("Offer: " + numberFormat.format(tempFare));
+                offerDisplay.setText("Offer: " + numberFormat.format(farePlusTip));
             }
         }));
 

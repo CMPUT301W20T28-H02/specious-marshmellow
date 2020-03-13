@@ -46,6 +46,7 @@ public class Rider extends User {
   public void addMoney(double amount) {
     Wallet wallet = this.getWallet();
     wallet.deposit(amount);
+    this.setWallet(wallet);
   }
 
   @Override

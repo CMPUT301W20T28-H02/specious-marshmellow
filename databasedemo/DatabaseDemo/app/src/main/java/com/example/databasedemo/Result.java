@@ -6,7 +6,7 @@ Date March 13 2020
 package com.example.databasedemo;
 
 /**
- * @deprecated
+ *
  * @author Hussein Warsame
  */
 public class Result {

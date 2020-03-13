@@ -51,6 +51,7 @@ public class Driver extends User {
   public void getPaid(double amount) {
     Wallet wallet = this.getWallet();
     wallet.deposit(amount);
+    this.setWallet(wallet);
     // wallet.setBalance(wallet.getBalance() + amount);
     // User.setWallet(wallet);
   }

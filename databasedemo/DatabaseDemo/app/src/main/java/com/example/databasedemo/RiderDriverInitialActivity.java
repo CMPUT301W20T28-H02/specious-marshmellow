@@ -132,6 +132,36 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
+
+        myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                requestArrayList.clear();
+                for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
+                    final Request request = doc.toObject(Request.class);
+                    if (!request.getRequestStatus()) {
+                        Log.i("Hello", "Before Current Location: ");
+                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                Log.i("Hello", "After Current Location: ");
+                                if(location != null){
+                                    double distance = Request.getDistance(new com.example.databasedemo.Location(location.getLatitude(),location.getLongitude()),
+                                            request.getStartLocation());
+                                    Log.i("Hello", "Even Better! Distance: " + distance);
+                                    if (distance < globalBound){
+                                        addRequest(request);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+
         globalBoundsEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
@@ -218,34 +248,6 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                 intent.putExtra("username", username);
                 intent.putExtra("email", email );
                 startActivity(intent);
-            }
-        });
-
-
-        CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
-
-        myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                requestArrayList.clear();
-                for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
-                    final Request request = doc.toObject(Request.class);
-                    if (!request.getRequestStatus()) {
-                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if(location != null){
-                                    double distance = Request.getDistance(new com.example.databasedemo.Location(location.getLatitude(),location.getLongitude()),
-                                            request.getStartLocation());
-                                    Log.i("Hello", "Even Better! Distance: " + distance);
-                                    if (distance < globalBound){
-                                        addRequest(request);
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
             }
         });
 

@@ -83,7 +83,7 @@ public class GenerateQR extends AppCompatActivity{
 
 
 
-                if (request.getPaymentComplete()){
+                if (request.getRider().getPaymentComplete() && request.getDriver().getPaymentComplete()){
 
                     Log.i("Hello", "We are here 1");
 

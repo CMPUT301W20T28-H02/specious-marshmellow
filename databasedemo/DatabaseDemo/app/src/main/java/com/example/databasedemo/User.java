@@ -20,6 +20,8 @@ public class User {
 	private int numOfRatings; 	// Need this to generate an average rating
 	private boolean driver;
 
+	private boolean paymentComplete = false;
+
 	public User(){
 
 	}
@@ -135,6 +137,14 @@ public class User {
 		return this.driver;
 	}
 
+	/**
+	 * gets payment complete
+	 * @return {@code boolean} paymentComplete
+	 */
+	public boolean getPaymentComplete(){
+		return this.paymentComplete;
+	}
+
 	// Setters
 
 	/**
@@ -191,6 +201,14 @@ public class User {
 	 */
 	public void setDriver(boolean driver) {
 		this.driver = driver;
+	}
+
+	/**
+	 * sets paymentComplete
+	 * @param {@code boolean}paymentComplete
+	 */
+	public void setPaymentComplete(boolean paymentComplete){
+		this.paymentComplete = paymentComplete;
 	}
 
 }

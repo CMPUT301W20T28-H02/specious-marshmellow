@@ -5,11 +5,22 @@ Date March 13 2020
  */
 package com.example.databasedemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -21,6 +32,8 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class DriverScannerActivity extends BaseScannerActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     private String TAG = "message";
+    private String riderUsername;
+    private String driverUsername;
 
     /**
      * Called when activity is created
@@ -32,6 +45,13 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
         super.onCreate(savedInstanceState);
         mScannerView = new ZXingScannerView(this);
         setContentView(R.layout.activity_driver_scanner);
+        Intent i = getIntent();
+        riderUsername = i.getStringExtra("riderUsername");
+        driverUsername = i.getStringExtra("driverUsername");
+
+
+
+
 
         ViewGroup contentFrame = findViewById(R.id.content_frame);
         contentFrame.addView(mScannerView);
@@ -65,8 +85,7 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
      */
     @Override
     public void handleResult(Result rawResult) {
-        Toast.makeText(this, "Contents = " + rawResult.getText() +
-                ", Format = " + rawResult.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Amount = " + rawResult.getText(), Toast.LENGTH_SHORT).show();
 
         // Note:
         // * Wait 2 seconds to resume the preview.
@@ -76,8 +95,54 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                mScannerView.resumeCameraPreview(DriverScannerActivity.this);
+                //mScannerView.resumeCameraPreview(DriverScannerActivity.this);
             }
-        }, 2000);
+        }, 10000);
+
+        final double amount = Double.valueOf(rawResult.getText());
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        DocumentReference requestRef = db.collection("requests").document(riderUsername);
+        final CollectionReference userRef = db.collection("users");
+
+        Log.i("Hello", "Before request ref");
+
+        requestRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    final Request request = task.getResult().toObject(Request.class);
+                    Log.i("Hello", "After getting request");
+                    request.endRide(amount);
+                    Rider rider = request.getRider();
+                    rider.setPaymentComplete(true);
+                    request.setRider(rider);
+                    Driver driver = request.getDriver();
+                    driver.setPaymentComplete(true);
+                    request.setDriver(driver);
+                    Log.i("Hello", "After setting payment (objects)");
+                    userRef.document(riderUsername).set(request.getRider()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.i("Hello", "After setting payment (rider database)");
+                            userRef.document(driverUsername).set(request.getDriver()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.i("Hello", "After setting payment (driver database)");
+                                    Intent i = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+                                    i.putExtra("driver",true);
+                                    i.putExtra("username", driverUsername);
+                                    i.putExtra("email", request.getDriver().getEmail());
+                                    startActivity(i);
+                                }
+                            });
+
+                        }
+                    });
+
+                }
+            }
+        });
     }
 }

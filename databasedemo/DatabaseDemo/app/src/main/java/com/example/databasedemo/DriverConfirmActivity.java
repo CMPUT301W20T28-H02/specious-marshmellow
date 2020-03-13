@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -49,7 +50,8 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
 
         Intent i = getIntent();
         final String riderUsername = i.getStringExtra("riderUsername");
-        final String driverUsername = i.getStringExtra("driverusername");
+        final String driverUsername = i.getStringExtra("driverUsername");
+        Toast.makeText(this, "Driver = " + driverUsername, Toast.LENGTH_SHORT).show();
 
         driverConfirmPickupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +67,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                             docRef.set(request);
                             Intent i = new Intent(getBaseContext(), DriverEndAndPay.class);
                             i.putExtra("riderUsername", riderUsername);
-                            i.putExtra("driverUusername", driverUsername);
+                            i.putExtra("driverUsername", driverUsername);
                             startActivity(i);
                         }
                     }
