@@ -14,7 +14,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true" 
+        android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat">
 
         <activity android:name=".RiderConfirmPickup"></activity>
@@ -54,6 +54,12 @@
         <activity
             android:name=".QRCodeGenerator"
             android:label="QR Code Generator" />
+        <activity
+            android:name=".DriverRideInfoActivity"
+            android:label="Ride Confirmation"/>
+        <activity
+            android:name=".DisplayUserInfoActivity"
+            android:label="User Information"/>
     </application>
 
 </manifest>
