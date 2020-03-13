@@ -25,19 +25,17 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
         riderEndAndPayButton = findViewById(R.id.rider_end_and_pay_button);
 
         Intent i = getIntent();
-        final String riderUsername = i.getStringExtra("riderUsername");
-        final String driverUsername = i.getStringExtra("driverusername");
+        final String username = i.getStringExtra("username");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.driver_ride_map);
+                .findFragmentById(R.id.rider_ride_map);
         mapFragment.getMapAsync(this);
 
         riderEndAndPayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getBaseContext(), RiderEndAndPay.class);
-                i.putExtra("riderUsername", riderUsername);
-                i.putExtra("driverUusername", driverUsername);
+                i.putExtra("riderUsername", username);
 
             }
         });
