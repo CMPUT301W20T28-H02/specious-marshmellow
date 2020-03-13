@@ -82,6 +82,9 @@ public class EditContactInformationActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         final FirebaseUser authUser = mAuth.getCurrentUser();
 
+        // reauthorise the user to change their email
+        // this is only needed for updating the email but is required regardless of input
+        // can be updated later
         finishEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +108,9 @@ public class EditContactInformationActivity extends AppCompatActivity {
             }
         });
     }
+
     private void updateUser(final User user, final FirebaseUser authUser) {
+        // update the user
         final String username = user.getUsername();
         if (!TextUtils.isEmpty(newEmail.getText())) {
             // check if new email is supplied
