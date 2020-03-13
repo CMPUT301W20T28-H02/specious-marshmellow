@@ -37,6 +37,15 @@
         android:inputType="phone"
         android:importantForAutofill="no"/>
 
+    <EditText
+        android:id="@+id/input_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:inputType="textPassword"
+        android:importantForAutofill="no"
+        android:hint="@string/input_password" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"
@@ -50,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center"
             android:text="@string/finish_edit_button"/>
+
     </LinearLayout>
 
 </LinearLayout>
