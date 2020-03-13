@@ -37,13 +37,12 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
         mapFragment.getMapAsync(this);
 
         Intent i = getIntent();
-        final String riderUsername = i.getStringExtra("riderUsername");
-        final String driverUsername = i.getStringExtra("driverusername");
+        final String username = i.getStringExtra("username");
 
         riderConfirmPickupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(riderUsername);
+                final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
 
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -52,9 +51,8 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                             Request request = task.getResult().toObject(Request.class);
                             request.riderConfirmation();
                             docRef.set(request);
-                            Intent i = new Intent(getBaseContext(), DriverEndAndPay.class);
-                            i.putExtra("riderUsername", riderUsername);
-                            i.putExtra("driverUusername", driverUsername);
+                            Intent i = new Intent(getBaseContext(), RiderEndAndPay.class);
+                            i.putExtra("username", username);
                             startActivity(i);
                         }
                     }
