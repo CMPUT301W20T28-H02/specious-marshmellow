@@ -167,7 +167,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                     if(request.getRequestStatus() == true){
                         // Change this line so that it switches to Rider on a ride activity
                         Log.d("Database", "here");
-                        Intent i = new Intent(getBaseContext(),RiderConfirmPickup.class);
+                        Intent i = new Intent(getBaseContext(),RiderEndAndPay.class);
                         i.putExtra("username", username);
                         startActivity(i);
                     }
