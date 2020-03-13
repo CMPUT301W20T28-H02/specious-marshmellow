@@ -341,7 +341,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
         database.collection("requests").document(username).set(request);
 
-        Intent ConfirmedRequest = new Intent(RiderNewRequestActivity.this,currentRequest.class );
+        Intent ConfirmedRequest = new Intent(RiderNewRequestActivity.this, currentRequest.class );
         ConfirmedRequest.putExtra("username", username);
         ConfirmedRequest.putExtra("email", email);
 //                ConfirmedRequest.putExtra("Latitude", latLng.latitude);
