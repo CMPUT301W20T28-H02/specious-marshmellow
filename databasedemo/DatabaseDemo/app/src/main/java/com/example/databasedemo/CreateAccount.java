@@ -1,3 +1,8 @@
+/*
+CreateAccount
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import android.content.Intent;
@@ -33,7 +38,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Shows the user different fields to input account information, checks for valid input,
+ * and creates a new {@code User}, then adds it to the database
+ * @author Marcus Blair and Micheal Antifaoff
+ * */
 public class CreateAccount extends AppCompatActivity {
     String TAG = "CREATE_ACCOUNT";
     EditText usernameEditText;
@@ -47,6 +56,12 @@ public class CreateAccount extends AppCompatActivity {
     FirebaseFirestore db;
     boolean returnVal = true;
 
+    /**
+     * Called when the activity is created.
+     * Uses {@link CreateAccount#checkInput(List) checkInput()} for valid input, then connects to
+     * the database and if username does not already exist, continues
+     * to {@link CreateAccount#createUser() createUser()} when valid input is provided
+     * */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,6 +127,11 @@ public class CreateAccount extends AppCompatActivity {
         });
     }
 
+    /**
+     * Checks if input text is valid
+     * @param {@code List<EditText>} editTextList list of strings to validate
+     * @return {@code boolean} returns true of all fields entered are valid
+     */
     private boolean checkInput(List<EditText> editTextList) {
         for (EditText e : editTextList) {
             if (TextUtils.isEmpty(e.getText())) {
@@ -153,6 +173,10 @@ public class CreateAccount extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Adds user to database. On successful creation, calls
+     * {@link CreateAccount#finishUserCreate(String, String) finishUserCreate}
+     */
     private void createUser() {
         final String password = passwordEditText.getText().toString();
         final String username = usernameEditText.getText().toString();
@@ -192,6 +216,11 @@ public class CreateAccount extends AppCompatActivity {
 
     }
 
+    /**
+     * Finalizes addition of user to database by creating a User object with the given information
+     * @param {@code String}username username to add
+     * @param {@code String}email email to add
+     */
     private void finishUserCreate(String username, String email) {
         final String phone = phoneEditText.getText().toString();
         final String address = addressEditText.getText().toString();

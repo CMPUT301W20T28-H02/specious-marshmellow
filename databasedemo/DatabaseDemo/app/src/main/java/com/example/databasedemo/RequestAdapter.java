@@ -1,3 +1,8 @@
+/*
+RequestAdapter
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import android.content.Context;
@@ -16,6 +21,10 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter class for request
+ * @author Michael Antifaoff
+ */
 public class RequestAdapter extends ArrayAdapter<Request> {
     private Context context;
     private List<Request> requestList = new ArrayList<>();
@@ -25,6 +34,13 @@ public class RequestAdapter extends ArrayAdapter<Request> {
         this.context = context;
     }
 
+    /**
+     * gets all the necessary views to display a request
+     * @param {@code int}position
+     * @param {@code View}convertView
+     * @param {@code ViewGroup}parent
+     * @return {@code View} listItem Request view
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

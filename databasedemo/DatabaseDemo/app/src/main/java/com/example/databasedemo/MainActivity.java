@@ -17,13 +17,30 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+/*
+MainActivity
+Version 1
+Date March 13 2020
+ */
 
+/**
+ * Main Activity for app
+ * @author Michael Antifaoff, Marcus Blair, Hussein Warsame,
+ * Johnas Wong, Sirjan Chawla,Rafaella Graña
+ */
 public class MainActivity extends AppCompatActivity{
 
     FirebaseAuth mAuth;
     FirebaseFirestore db;
     private static String TAG = "DISPLAY_USER_ACCOUNT_INFO";
 
+    /**
+     * Called when activity is created
+     * goes to {@link MainActivity#displayDriverOrRiderScreen(String, String)
+     * displayRiderOrDriverScreen} or {@link SignInActivity SignInActivity} depending on
+     * whether user is signed in or not
+     * @param {@code}savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +67,12 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    /**
+     * display the rider or driver screen. Get the user info from the database and initiate
+     * {@link RiderDriverInitialActivity RiderDriverInitialActivity}
+     * @param {@code String} username
+     * @param {@code String} email
+     */
     private void displayDriverOrRiderScreen(String username, String email) {
         final DocumentReference docRef = db.collection("users").document(username);
 

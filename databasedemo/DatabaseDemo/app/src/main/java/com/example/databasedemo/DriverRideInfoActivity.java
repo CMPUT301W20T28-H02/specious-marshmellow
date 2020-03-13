@@ -1,3 +1,8 @@
+/*
+DriverRideInfoActivity
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import android.content.Intent;
@@ -31,7 +36,10 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.text.DecimalFormat;
 
-
+/**
+ * Displays ride information to the driver
+ * @author Marcus Blar and Michael Antifaoff
+ */
 public class DriverRideInfoActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static String TAG = "DRIVER_RIDE_INFO";
@@ -45,6 +53,10 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
     LatLng startPoint, endPoint;
     FusedLocationProviderClient fusedLocationProviderClient;
 
+    /**
+     * Displays ride information and allows driver accept it or cancel it
+     * @param {@code Bundle}savedInstanceState
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         // display the ride information for the driver
@@ -186,7 +198,10 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
             }
         });
     }
-
+    /**
+     * when map is loaded, assign it to the map attribute
+     * @param {@code GoogleMap}googleMap Map Object
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;

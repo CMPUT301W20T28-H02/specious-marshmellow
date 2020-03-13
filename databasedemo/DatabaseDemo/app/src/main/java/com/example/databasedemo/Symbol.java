@@ -1,5 +1,15 @@
+/*
+Symbol
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
+/**
+ * helper class for Barcode Format
+ * @see BarcodeFormat
+ * @author Hussein Warsame
+ */
 public class Symbol {
     public class Rect
     {

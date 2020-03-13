@@ -1,3 +1,8 @@
+/*
+currentRequest
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
@@ -59,7 +64,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-
+/**
+ * Displays the current request while waiting for a match and allows user to cancel request
+ * @author Johnas Wong, Michael Antifaoff, Sirjan Chawla
+ */
 public class currentRequest extends FragmentActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
 
@@ -72,7 +80,12 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
      CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
      /*FirebaseAuth mAuth;*/
 
-
+    /**
+     * Called when the activity is created
+     * Displays the user's current location on the map. In the future it will also display
+     * all the nearby drivers' location on the map
+     * @param {@Code Bundle}savedInstanceState data sent from caller activity
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -207,12 +220,17 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
     }
 
 
-
+    /**
+     * gets permission to use location
+     */
     private void requestPermission() {
         ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION},1);
     }
 
-
+    /**
+     * when map is loaded, assign it to the map attribute
+     * @param {@code GoogleMap}googleMap Map Object
+     */
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
@@ -221,6 +239,11 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
         map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
     }
 
+    /**
+     * Shows items in the sidebar
+     * @param {@code MenuItem}menuItem Item in the menu
+     * @return
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 

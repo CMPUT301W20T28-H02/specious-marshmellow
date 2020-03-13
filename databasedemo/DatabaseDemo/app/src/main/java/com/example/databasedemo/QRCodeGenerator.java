@@ -1,3 +1,8 @@
+/*
+QRCodeGenerator
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import android.graphics.Bitmap;
@@ -16,6 +21,10 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+/**
+ * @deprecated  replaced by GenerateQR
+ * @author Marcus Blair
+ */
 public class QRCodeGenerator extends AppCompatActivity {
     // only accessible for riders that are logged in
     // generates qr code at the end of the ride to pay the driver

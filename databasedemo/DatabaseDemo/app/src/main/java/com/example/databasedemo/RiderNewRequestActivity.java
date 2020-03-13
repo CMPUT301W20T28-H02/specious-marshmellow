@@ -1,3 +1,8 @@
+/*
+RiderNewRequestActivity
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
@@ -66,6 +71,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
+/**
+ * Displays map, lets user define pickup and dropoff locations in order to create a ride request
+ * @author Sirjan Chawla, Johnas Wong, Michael Antifaoff
+ */
 // implements TaskLoadedCallback
 public class RiderNewRequestActivity extends FragmentActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
@@ -84,6 +93,14 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
     private static String TAG = "Hello";
 
+    /**
+     * Called when activity is created
+     * displays map, buttons and text fields where to enter start and end locations of ride
+     * Checks that the locations are valid and then gives a fare estimate, with the option to add
+     * a tip to the ride. once all fields are valid, calls
+     * {@link RiderNewRequestActivity#addRequest(Request, String, String) addRequest}
+     * @param {@code Bundle}savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -348,6 +365,13 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
     }
 
+    /**
+     * Adds request to the database then goes to
+     * {@link currentRequest#onCreate(Bundle) currentRequest}
+     * @param {@code Request}request Request to be added
+     * @param {@code String}username Username of user
+     * @param {@code String}email Email of user
+     */
     public void addRequest (Request request, String username, String email){
         FirebaseFirestore database = FirebaseFirestore.getInstance();
 
@@ -362,20 +386,29 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
     }
 
 
-
+    /**
+     * Requests permission to access GPS information
+     */
     private void requestPermission(){
         ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION},1);
     }
 
 
-
-
+    /**
+     * when map is loaded, assign it to the map attribute
+     * @param {@code GoogleMap}googleMap Map Object
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
     }
 
+    /**
+     * Shows items in the sidebar
+     * @param {@code MenuItem}menuItem Item in the menu
+     * @return
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();

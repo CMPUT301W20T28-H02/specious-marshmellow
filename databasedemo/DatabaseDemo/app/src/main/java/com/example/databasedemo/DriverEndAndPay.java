@@ -1,3 +1,8 @@
+/*
+DriverEndAndPay
+Version 1
+Date March 13 2020
+ */
 package com.example.databasedemo;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +21,10 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
+/**
+ * Activity shown while ride is ongoing, asks driver to click on button once the ride is done
+ * @author Michael Antifaoff, Hussein Warsame
+ */
 public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCallback {
 
     GoogleMap map;
@@ -26,6 +35,10 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
     // used for creating intent
     private Class<?> mClss;
 
+    /**
+     * Called when activity is created
+     * @param {@code Bundle}savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +80,10 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
 
     }
 
-
-
+    /**
+     * when map is loaded, assign it to the map attribute
+     * @param {@code GoogleMap}googleMap Map Object
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -78,6 +93,13 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
         map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
     }
 
+    /**
+     * requests permission to use camera in order to scan code, on granted permission goes to
+     * {@link DriverScannerActivity#onCreate(Bundle) DriverScannerActivity}
+     * @param {@code int}requestCode
+     * @param {@code String}permissions
+     * @param {@code int[]}grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,  String permissions[], int[] grantResults) {
         switch (requestCode) {
