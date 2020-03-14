@@ -118,7 +118,7 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
                     Rider rider = request.getRider();
                     rider.setPaymentComplete(true);
                     request.setRider(rider);
-                    Driver driver = request.getDriver();
+                    final Driver driver = request.getDriver();
                     driver.setPaymentComplete(true);
                     request.setDriver(driver);
                     Log.i("Hello", "After setting payment (objects)");
@@ -132,7 +132,9 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
                                     Log.i("Hello", "After setting payment (driver database)");
                                     Intent i = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
                                     i.putExtra("driver",true);
+                                    Log.i("Hello", driverUsername);
                                     i.putExtra("username", driverUsername);
+                                    Log.i("Hello", request.getDriver().getEmail());
                                     i.putExtra("email", request.getDriver().getEmail());
                                     startActivity(i);
                                 }
