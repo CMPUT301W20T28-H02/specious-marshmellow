@@ -35,7 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyCallback {
 
     GoogleMap map;
-    TextView waiting;
+    TextView waiting, driverUsernameTextView, driverPhoneNumberTextView, driverEmailTextView;
     Button riderConfirmPickupButton, cancelRequestButton;
     boolean riderReady = false;
 
@@ -51,6 +51,9 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.activity_rider_confirm_pickup);
         riderConfirmPickupButton = findViewById(R.id.rider_confirm_pickup_button);
         cancelRequestButton = findViewById(R.id.cancel_request_button_confirm_activity);
+        driverUsernameTextView = findViewById(R.id.driver_username_rider_confirm_pickup);
+        driverPhoneNumberTextView = findViewById(R.id.driver_phone_number_rider_confirm_pickup);
+        driverEmailTextView = findViewById(R.id.driver_email_rider_confirm_pickup);
 
         waiting = findViewById(R.id.waiting_for_driver);
 
@@ -60,7 +63,9 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
 
         Intent i = getIntent();
         final String username = i.getStringExtra("username");
+        // TODO: Email is null here: Check to see if email is passed through MainActivity
         final String email = i.getStringExtra("email");
+
 
         final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
 
@@ -68,6 +73,10 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 Request request = documentSnapshot.toObject(Request.class);
+                // TODO: Take user to a display info activity instead that tells them all about the driver
+                driverUsernameTextView.setText(getString(R.string.rider_confirm_driver_username, request.getDriver().getUsername()));
+                driverPhoneNumberTextView.setText(getString(R.string.rider_confirm_driver_phone_number, request.getDriver().getPhone()));
+                driverEmailTextView.setText(getString(R.string.rider_confirm_driver_email, request.getDriver().getEmail()));
                 if (riderReady) {
                     riderConfirmPickupButton.setVisibility(View.INVISIBLE);
                     waiting.setVisibility(View.VISIBLE);

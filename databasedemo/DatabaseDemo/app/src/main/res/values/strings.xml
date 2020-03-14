@@ -33,6 +33,10 @@
     <string name="driver_to_rider_distance">Distance to Rider: %1$s Kilometers</string>
     <string name="driver_confirm_ride_distance">Ride Distance: %1$s Kilometers</string>
 
+    <string name="rider_confirm_driver_username">Username: %1$s</string>
+    <string name="rider_confirm_driver_phone_number">Phone Number: %1$s</string>
+    <string name="rider_confirm_driver_email">Email: %1$s</string>
+
     <string name="show_username">Username: %1$s</string>
     <string name="show_email">Email: %1$s</string>
     <string name="show_phone">Phone Number: %1$s</string>
