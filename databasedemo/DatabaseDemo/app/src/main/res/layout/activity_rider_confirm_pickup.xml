@@ -16,12 +16,41 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-
-    <Button
-        android:id="@+id/rider_confirm_pickup_button"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Confirm pickup" />
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+            <TextView
+                android:id="@+id/waiting_for_driver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Waiting for driver..."
+                android:textAlignment="center"
+                android:textSize="22sp"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/cancel_request_button_confirm_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:visibility="invisible"
+                android:text="Cancel Request" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/rider_confirm_pickup_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm pickup" />
+
+    </FrameLayout>
 
 
 </LinearLayout>

@@ -100,7 +100,6 @@ public class Request
     }
 
     /**
-     * @deprecated
      * is true if rider and driver have confirmed
      * @return {@code boolean} whether both parties have compared
      */

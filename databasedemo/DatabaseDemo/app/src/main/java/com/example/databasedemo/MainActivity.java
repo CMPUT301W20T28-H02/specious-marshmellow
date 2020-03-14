@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity{
                             if (request.getRequestStatus())
                             { // If rider has already been matched with a driver
                                 // If rider has already confirmed pickup
-                                if (request.getRiderConfirmation()){
+                                if (request.isConfirmedByRiderAndDriver()){
                                     Intent startRiderEndandPay = new Intent(getBaseContext(), RiderEndAndPay.class);
                                     // Activity expects: final String username = i.getStringExtra("username");
                                     startRiderEndandPay.putExtra("username",username);
@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity{
             Intent intent = new Intent(getBaseContext(), SignInActivity.class);
             startActivity(intent);
         }
-
     }
 
     /**

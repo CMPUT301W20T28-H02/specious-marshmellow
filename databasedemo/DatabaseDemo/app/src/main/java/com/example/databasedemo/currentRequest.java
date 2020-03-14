@@ -163,6 +163,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
                 intent.putExtra("driver", false);
                 intent.putExtra("username", username);
+                intent.putExtra("email", email);
 
                 startActivity(intent);
 
@@ -182,6 +183,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                         Log.d("Database", "here");
                         Intent i = new Intent(getBaseContext(),RiderConfirmPickup.class);
                         i.putExtra("username", username);
+                        i.putExtra("email", email);
                         startActivity(i);
                     }
 
