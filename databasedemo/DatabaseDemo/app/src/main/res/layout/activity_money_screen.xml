@@ -8,11 +8,12 @@
     tools:context=".moneyScreen">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ADD MONEY"
+        android:text="Wallet"
+        android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        android:textSize="40dp" />
+        android:textSize="32dp" />
 
     <Space
         android:layout_width="match_parent"
@@ -25,10 +26,10 @@
 
         <TextView
             android:id="@+id/balance"
-            android:layout_width="173dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="BALANCE IN WALLET:"
+            android:text="Balance:"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textSize="27sp" />
 
@@ -44,11 +45,11 @@
 
     <Button
         android:id="@+id/add_5"
-        android:layout_width="145dp"
-        android:layout_height="77dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@android:drawable/dialog_holo_dark_frame"
-        android:paddingBottom="20dp"
+        android:padding="20dp"
         android:text="ADD $5"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
@@ -60,11 +61,11 @@
 
     <Button
         android:id="@+id/add_25"
-        android:layout_width="145dp"
-        android:layout_height="77dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@android:drawable/dialog_holo_dark_frame"
-        android:paddingBottom="20dp"
+        android:padding="20dp"
         android:text="ADD $25"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
@@ -76,11 +77,11 @@
 
     <Button
         android:id="@+id/add_50"
-        android:layout_width="145dp"
-        android:layout_height="77dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@android:drawable/dialog_holo_dark_frame"
-        android:paddingBottom="20dp"
+        android:padding="20dp"
         android:text="ADD $50"
         android:textColor="#FFFFFF"
         android:textSize="24sp" />
@@ -92,11 +93,12 @@
 
     <Button
         android:id="@+id/back_home"
-        android:layout_width="295dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@android:drawable/dialog_holo_dark_frame"
         android:text="MAKE REQUEST"
+        android:padding="20dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         android:textColor="#EFEDED"
         android:textSize="24sp" />
