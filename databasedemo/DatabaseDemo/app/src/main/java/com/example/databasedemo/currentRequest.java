@@ -9,8 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -82,7 +85,11 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
      TextView usrNameText,usrEmailText;
      FirebaseFirestore db;
      CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
+     String username = new String();
      /*FirebaseAuth mAuth;*/
+
+     NotificationCompat.Builder riderMatchedWithDriverNotification;
+     private static final int uniqueID = 22;
 
     /**
      * Called when the activity is created
@@ -94,7 +101,6 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_current_request);
-
 
         can_Request = findViewById(R.id.can_request);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -110,7 +116,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
 
 
         Intent intent = getIntent();
-        final String username = intent.getStringExtra("username");
+        username = intent.getStringExtra("username");
         final String email = intent.getStringExtra("email");
         usrNameText = headerview.findViewById(R.id.usrNameText);
         usrEmailText=headerview.findViewById(R.id.usrEmailText);
@@ -181,6 +187,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                     if(request.getRequestStatus() == true){
                         // Change this line so that it switches to Rider on a ride activity
                         Log.d("Database", "here");
+
                         Intent i = new Intent(getBaseContext(),RiderConfirmPickup.class);
                         i.putExtra("username", username);
                         i.putExtra("email", email);
@@ -190,6 +197,118 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 }
             }
         });
+
+//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                if(task.isSuccessful()){
+//                    // for two decimal places
+//                    //final DecimalFormat numberFormat = new DecimalFormat("#.00");
+//
+//                    // get the fare and the start and end locations from the database
+//                    final Request request = task.getResult().toObject(Request.class);
+//                    //String fare = String.valueOf(numberFormat.format(request.getFare()));
+//
+//
+//                    com.example.databasedemo.Location startLocation = request.getStartLocation();
+//                    com.example.databasedemo.Location endLocation = request.getEndLocation();
+//
+//                    // get the distance and convert to string
+//                    //double doubleDistance = Request.getDistance(startLocation, endLocation);
+//                    //String distance = String.valueOf(numberFormat.format(doubleDistance));
+//
+//                    // Get distance to rider from driver's current location
+////                    fusedLocationProviderClient.getLastLocation().addOnSuccessListener(DriverRideInfoActivity.this, new OnSuccessListener<android.location.Location>() {
+////                        @Override
+////                        public void onSuccess(android.location.Location location) {
+////                            if(location != null){
+////                                double doubleDistanceToRider = Request.getDistance(new com.example.databasedemo.Location(location.getLatitude(),location.getLongitude()),
+////                                        request.getStartLocation());
+////                                String distanceToRider = String.valueOf(numberFormat.format(doubleDistanceToRider));
+////                                distanceToRiderTextView.setText(getString(R.string.driver_to_rider_distance, distanceToRider));
+////                            }
+////                        }
+////                    });
+//
+//                    // display the fare and distance
+//                    // rideFareTextView.setText(getString(R.string.driver_confirm_ride_fare, fare));
+//                    // rideDistanceTextView.setText(getString(R.string.driver_confirm_ride_distance, distance));
+//
+//                    // set start and end points as latlng
+//                    startPoint = new LatLng(startLocation.getLatitude(), startLocation.getLongitude());
+//                    endPoint = new LatLng(endLocation.getLatitude(), endLocation.getLongitude());
+//
+//                    // add markers to map for start and end points
+//                    map.addMarker(new MarkerOptions().position(startPoint).title("Start Location"));
+//                    map.addMarker(new MarkerOptions().position(endPoint).title("End Location"));
+//
+//
+//                    // move map to show the start and end points
+//                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//                    // set builder with start and end locations
+//                    builder.include(startPoint);
+//                    builder.include(endPoint);
+//                    LatLngBounds bounds = builder.build();
+//                    // construct a cameraUpdate with a buffer of 200
+//                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 10);
+//                    // move the camera
+//                    map.animateCamera(cameraUpdate);
+//                }
+//            }
+//        });
+
+
+
+//        myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+//                for(QueryDocumentSnapshot document: queryDocumentSnapshots ){
+//                    Request request = document.toObject(Request.class);
+//
+//                    if (username.equals(request.getRider().getUsername())){
+//                        if(request.getRequestStatus() == true){
+//                            // Change this line so that it switches to Rider on a ride activity
+//                            Intent i = new Intent(getBaseContext(),RiderDriverInitialActivity.class);
+//                        }
+//                    }
+//
+//                }
+//            }
+//        });
+
+//        String longitudeString = getIntent().getStringExtra("Longitude");
+//        String latitudeString = getIntent().getStringExtra("Latitude");
+//
+//        Double longitude = Double.valueOf(longitudeString);
+//        Double latitude = Double.valueOf(latitudeString);
+//
+//        latLng = new LatLng(latitude, longitude);
+//        MarkerOptions p1 = new MarkerOptions().position(latLng);
+//        map.addMarker(p1);
+//        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+
+
+    }
+
+
+    /**
+     * gets permission to use location
+     */
+    private void requestPermission() {
+        ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION},1);
+    }
+
+    /**
+     * when map is loaded, assign it to the map attribute
+     * @param {@code GoogleMap}googleMap Map Object
+     */
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+
+        /*LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
+        map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
+        map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
+        DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -250,57 +369,6 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
             }
         });
 
-
-
-//        myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-//                for(QueryDocumentSnapshot document: queryDocumentSnapshots ){
-//                    Request request = document.toObject(Request.class);
-//
-//                    if (username.equals(request.getRider().getUsername())){
-//                        if(request.getRequestStatus() == true){
-//                            // Change this line so that it switches to Rider on a ride activity
-//                            Intent i = new Intent(getBaseContext(),RiderDriverInitialActivity.class);
-//                        }
-//                    }
-//
-//                }
-//            }
-//        });
-
-//        String longitudeString = getIntent().getStringExtra("Longitude");
-//        String latitudeString = getIntent().getStringExtra("Latitude");
-//
-//        Double longitude = Double.valueOf(longitudeString);
-//        Double latitude = Double.valueOf(latitudeString);
-//
-//        latLng = new LatLng(latitude, longitude);
-//        MarkerOptions p1 = new MarkerOptions().position(latLng);
-//        map.addMarker(p1);
-//        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
-
-
-    }
-
-
-    /**
-     * gets permission to use location
-     */
-    private void requestPermission() {
-        ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION},1);
-    }
-
-    /**
-     * when map is loaded, assign it to the map attribute
-     * @param {@code GoogleMap}googleMap Map Object
-     */
-    public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
-
-        /*LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
-        map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
-        map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
     }
 
     /**

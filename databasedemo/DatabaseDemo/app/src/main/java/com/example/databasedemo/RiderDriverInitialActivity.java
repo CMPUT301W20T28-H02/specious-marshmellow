@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import com.google.android.material.navigation.NavigationView;
@@ -132,34 +133,34 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-        CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
-
-        myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                requestArrayList.clear();
-                for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
-                    final Request request = doc.toObject(Request.class);
-                    if (!request.getRequestStatus()) {
-                        Log.i("Hello", "Before Current Location: ");
-                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                Log.i("Hello", "After Current Location: ");
-                                if(location != null){
-                                    double distance = Request.getDistance(new com.example.databasedemo.Location(location.getLatitude(),location.getLongitude()),
-                                            request.getStartLocation());
-                                    Log.i("Hello", "Even Better! Distance: " + distance);
-                                    if (distance < globalBound){
-                                        addRequest(request);
-                                    }
-                                }
-                            }
-                        });
-                    }
-                }
-            }
-        });
+//        CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
+//
+//        myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+//                requestArrayList.clear();
+//                for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
+//                    final Request request = doc.toObject(Request.class);
+//                    if (!request.getRequestStatus()) {
+//                        Log.i("Hello", "Before Current Location: ");
+//                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
+//                            @Override
+//                            public void onSuccess(Location location) {
+//                                Log.i("Hello", "After Current Location: ");
+//                                if(location != null){
+//                                    double distance = Request.getDistance(new com.example.databasedemo.Location(location.getLatitude(),location.getLongitude()),
+//                                            request.getStartLocation());
+//                                    Log.i("Hello", "Even Better! Distance: " + distance);
+//                                    if (distance < globalBound){
+//                                        addRequest(request);
+//                                    }
+//                                }
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//        });
 
 
         globalBoundsEditText.addTextChangedListener(new TextWatcher() {
@@ -356,9 +357,51 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
                 }
             });
+            fusedLocationProviderClient.getLastLocation().addOnFailureListener(RiderDriverInitialActivity.this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.i("Hello", "We are inside onFailure");
+                    Toast.makeText(RiderDriverInitialActivity.this, "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG).show();
+
+                }
+            });
+            Log.i("Hello", "We are inside current location even though we though location permissions were denied");
+        } else {
+            Log.i("Hello", "We are not inside current location even though we though location permissions were denied");
+            Toast.makeText(RiderDriverInitialActivity.this,
+                    "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG);
         }
 
+        Log.i("Hello", "We must get here");
 
+        CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
+
+        myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                requestArrayList.clear();
+                for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
+                    final Request request = doc.toObject(Request.class);
+                    if (!request.getRequestStatus()) {
+                        Log.i("Hello", "Before Current Location: ");
+                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                Log.i("Hello", "After Current Location: ");
+                                if(location != null){
+                                    double distance = Request.getDistance(new com.example.databasedemo.Location(location.getLatitude(),location.getLongitude()),
+                                            request.getStartLocation());
+                                    Log.i("Hello", "Even Better! Distance: " + distance);
+                                    if (distance < globalBound){
+                                        addRequest(request);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 }
 

@@ -192,8 +192,8 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                         }
                         Log.i("Hello", "This is address list 1 " + addressList.toString());
                     } catch (Exception e) {
-                        System.out.print(e.getMessage());
                         Log.i("Hello", "Does this throw an IOException? 1" + addressList.toString());
+                        goodNews = false;
                     }
 
                     //if (addressList.size()>0) {
@@ -249,8 +249,8 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                         }
                         Log.i("Hello", "This is address list 2 " + addressList2.toString());
                     } catch (Exception e) {
-                        System.out.print(e.getMessage());
                         Log.i("Hello", "Does this throw an IOException? 2" + addressList2.toString());
+                        goodNews = false;
                     }
 
                     Address address;
