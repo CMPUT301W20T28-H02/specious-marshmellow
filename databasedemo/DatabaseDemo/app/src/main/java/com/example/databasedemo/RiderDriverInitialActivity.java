@@ -33,11 +33,13 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -104,8 +106,6 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         final String username = intent.getStringExtra("username");
         final String email = intent.getStringExtra("email");
 
-        requestPermission();
-
         if (driver) {
             Log.i(TAG, "We are here");
             setContentView(R.layout.driver_initial);
@@ -170,6 +170,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 requestArrayList.clear();
+                map.clear();
                 if(!charSequence.toString().equals("")) {
                     globalBound = Double.valueOf(globalBoundsEditText.getText().toString());
                     CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
@@ -180,6 +181,13 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                                 for (QueryDocumentSnapshot doc : task.getResult()) {
                                     final Request request = doc.toObject(Request.class);
                                     if (!request.getRequestStatus()) {
+
+                                        // set rider start point as latlng
+                                        LatLng riderLocation = new LatLng(request.getStartLocation().getLatitude(), request.getStartLocation().getLongitude());
+
+                                        // add markers to map for rider start location
+                                        map.addMarker(new MarkerOptions().position(riderLocation).title(request.getRider().getUsername()));
+
                                         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
                                             @Override
                                             public void onSuccess(Location location) {
@@ -198,6 +206,20 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                                         });
                                     }
                                 }
+
+                                map.setMyLocationEnabled(true);
+
+                                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
+                                    @Override
+                                    public void onSuccess(Location location) {
+                                        if (location != null) {
+                                            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+
+                                        }
+
+                                    }
+                                });
                             }
                         }
                     });
@@ -309,6 +331,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
+        requestPermission();
         /*LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
         map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
         map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
@@ -344,15 +367,15 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (permissions[0].equals(ACCESS_FINE_LOCATION)) {
+
+            map.setMyLocationEnabled(true);
+
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
                     if (location != null) {
                         latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                        MarkerOptions p3 = new MarkerOptions().position(latLng);
-                        map.addMarker(p3);
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-
                     }
 
                 }
@@ -380,10 +403,18 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 requestArrayList.clear();
+                map.clear();
                 for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
                     final Request request = doc.toObject(Request.class);
                     if (!request.getRequestStatus()) {
                         Log.i("Hello", "Before Current Location: ");
+
+                        // set rider start point as latlng
+                        LatLng riderLocation = new LatLng(request.getStartLocation().getLatitude(), request.getStartLocation().getLongitude());
+
+                        // add markers to map for rider start location
+                        map.addMarker(new MarkerOptions().position(riderLocation).title(request.getRider().getUsername()));
+
                         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
                             @Override
                             public void onSuccess(Location location) {
@@ -400,6 +431,19 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                         });
                     }
                 }
+
+                map.setMyLocationEnabled(true);
+                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+
+                        }
+
+                    }
+                });
             }
         });
     }

@@ -31,7 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 
 /**
  * Shows map to driver and asks to confirm pickup
- * @author Michael Antifaoff
+ * @author Micheal Antifaoff
  */
 public class DriverConfirmActivity extends AppCompatActivity implements OnMapReadyCallback {
 
