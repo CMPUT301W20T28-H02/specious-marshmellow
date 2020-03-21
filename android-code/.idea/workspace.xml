@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4d10b149-b5af-4335-b3ae-f225ae25bd37" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DatabaseDemo/app/src/main/java/com/example/databasedemo/RiderDriverInitialActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/DatabaseDemo/app/src/main/java/com/example/databasedemo/RiderDriverInitialActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DatabaseDemo/app/src/main/res/layout/rider_initial.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DatabaseDemo/app/src/main/res/layout/rider_initial.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DatabaseDemo/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DatabaseDemo/app/src/main/res/values/strings.xml" afterDir="false" />
-    </list>
+    <list default="true" id="4d10b149-b5af-4335-b3ae-f225ae25bd37" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,24 +22,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="ProjectPane" />
       <pane id="PackagesPane" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="databasedemo" type="b2602c69:ProjectViewProjectNode" />
-              <item name="databasedemo" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="databasedemo" type="b2602c69:ProjectViewProjectNode" />
-              <item name="databasedemo" type="462c0819:PsiDirectoryNode" />
-              <item name="DatabaseDemo" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">

@@ -42,4 +42,15 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.android.support:design:28.0.0'
+
+    //androidx.test
+    def androidx_test = "1.1.0"
+    androidTestImplementation "androidx.test:runner:$androidx_test"
+    androidTestImplementation "androidx.test:core:$androidx_test"
+    androidTestImplementation "androidx.test.ext:junit-ktx:$androidx_test"
+    androidTestImplementation 'androidx.test:rules:1.1.1'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+
+
+
 }
