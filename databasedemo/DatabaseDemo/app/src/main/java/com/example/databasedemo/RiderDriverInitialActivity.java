@@ -81,6 +81,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
     ArrayAdapter<Request> requestArrayAdapter;
     ArrayList<Request> requestArrayList;
     double globalBound = 10000;
+    boolean driver;
 
     /**
      * Called when activity is created
@@ -102,7 +103,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         //NavigationView navi = findViewById(R.id.nav_view);
 
 
-        boolean driver = intent.getBooleanExtra("driver", true);
+        driver = intent.getBooleanExtra("driver", true);
         final String username = intent.getStringExtra("username");
         final String email = intent.getStringExtra("email");
 
@@ -182,11 +183,12 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                                     final Request request = doc.toObject(Request.class);
                                     if (!request.getRequestStatus()) {
 
-                                        // set rider start point as latlng
-                                        LatLng riderLocation = new LatLng(request.getStartLocation().getLatitude(), request.getStartLocation().getLongitude());
-
-                                        // add markers to map for rider start location
-                                        map.addMarker(new MarkerOptions().position(riderLocation).title(request.getRider().getUsername()));
+                                        if (driver) {
+                                            // set rider start point as latlng
+                                            LatLng riderLocation = new LatLng(request.getStartLocation().getLatitude(), request.getStartLocation().getLongitude());
+                                            // add markers to map for rider start location
+                                            map.addMarker(new MarkerOptions().position(riderLocation).title(request.getRider().getUsername()));
+                                        }
 
                                         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
                                             @Override
@@ -214,7 +216,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                                     public void onSuccess(Location location) {
                                         if (location != null) {
                                             latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
 
                                         }
 
@@ -409,11 +411,12 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                     if (!request.getRequestStatus()) {
                         Log.i("Hello", "Before Current Location: ");
 
-                        // set rider start point as latlng
-                        LatLng riderLocation = new LatLng(request.getStartLocation().getLatitude(), request.getStartLocation().getLongitude());
-
-                        // add markers to map for rider start location
-                        map.addMarker(new MarkerOptions().position(riderLocation).title(request.getRider().getUsername()));
+                        if (driver) {
+                            // set rider start point as latlng
+                            LatLng riderLocation = new LatLng(request.getStartLocation().getLatitude(), request.getStartLocation().getLongitude());
+                            // add markers to map for rider start location
+                            map.addMarker(new MarkerOptions().position(riderLocation).title(request.getRider().getUsername()));
+                        }
 
                         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
                             @Override
@@ -438,7 +441,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                     public void onSuccess(Location location) {
                         if (location != null) {
                             latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
 
                         }
 
