@@ -15,6 +15,51 @@
       },
       "oauth_client": [
         {
+          "client_id": "886940808949-m25s4gijpg9nmkgqoccq1362pcfe5pf0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.databasedemo",
+            "certificate_hash": "cc859fd53521405fb6ff19092fc3b0636879f3a4"
+          }
+        },
+        {
+          "client_id": "886940808949-us7nkpn4c2kaesgceu1lgr67k6gthpq9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVOKyxT4oslDH-7WU38PkqnqhcY6PfnBk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886940808949-us7nkpn4c2kaesgceu1lgr67k6gthpq9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886940808949:android:3c7884d69354069aea77bc",
+        "android_client_info": {
+          "package_name": "com.example.simpleparadox.sendimagetofirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886940808949-9m7eub9s5l4homhckbu6kkicmuuiso9g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.simpleparadox.sendimagetofirebase",
+            "certificate_hash": "cc859fd53521405fb6ff19092fc3b0636879f3a4"
+          }
+        },
+        {
           "client_id": "886940808949-us7nkpn4c2kaesgceu1lgr67k6gthpq9.apps.googleusercontent.com",
           "client_type": 3
         }
