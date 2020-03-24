@@ -4,6 +4,7 @@ import android.util.Log;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.test.espresso.IdlingRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
@@ -33,20 +34,34 @@ import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class CreateAccountTest {
+
+    // Firestore instance
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    private String username = "foo";
+    // user data
     private User testUser;
-    private EditText userText;
+    private String username = "foo";
+    private String email = "hkwarsam@ualberta.ca";
+    private Wallet wallet = new Wallet ();
+    private String phone = "780-434-4323";
+    private double rating = 5.0;
+    private int numOfRatings = 1;
+    private boolean driver = true;
+    private String password = "123456";
+    private String address = "Hogwarts";
+
 
     @Rule
     public ActivityTestRule<CreateAccount> createAccountActivityTestRule
             = new ActivityTestRule<>(CreateAccount.class);
 
+    // add user to database
     @Before
     public void addUsername(){
-        testUser = new User();
-        testUser.setUsername(username);
+        // create user object
+        testUser = new User(username, email, wallet, phone, rating, numOfRatings, driver);
+
+        // add user to firestore and set user data
         db.collection("users").document(username).set(testUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -61,27 +76,44 @@ public class CreateAccountTest {
                         Log.d("database", "addition unsuccessful" , e);
                     }
                 });
+
+        // register Idling resource that waits for firestore processes to finish
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.getIdlingResource());
     }
 
+    /* input user data and check if error text pops up
+    when trying to use non-unique username */
     @Test
     public void enterUsernameText(){
+        // enter username
         onView(withId(R.id.username))
                 .perform(typeText(username), closeSoftKeyboard());
+
+        // enter password
         onView(withId(R.id.password))
-                .perform(typeText("123456"), closeSoftKeyboard());
+                .perform(typeText(password), closeSoftKeyboard());
+
+        // enter email
         onView(withId(R.id.email))
-                .perform(typeText("hkwarsam@ualberta.ca"), closeSoftKeyboard());
+                .perform(typeText(email), closeSoftKeyboard());
+
+        // enter address
         onView(withId(R.id.address))
-                .perform(typeText("Hogwarts"), closeSoftKeyboard());
+                .perform(typeText(address), closeSoftKeyboard());
+
+        // enter phone number
         onView(withId(R.id.phone))
-                .perform(typeText(String.valueOf("780-434-4323")), closeSoftKeyboard());
+                .perform(typeText(String.valueOf(phone)), closeSoftKeyboard());
+
+        // select driver option
         onView(withId(R.id.driver_or_rider))
                 .perform(click());
         onData(anything()).atPosition(1).perform(click());
 
-
+        // create account
         onView(withId(R.id.finish_create)).perform(click());
 
+        // check if error text pops up when creating
         onView(withId(R.id.username)).check(matches(hasErrorText("Username is not unique.")));
     }
 
