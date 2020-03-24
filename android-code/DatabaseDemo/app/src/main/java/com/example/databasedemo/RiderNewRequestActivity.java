@@ -5,15 +5,6 @@ Date March 13 2020
  */
 package com.example.databasedemo;
 
-import androidx.annotation.NonNull;
-
-import androidx.annotation.RequiresApi;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.annotation.Nullable;
-
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -21,22 +12,21 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-
-import android.view.MenuItem;
-
 import android.util.Log;
-
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListAdapter;
+import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.Toolbar;
 
-import com.example.databasedemo.DirectionHelpers.TaskLoadedCallback;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -44,30 +34,23 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.example.databasedemo.DirectionHelpers.FetchURL;
-import com.example.databasedemo.DirectionHelpers.TaskLoadedCallback;
-
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-
-import com.google.android.material.navigation.NavigationView;
-
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -90,6 +73,8 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
     TextView tipAmount;
     double fare, globalTip;
     FirebaseAuth mAuth;
+    ImageView profile;
+    DatabaseReference reff;
 
     private static String TAG = "Hello";
 
@@ -122,6 +107,8 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         final String email = intent.getStringExtra("email");
 
 
+
+
         btnGetFare = findViewById(R.id.btnGetFare);
 
         btnAddTip = findViewById(R.id.addTipButton);
@@ -133,11 +120,44 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         tipAmount = findViewById(R.id.tipAmount);
         usrNameText = headerView.findViewById(R.id.usrNameText);
         usrEmailText=headerView.findViewById(R.id.usrEmailText);
-        searchView.setQuery("Current Location", false);
+        profile=headerView.findViewById(R.id.profilepic);
+        reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+        // here gonna have to adjust reff to accurately go to the correct
+        // user, so i think add an if statement
+        // at dataSnapshot.child("//username").getValue().toString();
+
+
+        reff.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String url = dataSnapshot.child("imageUrl").getValue().toString();
+
+
+                Log.d("Firebase", url);
+                Picasso.get()
+                        .load( url )
+                        .into( profile );
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getBaseContext(),TakeProfilePicture.class);
+                startActivity(intent);
+            }
+        });
+
         usrNameText.setText(username);
         usrEmailText.setText(email);
 
-
+        searchView.setQuery("Current Location", false);
         mapFragment = ( SupportMapFragment ) getSupportFragmentManager()
                 .findFragmentById( R.id.map);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
@@ -427,6 +447,12 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
                 startActivity(intent_2);
                 break;
+            case R.id.contact_info:
+                Intent intent1 = new Intent(getBaseContext(),EditContactInformationActivity.class);
+                intent1.putExtra("username", username);
+                startActivity(intent1);
+                break;
+
         }
 
 

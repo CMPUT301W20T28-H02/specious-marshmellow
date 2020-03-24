@@ -1,9 +1,5 @@
 package com.example.databasedemo;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -22,12 +18,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -74,7 +74,7 @@ public class TakeProfilePicture extends AppCompatActivity {
         setContentView(R.layout.activity_take_profile_picture);
 
 //        FirebaseApp.initializeApp(this);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         Log.d("Before ids", "Before");
 
@@ -342,11 +342,14 @@ public class TakeProfilePicture extends AppCompatActivity {
         if( resultCode == RESULT_OK && requestCode == PICK_IMAGE )
         {
             image_uri = data.getData();
+
             mImageView.setImageURI( image_uri );
+
         } else if ( resultCode == RESULT_OK ) {
             // set image captured to our image view
 
             mImageView.setImageURI( image_uri );
         }
     }
+
 }

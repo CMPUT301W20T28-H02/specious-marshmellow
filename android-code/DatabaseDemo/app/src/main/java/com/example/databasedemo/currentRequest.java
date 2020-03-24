@@ -5,34 +5,25 @@ Date March 13 2020
  */
 package com.example.databasedemo;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.fragment.app.FragmentActivity;
-
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -45,29 +36,23 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
-
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.text.DecimalFormat;
+import com.squareup.picasso.Picasso;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -82,10 +67,12 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
      LatLng latLng, startPoint, endPoint;
      FusedLocationProviderClient fusedLocationProviderClient;
      Button can_Request;
-     TextView usrNameText,usrEmailText;
+     TextView usrNameText,usrEmailText,usrEditInfo;
+     ImageView profile;
      FirebaseFirestore db;
      CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
      String username = new String();
+     DatabaseReference reff;
      /*FirebaseAuth mAuth;*/
 
      NotificationCompat.Builder riderMatchedWithDriverNotification;
@@ -122,6 +109,42 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
         usrEmailText=headerview.findViewById(R.id.usrEmailText);
         usrNameText.setText(username);
         usrEmailText.setText(email);
+
+        reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+        // here gonna have to adjust reff to accurately go to the correct
+        // user, so i think add an if statement
+        // at dataSnapshot.child("//username").getValue().toString();
+
+
+        reff.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               String url = dataSnapshot.child("imageUrl").getValue().toString();
+
+
+                Log.d("Firebase", url);
+                Picasso.get()
+                        .load( url )
+                        .into( profile );
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        profile = headerview.findViewById(R.id.profilepic);
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getBaseContext(), TakeProfilePicture.class);
+                startActivity(intent);
+            }
+        });
 
         can_Request = findViewById(R.id.can_request);
 
@@ -396,6 +419,13 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 Toast.makeText(this, "Action restricted, Request Created ", Toast.LENGTH_LONG).show();
 
                 break;
+            case R.id.contact_info:
+                Intent intent1 = new Intent(getBaseContext(),EditContactInformationActivity.class);
+                intent1.putExtra("username", username);
+                startActivity(intent1);
+                break;
+
+
         }
 
 
