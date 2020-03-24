@@ -144,12 +144,18 @@ public class CreateAccount extends AppCompatActivity {
             passwordEditText.setError("Password must be at least 6 characters");
             return false;
         }
+        // increment Idling resource for UI test
+        EspressoIdlingResource.increment();
 
         FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
         CollectionReference collectionRef = rootRef.collection("users");
         collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                // decrement Idling resource
+                EspressoIdlingResource.decrement();
+
                 if (task.isSuccessful()){
                     List<User> users = task.getResult().toObjects(User.class);
                     for (User user : users){
