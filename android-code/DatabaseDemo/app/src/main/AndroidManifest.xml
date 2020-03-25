@@ -16,18 +16,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat">
-
-        <activity android:name=".DriverEndAndPay"></activity>
-        <activity android:name=".RiderEndAndPay"></activity>
+        <activity android:name=".ProfilePictureFromFirebaseStorage"></activity>
+        <activity android:name=".TakeProfilePicture" />
+        <activity android:name=".DriverEndAndPay" />
+        <activity android:name=".RiderEndAndPay" />
         <activity android:name=".RiderConfirmPickup" />
         <activity android:name=".DriverConfirmActivity" /> <!-- if you have theme problems change the line above -->
         <activity android:name=".moneyScreen" /> <!-- if you have theme problems change the line above -->
         <activity android:name=".currentRequest" />
         <activity android:name=".RiderNewRequestActivity" />
         <activity android:name=".RiderDriverInitialActivity" />
-        <activity android:name = ".GenerateQR"/>
-        <activity android:name=".DriverScannerActivity"/>
-
+        <activity android:name=".GenerateQR" />
+        <activity android:name=".DriverScannerActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -59,10 +59,10 @@
             android:label="QR Code Generator" />
         <activity
             android:name=".DriverRideInfoActivity"
-            android:label="Ride Confirmation"/>
+            android:label="Ride Confirmation" />
         <activity
             android:name=".DisplayUserInfoActivity"
-            android:label="User Information"/>
+            android:label="User Information" />
     </application>
 
 </manifest>

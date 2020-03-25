@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
 
     android:orientation="vertical"
-    tools:context=".currentRequest"
-    android:background="@color/common_google_signin_btn_text_light_default">
+
+    android:background="@color/common_google_signin_btn_text_light_default"
 
 
     android:fitsSystemWindows="true"

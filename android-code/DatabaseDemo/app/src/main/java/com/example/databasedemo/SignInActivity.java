@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class SignInActivity extends AppCompatActivity {
     Button signInButton;
     Button createAccountButton;
+    Button profilePictureButton;
     EditText enterEmailEditText;
     EditText enterPasswordEditText;
     FirebaseAuth mAuth;
@@ -45,10 +46,20 @@ public class SignInActivity extends AppCompatActivity {
 
         signInButton = findViewById(R.id.sign_in);
         createAccountButton = findViewById(R.id.create_account);
+        profilePictureButton = findViewById( R.id.profile_picture );
         enterEmailEditText = findViewById(R.id.input_email);
         enterPasswordEditText = findViewById(R.id.input_password);
 
         mAuth = FirebaseAuth.getInstance();
+
+
+        profilePictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent( getBaseContext(), TakeProfilePicture.class );
+                startActivity( intent );
+            }
+        });
 
 
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +84,7 @@ public class SignInActivity extends AppCompatActivity {
                         });
             }
         });
+
 
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
