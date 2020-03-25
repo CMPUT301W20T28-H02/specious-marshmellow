@@ -216,7 +216,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                                     public void onSuccess(Location location) {
                                         if (location != null) {
                                             latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
 
                                         }
 
@@ -441,7 +441,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                     public void onSuccess(Location location) {
                         if (location != null) {
                             latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
 
                         }
 
