@@ -124,7 +124,7 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //Toast.makeText(MainActivity.this, R.string.welcome_message, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getBaseContext(), EditContactInformationActivity.class);
+                    Intent intent = new Intent(DisplayUserInfoActivity.this, EditContactInformationActivity.class);
                     intent.putExtra("username", username);
                     startActivity(intent);
                 }
@@ -139,7 +139,7 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
                     mAuth.signOut();
                     finish();
                     overridePendingTransition(0, 0);
-                    Intent intent = new Intent(getBaseContext(), SignInActivity.class);
+                    Intent intent = new Intent(DisplayUserInfoActivity.this, SignInActivity.class);
                     startActivity(intent);
                     overridePendingTransition(0, 0);
                 }

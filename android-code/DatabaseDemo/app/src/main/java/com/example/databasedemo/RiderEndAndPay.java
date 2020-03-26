@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("Hello", "We are inside onCreate() of RiderEndAndPay");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_end_and_pay);
         riderEndAndPayButton = findViewById(R.id.rider_end_and_pay_button);

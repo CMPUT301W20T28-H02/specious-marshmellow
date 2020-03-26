@@ -21,6 +21,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
@@ -48,10 +49,6 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
         Intent i = getIntent();
         riderUsername = i.getStringExtra("riderUsername");
         driverUsername = i.getStringExtra("driverUsername");
-
-
-
-
 
         ViewGroup contentFrame = findViewById(R.id.content_frame);
         contentFrame.addView(mScannerView);
@@ -87,64 +84,62 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
     public void handleResult(Result rawResult) {
         Toast.makeText(this, "Amount = " + rawResult.getText(), Toast.LENGTH_SHORT).show();
 
-        // Note:
-        // * Wait 2 seconds to resume the preview.
-        // * On older devices continuously stopping and resuming camera preview can result in freezing the app.
-        // * I don't know why this is the case but I don't have the time to figure out.
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //mScannerView.resumeCameraPreview(DriverScannerActivity.this);
-            }
-        }, 10000);
-
         final double amount = Double.valueOf(rawResult.getText());
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        DocumentReference requestRef = db.collection("requests").document(riderUsername);
-        final CollectionReference userRef = db.collection("users");
 
         Log.i("Hello", "Before request ref");
 
-        requestRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    final Request request = task.getResult().toObject(Request.class);
-                    Log.i("Hello", "After getting request");
-                    request.endRide(amount);
-                    Rider rider = request.getRider();
-                    rider.setPaymentComplete(true);
-                    request.setRider(rider);
-                    final Driver driver = request.getDriver();
-                    driver.setPaymentComplete(true);
-                    request.setDriver(driver);
-                    Log.i("Hello", "After setting payment (objects)");
-                    userRef.document(riderUsername).set(request.getRider()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.i("Hello", "After setting payment (rider database)");
-                            userRef.document(driverUsername).set(request.getDriver()).addOnSuccessListener(new OnSuccessListener<Void>() {
+        new Thread(new Runnable() {
+            public void run() {
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                final DocumentReference requestRef = db.collection("requests").document(riderUsername);
+                final CollectionReference userRef = db.collection("users");
+
+                requestRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            //TODO java.lang.NullPointerException: Attempt to invoke virtual method 'void com.example.databasedemo.Wallet.deposit(double)' on a null object reference
+                            //        at com.example.databasedemo.Driver.getPaid(Driver.java:53)
+                            //        at com.example.databasedemo.Request.endRide(Request.java:127)
+                            //        at com.example.databasedemo.DriverScannerActivity$1$1.onComplete(DriverScannerActivity.java:104)
+                            final Request request = task.getResult().toObject(Request.class);
+                            Log.i("Hello", "After getting request");
+                            request.endRide(amount);
+                            Log.i("Hello", "After getting request");
+
+                            WriteBatch batch = FirebaseFirestore.getInstance().batch();
+                            DocumentReference driverRef = userRef.document(driverUsername);
+                            batch.set(driverRef, request.getDriver());
+                            DocumentReference riderRef = userRef.document(riderUsername);
+                            batch.set(riderRef, request.getRider());
+                            // Need to write the request back as well to indicate payment is complete
+                            batch.set(requestRef, request);
+
+                            Log.i("Hello", "Just before committing the batch request");
+                            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.i("Hello", "After setting payment (driver database)");
-                                    Intent i = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
-                                    i.putExtra("driver",true);
-                                    Log.i("Hello", driverUsername);
-                                    i.putExtra("username", driverUsername);
-                                    Log.i("Hello", request.getDriver().getEmail());
-                                    i.putExtra("email", request.getDriver().getEmail());
-                                    startActivity(i);
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    //runOnUiThread(new Runnable() {
+                                        //public void run() {
+                                            Log.i("Hello", "After rider pays driver");
+                                            Intent i = new Intent(DriverScannerActivity.this, RiderDriverInitialActivity.class);
+                                            i.putExtra("driver", true);
+                                            Log.i("Hello", "Driver username:" + driverUsername);
+                                            i.putExtra("username", driverUsername);
+                                            Log.i("Hello", "Email:" + request.getDriver().getEmail());
+                                            i.putExtra("email", request.getDriver().getEmail());
+                                            Log.i("Hello", "Driver Scanner Activity: Just before starting RiderDriverInitialActivity");
+                                            startActivity(i);
+                                        //}
+                                   // });
                                 }
                             });
-
                         }
-                    });
-
-                }
+                    }
+                });
             }
-        });
+        }).start();
     }
 }

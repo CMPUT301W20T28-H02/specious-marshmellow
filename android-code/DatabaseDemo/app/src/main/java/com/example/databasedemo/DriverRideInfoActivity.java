@@ -87,7 +87,7 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
         riderUsernameTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), DisplayUserInfoActivity.class);
+                Intent intent = new Intent(DriverRideInfoActivity.this, DisplayUserInfoActivity.class);
                 intent.putExtra("username", riderUsername);
                 startActivity(intent);
             }
@@ -172,7 +172,7 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
                                         request.isAcceptedBy(driver);
                                         DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(request.getRider().getUsername());
                                         docRef.set(request);
-                                        Intent i = new Intent(getBaseContext(), DriverConfirmActivity.class);  // Directions to start location and confirm pickup button
+                                        Intent i = new Intent(DriverRideInfoActivity.this, DriverConfirmActivity.class);  // Directions to start location and confirm pickup button
                                         i.putExtra("riderUsername", riderUsername);
                                         i.putExtra("driverUsername",driverUsername);
                                         startActivity(i);

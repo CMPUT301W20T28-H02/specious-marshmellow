@@ -48,13 +48,13 @@ import androidmads.library.qrgenearator.QRGSaver;
  * @author Michael Antifaoff, Hussein Warsame
  */
 public class GenerateQR extends AppCompatActivity{
-    String TAG = "GenerateQRCode";
     TextView thankYouTextView;
     QRGEncoder qrgEncoder;
     ImageView qrImage;
     Bitmap bitmap;
     String inputValue;
-    Button start, save;
+    String username, email;
+    Button start, makeNewRequestButton;
     String savePath = Environment.getExternalStorageDirectory().getPath() + "/QRCode/";
 
     /**
@@ -68,138 +68,96 @@ public class GenerateQR extends AppCompatActivity{
         setContentView(R.layout.activity_generate_qr);
 
         Intent i = getIntent();
-        final String username = i.getStringExtra("username");
+        username = i.getStringExtra("username");
 
         qrImage = (ImageView) findViewById(R.id.QR_Image);
         thankYouTextView = findViewById(R.id.thank_you_TextView);
         start = (Button) findViewById(R.id.start);
-
-        DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
-
-        // Add a snapshot listener to the rider username in the user database
-        // If the payment is complete, displ
+        makeNewRequestButton = findViewById(R.id.make_new_request_button);
 
 
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                final Request request = documentSnapshot.toObject(Request.class);
 
-                final DocumentReference riderRef = FirebaseFirestore.getInstance().collection("users").document(username);
 
-                riderRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        new Thread(new Runnable() {
+            public void run() {
+
+                DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
+
+                // Add a snapshot listener to the rider username in the user database
+                // If the payment is complete, display a thank you message and then let the user make another request
+
+                docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()){
-                            Rider rider = task.getResult().toObject(Rider.class);
-                            if (rider.getPaymentComplete()){
-                                Log.i("Hello", "We are here 1");
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if (documentSnapshot.exists()){
+                            final Request request = documentSnapshot.toObject(Request.class);
+
+                            if (request.getPaymentComplete()) {
                                 thankYouTextView.setText("Thank you for riding with Marshmellow!");
-                                rider.setPaymentComplete(false);
-                                riderRef.set(rider).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                Log.i("Hello", "We have set the TextView to say thank you!");
+                                DocumentReference innerRef = FirebaseFirestore.getInstance().collection("requests").document(username);
+                                innerRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
 
-                                        Log.i("Hello", "We are here 2");
+                                        Log.i("Hello", "We have deleted the request from the database");
+                                        Intent intent = new Intent(GenerateQR.this, RiderDriverInitialActivity.class);
+                                        intent.putExtra("username", username);
+                                        intent.putExtra("driver", false);
+                                        intent.putExtra("email", email);
+                                        Log.i("Hello", "We are about to start RiderDriverInitialActivity");
+                                        startActivity(intent);
+                                        makeNewRequestButton.setVisibility(View.VISIBLE);
 
-                                        final Intent i = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
-                                        i.putExtra("username", username);
-                                        i.putExtra("driver", false);
-                                        i.putExtra("email", request.getRider().getEmail());
-                                        startActivity(i);
-
-                                        /*try {
-                                            TimeUnit.SECONDS.sleep(3);
-                                        } catch(InterruptedException interrupted){
-                                            Log.e("Hello", interrupted.toString());
-                                        }*/
-
-                                        Log.i("Hello", "We are here 3");
-                                        final Runnable r = new Runnable() {
-                                            public void run() {
-                                                startActivity(i);
-                                            }
-                                        };
-
-                                        final Handler handler = new Handler();
-                                        //handler.postDelayed(r,5000);
                                     }
                                 });
 
+                            } else {
+
+                                Log.i("Hello", "We are not about to start RiderDriverInitialActivity");
+
+                                // Print QR Code to the screen
+                                WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
+                                Display display = manager.getDefaultDisplay();
+                                Point point = new Point();
+                                display.getSize(point);
+                                int width = point.x;
+                                int height = point.y;
+                                int smallerDimension = width < height ? width : height;
+                                smallerDimension = smallerDimension * 3 / 4;
+
+                                qrgEncoder = new QRGEncoder(
+                                        String.valueOf(request.getFare()), null,
+                                        QRGContents.Type.TEXT,
+                                        smallerDimension);
+                                try {
+                                    bitmap = qrgEncoder.encodeAsBitmap();
+                                    qrImage.setImageBitmap(bitmap);
+                                } catch (WriterException error) {
+                                    Log.v("Hello", error.toString());
+                                }
                             }
                         }
 
+
                     }
                 });
+            }
+        }).start();
 
-//                final Runnable r = new Runnable() {
-//                    public void run() {
-//                        startActivity(i);
-//                    }
-//                };
-//
-//                final Handler handler = new Handler();
-//                handler.postDelayed(r,5000);
-
-
-                WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-                Display display = manager.getDefaultDisplay();
-                Point point = new Point();
-                display.getSize(point);
-                int width = point.x;
-                int height = point.y;
-                int smallerDimension = width < height ? width : height;
-                smallerDimension = smallerDimension * 3 / 4;
-
-                qrgEncoder = new QRGEncoder(
-                        String.valueOf(request.getFare()), null,
-                        QRGContents.Type.TEXT,
-                        smallerDimension);
-                try {
-                    bitmap = qrgEncoder.encodeAsBitmap();
-                    qrImage.setImageBitmap(bitmap);
-                } catch (WriterException error) {
-                    Log.v(TAG, error.toString());
-                }
-
-
+        makeNewRequestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GenerateQR.this, RiderDriverInitialActivity.class);
+                intent.putExtra("username", username);
+                intent.putExtra("driver", false);
+                intent.putExtra("email", email);
+                Log.i("Hello", "We are about to start RiderDriverInitialActivity");
+                startActivity(intent);
             }
         });
 
-//        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                if (task.isSuccessful()){
-//                    Request request = task.getResult().toObject(Request.class);
-//                    WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
-//                    Display display = manager.getDefaultDisplay();
-//                    Point point = new Point();
-//                    display.getSize(point);
-//                    int width = point.x;
-//                    int height = point.y;
-//                    int smallerDimension = width < height ? width : height;
-//                    smallerDimension = smallerDimension * 3 / 4;
-//
-//                    qrgEncoder = new QRGEncoder(
-//                            String.valueOf(request.getFare()), null,
-//                            QRGContents.Type.TEXT,
-//                            smallerDimension);
-//                    try {
-//                        bitmap = qrgEncoder.encodeAsBitmap();
-//                        qrImage.setImageBitmap(bitmap);
-//                    } catch (WriterException e) {
-//                        Log.v(TAG, e.toString());
-//                    }
-//                }
-//            }
-//        });
-
-
-
-
-
     }
-
 
 }
 

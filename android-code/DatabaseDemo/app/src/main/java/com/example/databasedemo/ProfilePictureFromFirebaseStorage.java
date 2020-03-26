@@ -1,16 +1,14 @@
 package com.example.databasedemo;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,6 +26,8 @@ import java.net.URLConnection;
 public class ProfilePictureFromFirebaseStorage extends AppCompatActivity {
 
     ImageView firebaseImage;
+    ImageView profile;
+    static String url;
     DatabaseReference reff;
 
     @Override
@@ -37,21 +37,25 @@ public class ProfilePictureFromFirebaseStorage extends AppCompatActivity {
 
         firebaseImage = findViewById( R.id.firebase_image );
 
+
         reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
         // here gonna have to adjust reff to accurately go to the correct
         // user, so i think add an if statement
         // at dataSnapshot.child("//username").getValue().toString();
 
+
         reff.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String url = dataSnapshot.child("imageUrl").getValue().toString();
+                 url = dataSnapshot.child("imageUrl").getValue().toString();
+
 
                 Log.d("Firebase", url);
-
                 Picasso.get()
                         .load( url )
                         .into( firebaseImage );
+
+
             }
 
             @Override
@@ -62,7 +66,9 @@ public class ProfilePictureFromFirebaseStorage extends AppCompatActivity {
 
 
 
+
     }
+
 
 
 

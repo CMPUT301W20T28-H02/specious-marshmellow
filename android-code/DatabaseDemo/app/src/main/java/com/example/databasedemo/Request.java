@@ -25,6 +25,7 @@ public class Request
 
     private boolean riderConfirmation = false;
     private boolean driverConfirmation = false;
+    private boolean paymentComplete = false;
 
     private static ArrayList<Request> requests = new ArrayList<Request>();
 
@@ -100,14 +101,6 @@ public class Request
     }
 
     /**
-     * is true if rider and driver have confirmed
-     * @return {@code boolean} whether both parties have compared
-     */
-    public boolean isConfirmedByRiderAndDriver() {
-      return riderConfirmation && driverConfirmation;
-    }
-
-    /**
      * @deprecated
      * creates ride based on request data
      * @return
@@ -123,8 +116,9 @@ public class Request
      */
     // Called by the driver, amount comes from the QR Code AND includes the tip (so we can't simply use fare)
     public void endRide(double amount){
-        rider.pay(amount);
-        driver.getPaid(amount);
+        this.rider.pay(amount);
+        this.driver.getPaid(amount);
+        this.paymentComplete = true;
     }
 
     // Please ignore this comment:
@@ -134,11 +128,11 @@ public class Request
     //
     // riderConfirmation(); or driverConfirmation();    // Depends which onClickListener we are in
     // Ride ride;
-    // if(isConfirmedByRiderAndDriver()){         // If both the rider and driver have confirmed pickup, create a ride
+    // if(request.getRiderConfirmation()&&request.getDriverConfirmation()){         // If both the rider and driver have confirmed pickup, create a ride
     //     ride = request.createRide();
     //     // Need to add ride to ride database
     // } else {
-    //    while(!isConfirmedByRiderAndDriver()){} // Otherwise, wait for the other user (the complement rider/driver) to confirm and create the ride
+    //    while(!(request.getRiderConfirmation()&&request.getDriverConfirmation())){} // Otherwise, wait for the other user (the complement rider/driver) to confirm and create the ride
     // }
 
     /**
@@ -245,6 +239,14 @@ public class Request
 		return this.driverConfirmation;
 	}
 
+    /**
+     * gets whether payment for the request is complete
+     * @return {@code Boolean} paymentComplete
+     */
+	public boolean getPaymentComplete(){
+        return this.paymentComplete;
+    }
+
   // Setters
 
     /**
@@ -302,5 +304,9 @@ public class Request
 	public void setFareMultiplier(double fareMultiplier) {
 		this.fareMultiplier = fareMultiplier;
 	}
+
+	public void setPaymentComplete(boolean paymentComplete) {
+	    this.paymentComplete = paymentComplete;
+    }
 
 }
