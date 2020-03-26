@@ -6,10 +6,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -17,6 +21,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedInputStream;
@@ -35,6 +44,8 @@ public class ProfilePictureFromFirebaseStorage extends AppCompatActivity {
     FirebaseAuth mAuth;
     String username;
 
+    boolean hasProfilePicture;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,67 +58,71 @@ public class ProfilePictureFromFirebaseStorage extends AppCompatActivity {
         username = user.getDisplayName();
 
 
-        reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
-        // here gonna have to adjust reff to accurately go to the correct
-        // user, so i think add an if statement
-        // at dataSnapshot.child("//username").getValue().toString();
+        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
 
 
-        reff.addValueEventListener(new ValueEventListener() {
+//        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+//                Rider rider = documentSnapshot.toObject(Rider.class);
+//                hasProfilePicture = rider.getHasProfilePicture();
+//                String temp = String.valueOf( hasProfilePicture );
+//                Toast.makeText(ProfilePictureFromFirebaseStorage.this, temp, Toast.LENGTH_SHORT).show();
+//                Toast.makeText( ProfilePictureFromFirebaseStorage.this, username, Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
+
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                 url = dataSnapshot.child("imageUrl").getValue().toString();
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    Rider rider = task.getResult().toObject(Rider.class);
+                    hasProfilePicture = rider.getHasProfilePicture();
+                }
+
+                if( hasProfilePicture )
+                {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
+                } else {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+                }
 
 
-                Log.d("Firebase", url);
-                Picasso.get()
-                        .load( url )
-                        .into( firebaseImage );
+
+                // here gonna have to adjust reff to accurately go to the correct
+                // user, so i think add an if statement
+                // at dataSnapshot.child("//username").getValue().toString();
 
 
+                reff.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        url = dataSnapshot.child("imageUrl").getValue().toString();
+
+
+                        Log.d("Firebase", url);
+                        Picasso.get()
+                                .load( url )
+                                .into( firebaseImage );
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
         });
-
-
-
-
     }
 
 
 
-
-    public static Drawable LoadImageFromWebOperations(String url) {
-        try {
-            InputStream is = (InputStream) new URL(url).getContent();
-            Drawable d = Drawable.createFromStream(is, "src name");
-            return d;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-
-    private Bitmap getImageBitmap(String url) {
-        Bitmap bm = null;
-        try {
-            URL aURL = new URL(url);
-            URLConnection conn = aURL.openConnection();
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();
-        } catch (IOException e) {
-            Log.e("Uri bitmap: ", "Error getting bitmap", e);
-        }
-        return bm;
-    }
 
 
 }

@@ -32,6 +32,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -66,6 +71,7 @@ public class TakeProfilePicture extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     String username;
+    boolean hasProfilePicture;
 
 
     @Override
@@ -100,6 +106,19 @@ public class TakeProfilePicture extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         username = user.getDisplayName();
+//        hasProfilePicture = FirebaseAuth.getInstance().getCurrentUser().get();
+
+        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
+
+
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                Rider rider = documentSnapshot.toObject(Rider.class);
+                hasProfilePicture = rider.getHasProfilePicture();
+            }
+        });
+
 
         //Button click
         mCaptureBtn.setOnClickListener( new View.OnClickListener()
@@ -176,6 +195,7 @@ public class TakeProfilePicture extends AppCompatActivity {
         //----------------------------------------------------------------------------------
         // getUploadSessionUri() instead of depreciated taskSnapshot.getDownloadURL
         // from Waleed Younis
+
         if (image_uri != null)
         {
             final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
@@ -236,6 +256,9 @@ public class TakeProfilePicture extends AppCompatActivity {
                                         Toast.makeText(TakeProfilePicture.this, "Upload successful", Toast.LENGTH_LONG).show();
                                         Upload upload = new Upload( mEditTextFileName.getText().toString().trim(),
                                                 thumb_download_url );     // here, need to get a valid uri or a valid url
+
+
+
 //                            String uploadId = mDatabaseRef.push().getKey();
 //                                        String uploadId = "Will_be_username";     // this will be username of person
 //                                String uploadId = String.valueOf( tempCounter );
@@ -246,6 +269,18 @@ public class TakeProfilePicture extends AppCompatActivity {
                                         mDatabaseRef.child(username).setValue(upload);
 
 
+
+                                        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
+                                        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                if(task.isSuccessful()){
+                                                    Rider rider = task.getResult().toObject(Rider.class);
+                                                    rider.setHasProfilePicture( true );
+                                                    docRef.set(rider);
+                                                }
+                                            }
+                                        });
 
 
                                     }

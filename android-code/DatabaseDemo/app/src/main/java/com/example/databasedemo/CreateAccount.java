@@ -236,8 +236,9 @@ public class CreateAccount extends AppCompatActivity {
             driverTemp = true;
         }
         final boolean driverBoolean = driverTemp;
+        final boolean hasProfilePicture = false;
 
-        User currentUser = new User(username, email, new Wallet(0), phone, 5.0, 1, driverBoolean);
+        User currentUser = new User(username, email, new Wallet(0), phone, 5.0, 1, driverBoolean, hasProfilePicture );
 
 //        Map<String, User> userData = new HashMap<>();
 //        userData.put("username", username);

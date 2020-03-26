@@ -19,6 +19,7 @@ public class User {
 	private double rating;
 	private int numOfRatings; 	// Need this to generate an average rating
 	private boolean driver;
+	private boolean hasProfilePicture = false;
 
 	public User(){
 
@@ -35,7 +36,7 @@ public class User {
 	 * @param {@code boolean}driver
 	 */
 	public User(String username, String email,
-		Wallet wallet, String phone, double rating, int numOfRatings, boolean driver){
+		Wallet wallet, String phone, double rating, int numOfRatings, boolean driver, boolean hasProfilePicture){
 		this.username = username;
 		this.email = email;
 		this.wallet = wallet;
@@ -43,6 +44,7 @@ public class User {
 		this.rating = rating;
 		this.numOfRatings = numOfRatings;
 		this.driver = driver;
+		this.hasProfilePicture = hasProfilePicture;
 	}
 
 	// What are these two supposed to do?
@@ -135,6 +137,16 @@ public class User {
 		return this.driver;
 	}
 
+
+	/**
+	 * gets whether the user has a profile picture or not
+	 * @return boolean} hasProfilePicture
+	 */
+	public boolean getHasProfilePicture()
+	{
+		return this.hasProfilePicture;
+	}
+
 	// Setters
 
 	/**
@@ -193,4 +205,9 @@ public class User {
 		this.driver = driver;
 	}
 
+
+	public void setHasProfilePicture( boolean hasProfilePicture )
+	{
+		this.hasProfilePicture = hasProfilePicture;
+	}
 }
