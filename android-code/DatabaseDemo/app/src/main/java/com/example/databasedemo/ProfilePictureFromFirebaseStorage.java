@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,6 +32,9 @@ public class ProfilePictureFromFirebaseStorage extends AppCompatActivity {
     static String url;
     DatabaseReference reff;
 
+    FirebaseAuth mAuth;
+    String username;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +42,12 @@ public class ProfilePictureFromFirebaseStorage extends AppCompatActivity {
 
         firebaseImage = findViewById( R.id.firebase_image );
 
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = mAuth.getCurrentUser();
+        username = user.getDisplayName();
 
-        reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+
+        reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
         // here gonna have to adjust reff to accurately go to the correct
         // user, so i think add an if statement
         // at dataSnapshot.child("//username").getValue().toString();

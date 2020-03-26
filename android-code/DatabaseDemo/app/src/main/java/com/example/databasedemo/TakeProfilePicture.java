@@ -98,10 +98,7 @@ public class TakeProfilePicture extends AppCompatActivity {
 
 
         mAuth = FirebaseAuth.getInstance();
-
-
         FirebaseUser user = mAuth.getCurrentUser();
-
         username = user.getDisplayName();
 
         //Button click
