@@ -28,6 +28,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -48,7 +50,6 @@ public class TakeProfilePicture extends AppCompatActivity {
     Button mButtonUpload;
     Button mShowImageFromFirebaseBtn;
     ProgressBar mProgressBar;
-
     EditText mEditTextFileName;
     private static final int PICK_IMAGE = 100;
 
@@ -61,11 +62,10 @@ public class TakeProfilePicture extends AppCompatActivity {
     private DatabaseReference mDatabaseRef;
 
     StorageTask mUploadTask;
-
-
     String thumb_download_url;
 
-    int tempCounter = 1;
+    FirebaseAuth mAuth;
+    String username;
 
 
     @Override
@@ -95,6 +95,14 @@ public class TakeProfilePicture extends AppCompatActivity {
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Profile pictures");
 
         Log.d("After ids", "after everything");
+
+
+        mAuth = FirebaseAuth.getInstance();
+
+
+        FirebaseUser user = mAuth.getCurrentUser();
+
+        username = user.getDisplayName();
 
         //Button click
         mCaptureBtn.setOnClickListener( new View.OnClickListener()
@@ -232,13 +240,13 @@ public class TakeProfilePicture extends AppCompatActivity {
                                         Upload upload = new Upload( mEditTextFileName.getText().toString().trim(),
                                                 thumb_download_url );     // here, need to get a valid uri or a valid url
 //                            String uploadId = mDatabaseRef.push().getKey();
-                                        String uploadId = "Will_be_username";     // this will be username of person
+//                                        String uploadId = "Will_be_username";     // this will be username of person
 //                                String uploadId = String.valueOf( tempCounter );
 //                                tempCounter++;
 
 
 
-                                        mDatabaseRef.child(uploadId).setValue(upload);
+                                        mDatabaseRef.child(username).setValue(upload);
 
 
 
