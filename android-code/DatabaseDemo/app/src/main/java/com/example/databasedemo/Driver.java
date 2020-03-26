@@ -28,8 +28,8 @@ public class Driver extends User {
    * @param {@code int}numOfRatings
    * @param {@code boolean}driver
    */
-  public Driver(String username, String email, Wallet wallet, String phone, double rating, int numOfRatings, boolean driver) {
-    super(username, email, wallet, phone, rating, numOfRatings, driver);
+  public Driver(String username, String email, Wallet wallet, String phone, double rating, int numOfRatings, boolean driver, boolean hasProfilePicture) {
+    super(username, email, wallet, phone, rating, numOfRatings, driver, hasProfilePicture);
   }
 
   /*public ArrayList<Request> searchRequests(Location driverLocation, ArrayList<Request> requestsToBeSorted) {

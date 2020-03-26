@@ -29,8 +29,8 @@ public class Rider extends User {
    * @param {@code int}numOfRatings
    * @param {@code boolean}driver
    */
-  public Rider(String username, String email, Wallet wallet, String phone, double rating, int numOfRatings, boolean driver) {
-    super(username, email, wallet, phone, rating, numOfRatings, driver);  // driver should be false
+  public Rider(String username, String email, Wallet wallet, String phone, double rating, int numOfRatings, boolean driver, boolean hasProfilePicture) {
+    super(username, email, wallet, phone, rating, numOfRatings, driver, hasProfilePicture);  // driver should be false
   }
 
   /**
