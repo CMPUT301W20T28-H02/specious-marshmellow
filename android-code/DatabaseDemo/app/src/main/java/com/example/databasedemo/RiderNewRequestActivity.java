@@ -357,7 +357,11 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                                     new com.example.databasedemo.Location(latLng.latitude, latLng.longitude),
                                     new com.example.databasedemo.Location(latLng2.latitude, latLng2.longitude));
                             request.setFare(request.getFare()+globalTip);
+
                             addRequest(request, username, email);
+
+
+
                         }
                     }
                 });
