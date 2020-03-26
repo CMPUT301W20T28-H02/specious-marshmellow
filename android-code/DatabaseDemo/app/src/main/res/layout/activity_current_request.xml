@@ -9,6 +9,8 @@
 
     tools:context=".currentRequest"
     android:background="@color/common_google_signin_btn_text_light_default"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start"
     >
 
 
