@@ -75,7 +75,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                     waiting.setVisibility(View.VISIBLE);
                     cancelPickupButton.setVisibility(View.VISIBLE);
                 }
-                if(request.isConfirmedByRiderAndDriver()){
+                if(request.getRiderConfirmation()&&request.getDriverConfirmation()){
                     Intent i = new Intent(DriverConfirmActivity.this, DriverEndAndPay.class);
                     // Activity expects: final String riderUsername = i.getStringExtra("riderUsername");
                     //                   final String driverUsername = i.getStringExtra("driverUsername");
@@ -121,7 +121,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                 docRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Intent startRiderOrDriverInitial = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+                        Intent startRiderOrDriverInitial = new Intent(DriverConfirmActivity.this, RiderDriverInitialActivity.class);
                         // Activity expects:    boolean driver = intent.getBooleanExtra("driver", true);
                         //                      final String username = intent.getStringExtra("username");
                         //                      final String email = intent.getStringExtra("email");

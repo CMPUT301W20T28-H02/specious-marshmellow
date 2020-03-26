@@ -107,7 +107,7 @@ public class moneyScreen extends AppCompatActivity {
         makeReq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+                Intent intent = new Intent(moneyScreen.this, RiderDriverInitialActivity.class);
                 intent.putExtra("driver", false);
                 startActivity(intent);
             }

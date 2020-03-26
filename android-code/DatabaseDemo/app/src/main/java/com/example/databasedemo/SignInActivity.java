@@ -56,7 +56,7 @@ public class SignInActivity extends AppCompatActivity {
         profilePictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent( getBaseContext(), TakeProfilePicture.class );
+                Intent intent = new Intent( SignInActivity.this, TakeProfilePicture.class );
                 startActivity( intent );
             }
         });
@@ -89,7 +89,7 @@ public class SignInActivity extends AppCompatActivity {
         createAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), CreateAccount.class);
+                Intent intent = new Intent(SignInActivity.this, CreateAccount.class);
                 //intent.putExtra("DATABASE", db);
                 startActivity(intent);
             }

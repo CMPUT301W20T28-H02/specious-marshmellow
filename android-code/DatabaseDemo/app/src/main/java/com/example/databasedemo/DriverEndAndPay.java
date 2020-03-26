@@ -35,6 +35,9 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
     // used for creating intent
     private Class<?> mClss;
 
+    String riderUsername;
+    String driverUsername;
+
     /**
      * Called when activity is created
      * @param {@code Bundle}savedInstanceState
@@ -48,8 +51,8 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
         mClss = DriverScannerActivity.class;
 
         Intent i = getIntent();
-        final String riderUsername = i.getStringExtra("riderUsername");
-        final String driverUsername = i.getStringExtra("driverUsername");
+        riderUsername = i.getStringExtra("riderUsername");
+        driverUsername = i.getStringExtra("driverUsername");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.driver_ride_map);
@@ -68,7 +71,7 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
                     ActivityCompat.requestPermissions( DriverEndAndPay.this,
                             new String[]{Manifest.permission.CAMERA}, ZXING_CAMERA_PERMISSION);
                 } else {
-                    Intent intent = new Intent(getBaseContext(), mClss);
+                    Intent intent = new Intent(DriverEndAndPay.this, mClss);
                     intent.putExtra("riderUsername", riderUsername);
                     intent.putExtra("driverUsername", driverUsername);
                     startActivity(intent);
@@ -107,6 +110,8 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if(mClss != null) {
                         Intent intent = new Intent(this, mClss);
+                        intent.putExtra("riderUsername", riderUsername);
+                        intent.putExtra("driverUsername", driverUsername);
                         startActivity(intent);
                     }
                 } else {

@@ -91,9 +91,9 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("Hello", "We are inside onCreate() of RiderDriverInitialActivity");
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.rider_initial);
-//        makeRequestButton = findViewById(R.id.make_request_button);
+
         Intent intent = getIntent();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -110,8 +110,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         if (driver) {
             Log.i(TAG, "We are here");
             setContentView(R.layout.driver_initial);
-//            navi.setNavigationItemSelectedListener(this);
-//            makeRequestButton = findViewById(R.id.make_request_button);
+//          navi.setNavigationItemSelectedListener(this);
         } else {
             setContentView(R.layout.rider_initial);
 
@@ -133,36 +132,6 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         mapFragment.getMapAsync(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-//        CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
-//
-//        myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-//                requestArrayList.clear();
-//                for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
-//                    final Request request = doc.toObject(Request.class);
-//                    if (!request.getRequestStatus()) {
-//                        Log.i("Hello", "Before Current Location: ");
-//                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
-//                            @Override
-//                            public void onSuccess(Location location) {
-//                                Log.i("Hello", "After Current Location: ");
-//                                if(location != null){
-//                                    double distance = Request.getDistance(new com.example.databasedemo.Location(location.getLatitude(),location.getLongitude()),
-//                                            request.getStartLocation());
-//                                    Log.i("Hello", "Even Better! Distance: " + distance);
-//                                    if (distance < globalBound){
-//                                        addRequest(request);
-//                                    }
-//                                }
-//                            }
-//                        });
-//                    }
-//                }
-//            }
-//        });
-
 
         globalBoundsEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -237,30 +206,12 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         requestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Log.i("Hello", "Rider Driver Initial Activity: inside ListView onItemClickListener");
                 final Request request = requestArrayList.get(position);
-                Intent i = new Intent(getBaseContext(), DriverRideInfoActivity.class);  // Directions to start location and confirm pickup button
+                Intent i = new Intent(RiderDriverInitialActivity.this, DriverRideInfoActivity.class);  // Directions to start location and confirm pickup button
                 i.putExtra("riderUsername", request.getRider().getUsername());
                 i.putExtra("driverUsername",username);
                 startActivity(i);
-
-                /*final Request request = requestArrayList.get(position);
-                // Need to get the current driver, then call request.isAcceptedBy(driver)
-                DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
-                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
-                            Driver driver = task.getResult().toObject(Driver.class);
-                            request.isAcceptedBy(driver);
-                            DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(request.getRider().getUsername());
-                            docRef.set(request);
-                            Intent i = new Intent(getBaseContext(), DriverRideInfoActivity.class);  // Directions to start location and confirm pickup button
-                            i.putExtra("riderUsername", request.getRider().getUsername());
-                            i.putExtra("driverUsername",username);
-                            startActivity(i);
-                        }
-                    }
-                });*/
             }
         });
 
@@ -268,35 +219,13 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
             @Override
             public void onClick(View view) {
                 //Toast.makeText(RiderDriverInitialActivity.this, "Make Request", 10);
-                Log.i(TAG, "Request made");
+                Log.i("Hello", "Rider Driver Initial Activity: inside make request button onItemClickListener");
                 Intent intent = new Intent(RiderDriverInitialActivity.this, RiderNewRequestActivity.class);
                 intent.putExtra("username", username);
                 intent.putExtra("email", email );
                 startActivity(intent);
             }
         });
-
-        // Code should work without this code -- give it three days from March 11
-        // If no more complaints of bugs, then delete this code on Friday, March 13 before uploading
-        /*if(ActivityCompat.checkSelfPermission(RiderDriverInitialActivity.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
-            Log.i(TAG, "We are without permissions");
-            return;
-        }
-        Log.i(TAG, "We are with permissions");
-
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if(location != null){
-                    latLng = new LatLng(location.getLatitude(),location.getLongitude());
-                    MarkerOptions p3 = new MarkerOptions().position(latLng);
-                    map.addMarker(p3);
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
-
-                }
-
-            }
-        });*/
 
     }
 
@@ -334,30 +263,9 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         map = googleMap;
 
         requestPermission();
-        /*LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
-        map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
-        map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
     }
 
-//    @Override
-//    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-//        switch (menuItem.getItemId()) {
-//            case R.id.nav_money:
-//                Intent intent = new Intent(getBaseContext(), moneyScreen.class);
-//
-//                startActivity(intent);
-//                break;
-//            case R.id.sign_out_tab:
-//                Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
-//
-//                startActivity(intent_2);
-//                break;
-//        }
-//
-//
-//        return false;
-//
-//    }
+
 
     /**
      * update map once permission is granted
@@ -385,19 +293,15 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
             fusedLocationProviderClient.getLastLocation().addOnFailureListener(RiderDriverInitialActivity.this, new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.i("Hello", "We are inside onFailure");
                     Toast.makeText(RiderDriverInitialActivity.this, "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG).show();
 
                 }
             });
-            Log.i("Hello", "We are inside current location even though we though location permissions were denied");
         } else {
-            Log.i("Hello", "We are not inside current location even though we though location permissions were denied");
             Toast.makeText(RiderDriverInitialActivity.this,
                     "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG);
         }
 
-        Log.i("Hello", "We must get here");
 
         CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
 
@@ -409,7 +313,6 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                 for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
                     final Request request = doc.toObject(Request.class);
                     if (!request.getRequestStatus()) {
-                        Log.i("Hello", "Before Current Location: ");
 
                         if (driver) {
                             // set rider start point as latlng
@@ -421,11 +324,9 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderDriverInitialActivity.this, new OnSuccessListener<Location>() {
                             @Override
                             public void onSuccess(Location location) {
-                                Log.i("Hello", "After Current Location: ");
                                 if(location != null){
                                     double distance = Request.getDistance(new com.example.databasedemo.Location(location.getLatitude(),location.getLongitude()),
                                             request.getStartLocation());
-                                    Log.i("Hello", "Even Better! Distance: " + distance);
                                     if (distance < globalBound){
                                         addRequest(request);
                                     }

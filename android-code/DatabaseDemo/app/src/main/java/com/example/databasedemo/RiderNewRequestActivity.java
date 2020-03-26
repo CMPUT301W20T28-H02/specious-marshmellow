@@ -149,7 +149,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(),TakeProfilePicture.class);
+                Intent intent = new Intent(RiderNewRequestActivity.this,TakeProfilePicture.class);
                 startActivity(intent);
             }
         });
@@ -436,19 +436,19 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         switch (menuItem.getItemId()) {
             case R.id.nav_money:
-                Intent intent = new Intent(getBaseContext(), moneyScreen.class);
+                Intent intent = new Intent(RiderNewRequestActivity.this, moneyScreen.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
                 break;
             case R.id.sign_out_tab:
                 mAuth.signOut();
                 finish();
-                Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
+                Intent intent_2 = new Intent(RiderNewRequestActivity.this, SignInActivity.class);
 
                 startActivity(intent_2);
                 break;
             case R.id.contact_info:
-                Intent intent1 = new Intent(getBaseContext(),EditContactInformationActivity.class);
+                Intent intent1 = new Intent(RiderNewRequestActivity.this,EditContactInformationActivity.class);
                 intent1.putExtra("username", username);
                 startActivity(intent1);
                 break;

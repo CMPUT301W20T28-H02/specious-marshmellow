@@ -68,19 +68,19 @@ public class MainActivity extends AppCompatActivity{
                             if (request.getRequestStatus())
                             { // If rider has already been matched with a driver
                                 // If rider has already confirmed pickup
-                                if (request.isConfirmedByRiderAndDriver()){
-                                    Intent startRiderEndandPay = new Intent(getBaseContext(), RiderEndAndPay.class);
+                                if (request.getRiderConfirmation()&&request.getDriverConfirmation()){
+                                    Intent startRiderEndandPay = new Intent(MainActivity.this, RiderEndAndPay.class);
                                     // Activity expects: final String username = i.getStringExtra("username");
                                     startRiderEndandPay.putExtra("username",username);
                                     startActivity(startRiderEndandPay);
                                 } else { // If rider has not yet confirmed pickup
-                                    Intent startRiderConfirmPickup = new Intent(getBaseContext(), RiderConfirmPickup.class);
+                                    Intent startRiderConfirmPickup = new Intent(MainActivity.this, RiderConfirmPickup.class);
                                     // Activity expects: final String username = i.getStringExtra("username");
                                     startRiderConfirmPickup.putExtra("username", username);
                                     startActivity(startRiderConfirmPickup);
                                 }
                             } else { // If rider has not yet been matched with a driver
-                                Intent startCurrentRequest = new Intent(getBaseContext(), currentRequest.class);
+                                Intent startCurrentRequest = new Intent(MainActivity.this, currentRequest.class);
                                 // Activity expects:    final String username = intent.getStringExtra("username");
                                 //                      final String email = intent.getStringExtra("email");
                                 startCurrentRequest.putExtra("username", username);
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity{
 
         } else {
             // No user is signed in
-            Intent intent = new Intent(getBaseContext(), SignInActivity.class);
+            Intent intent = new Intent(MainActivity.this, SignInActivity.class);
             startActivity(intent);
         }
     }
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity{
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         User currentUser = document.toObject(User.class);
-                        Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+                        Intent intent = new Intent(MainActivity.this, RiderDriverInitialActivity.class);
                         if (currentUser.getDriver()) {
                             intent.putExtra("driver", true);
                         } else {

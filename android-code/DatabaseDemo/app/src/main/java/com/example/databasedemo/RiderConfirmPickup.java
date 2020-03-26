@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 /**
  * ConfirmPickup from the rider side
@@ -63,34 +64,38 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
 
         Intent i = getIntent();
         final String username = i.getStringExtra("username");
+        Log.i("Hello", "RCP: The username is " + username);
         // TODO: Email is null here: Check to see if email is passed through MainActivity
         final String email = i.getStringExtra("email");
 
 
         final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
 
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        ListenerRegistration registration =docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                Request request = documentSnapshot.toObject(Request.class);
-                // TODO: Take user to a display info activity instead that tells them all about the driver
-                driverUsernameTextView.setText(getString(R.string.rider_confirm_driver_username, request.getDriver().getUsername()));
-                driverPhoneNumberTextView.setText(getString(R.string.rider_confirm_driver_phone_number, request.getDriver().getPhone()));
-                driverEmailTextView.setText(getString(R.string.rider_confirm_driver_email, request.getDriver().getEmail()));
-                if (riderReady) {
-                    riderConfirmPickupButton.setVisibility(View.INVISIBLE);
-                    waiting.setVisibility(View.VISIBLE);
-                    cancelRequestButton.setVisibility(View.VISIBLE);
-                }
-                if(request.isConfirmedByRiderAndDriver()){
-                    Intent i = new Intent(RiderConfirmPickup.this, RiderEndAndPay.class);
-                    i.putExtra("username", username);
-                    startActivity(i);
-                }
-                if (request.getRiderConfirmation()){
-                    riderConfirmPickupButton.setVisibility(View.INVISIBLE);
-                    waiting.setVisibility(View.VISIBLE);
-                    cancelRequestButton.setVisibility(View.VISIBLE);
+                if (documentSnapshot.exists()) {
+                    Request request = documentSnapshot.toObject(Request.class);
+                    // TODO: Take user to a display info activity instead that tells them all about the driver
+                    driverUsernameTextView.setText(getString(R.string.rider_confirm_driver_username, request.getDriver().getUsername()));
+                    driverPhoneNumberTextView.setText(getString(R.string.rider_confirm_driver_phone_number, request.getDriver().getPhone()));
+                    driverEmailTextView.setText(getString(R.string.rider_confirm_driver_email, request.getDriver().getEmail()));
+                    if (riderReady) {
+                        riderConfirmPickupButton.setVisibility(View.INVISIBLE);
+                        waiting.setVisibility(View.VISIBLE);
+                        cancelRequestButton.setVisibility(View.VISIBLE);
+                    }
+                    if (request.getRiderConfirmation()&&request.getDriverConfirmation()) {
+
+                        Intent i = new Intent(RiderConfirmPickup.this, RiderEndAndPay.class);
+                        i.putExtra("username", username);
+                        startActivity(i);
+                    }
+                    if (request.getRiderConfirmation()) {
+                        riderConfirmPickupButton.setVisibility(View.INVISIBLE);
+                        waiting.setVisibility(View.VISIBLE);
+                        cancelRequestButton.setVisibility(View.VISIBLE);
+                    }
                 }
             }
         });
@@ -129,7 +134,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                 docRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Intent startRiderOrDriverInitial = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
+                        Intent startRiderOrDriverInitial = new Intent(RiderConfirmPickup.this, RiderDriverInitialActivity.class);
                         // Activity expects:    boolean driver = intent.getBooleanExtra("driver", true);
                         //                      final String username = intent.getStringExtra("username");
                         //                      final String email = intent.getStringExtra("email");
