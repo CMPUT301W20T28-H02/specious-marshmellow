@@ -127,6 +127,7 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
                     Intent intent = new Intent(DisplayUserInfoActivity.this, EditContactInformationActivity.class);
                     intent.putExtra("username", username);
                     startActivity(intent);
+                    finish();
                 }
             });
 
@@ -141,6 +142,7 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
                     overridePendingTransition(0, 0);
                     Intent intent = new Intent(DisplayUserInfoActivity.this, SignInActivity.class);
                     startActivity(intent);
+                    finish();
                     overridePendingTransition(0, 0);
                 }
             });

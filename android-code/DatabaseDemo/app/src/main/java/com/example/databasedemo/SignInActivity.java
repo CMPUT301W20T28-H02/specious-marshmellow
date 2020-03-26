@@ -58,6 +58,7 @@ public class SignInActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent( SignInActivity.this, TakeProfilePicture.class );
                 startActivity( intent );
+                finish();
             }
         });
 
@@ -77,6 +78,7 @@ public class SignInActivity extends AppCompatActivity {
                                     Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
+                                    finish();
                                 } else {
                                     Toast.makeText(SignInActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                                 }
@@ -92,6 +94,7 @@ public class SignInActivity extends AppCompatActivity {
                 Intent intent = new Intent(SignInActivity.this, CreateAccount.class);
                 //intent.putExtra("DATABASE", db);
                 startActivity(intent);
+                finish();
             }
         });
     }

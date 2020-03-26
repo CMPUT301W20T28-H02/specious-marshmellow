@@ -75,6 +75,7 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
                     intent.putExtra("riderUsername", riderUsername);
                     intent.putExtra("driverUsername", driverUsername);
                     startActivity(intent);
+                    finish();
                 }
 
             }
@@ -113,6 +114,7 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
                         intent.putExtra("riderUsername", riderUsername);
                         intent.putExtra("driverUsername", driverUsername);
                         startActivity(intent);
+                        finish();
                     }
                 } else {
                     Toast.makeText(this, "Please grant camera permission to use the QR Scanner", Toast.LENGTH_SHORT).show();

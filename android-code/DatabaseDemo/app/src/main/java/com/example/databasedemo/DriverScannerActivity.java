@@ -60,6 +60,7 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
      */
     @Override
     public void onResume() {
+        Log.i("Hello", "DriverScannerActivity: We are inside OnResume");
         super.onResume();
         mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
         mScannerView.startCamera();          // Start camera on resume
@@ -132,6 +133,7 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
                                             i.putExtra("email", request.getDriver().getEmail());
                                             Log.i("Hello", "Driver Scanner Activity: Just before starting RiderDriverInitialActivity");
                                             startActivity(i);
+                                            finish();
                                         //}
                                    // });
                                 }

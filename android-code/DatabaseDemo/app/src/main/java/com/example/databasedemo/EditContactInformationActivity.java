@@ -170,6 +170,7 @@ public class EditContactInformationActivity extends AppCompatActivity {
                         Intent intent = new Intent(EditContactInformationActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
+                        finish();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

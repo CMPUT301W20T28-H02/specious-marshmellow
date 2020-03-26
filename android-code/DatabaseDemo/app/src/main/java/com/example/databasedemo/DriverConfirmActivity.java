@@ -28,6 +28,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 /**
  * Shows map to driver and asks to confirm pickup
@@ -39,6 +40,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
     TextView waiting;
     Button driverConfirmPickupButton, cancelPickupButton;
     boolean driverReady = false;
+    ListenerRegistration registration;
 
     /**
      * Called when activity is created
@@ -66,7 +68,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
 
         final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(riderUsername);
 
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        registration = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 Request request = documentSnapshot.toObject(Request.class);
@@ -82,6 +84,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                     i.putExtra("riderUsername", riderUsername);
                     i.putExtra("driverUsername", driverUsername);
                     startActivity(i);
+                    finish();
                 }
                 if (request.getDriverConfirmation()){
                     driverConfirmPickupButton.setVisibility(View.INVISIBLE);
@@ -130,12 +133,19 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                         String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
                         startRiderOrDriverInitial.putExtra("email", email);
                         startActivity(startRiderOrDriverInitial);
+                        finish();
                     }
                 });
             }
         });
 
 
+    }
+
+    @Override
+    public void onDestroy(){
+        registration.remove();
+        super.onDestroy();
     }
 
     /**

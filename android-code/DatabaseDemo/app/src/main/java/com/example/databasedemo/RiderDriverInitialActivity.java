@@ -55,6 +55,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -82,6 +83,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
     ArrayList<Request> requestArrayList;
     double globalBound = 10000;
     boolean driver;
+    ListenerRegistration registration;
 
     /**
      * Called when activity is created
@@ -212,6 +214,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                 i.putExtra("riderUsername", request.getRider().getUsername());
                 i.putExtra("driverUsername",username);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -224,9 +227,15 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                 intent.putExtra("username", username);
                 intent.putExtra("email", email );
                 startActivity(intent);
+                finish();
             }
         });
 
+    }
+
+    public void onDestroy(){
+        registration.remove();
+        super.onDestroy();
     }
 
     /**
@@ -305,7 +314,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
         CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
 
-        myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        registration = myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                 requestArrayList.clear();

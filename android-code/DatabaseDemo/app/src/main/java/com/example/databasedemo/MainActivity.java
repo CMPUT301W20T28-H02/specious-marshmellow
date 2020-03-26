@@ -73,11 +73,13 @@ public class MainActivity extends AppCompatActivity{
                                     // Activity expects: final String username = i.getStringExtra("username");
                                     startRiderEndandPay.putExtra("username",username);
                                     startActivity(startRiderEndandPay);
+                                    finish();
                                 } else { // If rider has not yet confirmed pickup
                                     Intent startRiderConfirmPickup = new Intent(MainActivity.this, RiderConfirmPickup.class);
                                     // Activity expects: final String username = i.getStringExtra("username");
                                     startRiderConfirmPickup.putExtra("username", username);
                                     startActivity(startRiderConfirmPickup);
+                                    finish();
                                 }
                             } else { // If rider has not yet been matched with a driver
                                 Intent startCurrentRequest = new Intent(MainActivity.this, currentRequest.class);
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity{
                                 startCurrentRequest.putExtra("username", username);
                                 startCurrentRequest.putExtra("email", email);
                                 startActivity(startCurrentRequest);
+                                finish();
                             }
                         }
                         else {
@@ -101,6 +104,7 @@ public class MainActivity extends AppCompatActivity{
             // No user is signed in
             Intent intent = new Intent(MainActivity.this, SignInActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 
@@ -130,6 +134,7 @@ public class MainActivity extends AppCompatActivity{
                         intent.putExtra("username", currentUser.getUsername());
                         intent.putExtra("email", currentUser.getEmail());
                         startActivity(intent);
+                        finish();
                     }
                 }
             }

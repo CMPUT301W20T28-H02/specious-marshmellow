@@ -151,6 +151,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
             public void onClick(View view) {
                 Intent intent = new Intent(RiderNewRequestActivity.this,TakeProfilePicture.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -409,6 +410,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 //                ConfirmedRequest.putExtra("Latitude", latLng.latitude);
 //                ConfirmedRequest.putExtra("Longitude", latLng.longitude);
         startActivity(ConfirmedRequest);
+        finish();
     }
 
 
@@ -443,18 +445,20 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 Intent intent = new Intent(RiderNewRequestActivity.this, moneyScreen.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.sign_out_tab:
                 mAuth.signOut();
                 finish();
                 Intent intent_2 = new Intent(RiderNewRequestActivity.this, SignInActivity.class);
-
                 startActivity(intent_2);
+                finish();
                 break;
             case R.id.contact_info:
                 Intent intent1 = new Intent(RiderNewRequestActivity.this,EditContactInformationActivity.class);
                 intent1.putExtra("username", username);
                 startActivity(intent1);
+                finish();
                 break;
 
         }

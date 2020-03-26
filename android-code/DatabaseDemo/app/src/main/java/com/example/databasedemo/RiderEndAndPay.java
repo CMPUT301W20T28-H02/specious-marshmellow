@@ -54,6 +54,7 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
                 Intent i = new Intent(RiderEndAndPay.this, GenerateQR.class);
                 i.putExtra("username", username);
                 startActivity(i);
+                finish();
 
             }
         });

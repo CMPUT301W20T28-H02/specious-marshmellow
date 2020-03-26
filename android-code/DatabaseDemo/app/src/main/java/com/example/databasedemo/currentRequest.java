@@ -52,6 +52,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.squareup.picasso.Picasso;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -73,7 +74,9 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
      CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
      String username = new String();
      DatabaseReference reff;
+     ListenerRegistration registration;
      /*FirebaseAuth mAuth;*/
+
 
      NotificationCompat.Builder riderMatchedWithDriverNotification;
      private static final int uniqueID = 22;
@@ -143,6 +146,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
             public void onClick(View view) {
                 Intent intent = new Intent(currentRequest.this, TakeProfilePicture.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -186,6 +190,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                                 intent.putExtra("email", email);
 
                                 startActivity(intent);
+                                finish();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -200,7 +205,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
 
         DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
 
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        registration = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(documentSnapshot.exists()){
@@ -213,12 +218,19 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                         i.putExtra("username", username);
                         i.putExtra("email", email);
                         startActivity(i);
+                        finish();
                     }
 
                 }
             }
         });
 
+    }
+
+    @Override
+    public void onDestroy(){
+        registration.remove();
+        super.onDestroy();
     }
 
 
@@ -314,6 +326,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 Intent intent = new Intent(currentRequest.this, moneyScreen.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.sign_out_tab:
                 /*mAuth.signOut();
@@ -328,6 +341,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 Intent intent1 = new Intent(currentRequest.this,EditContactInformationActivity.class);
                 intent1.putExtra("username", username);
                 startActivity(intent1);
+                finish();
                 break;
 
 

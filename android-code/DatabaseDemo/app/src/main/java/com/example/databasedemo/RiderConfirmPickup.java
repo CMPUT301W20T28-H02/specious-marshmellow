@@ -39,6 +39,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
     TextView waiting, driverUsernameTextView, driverPhoneNumberTextView, driverEmailTextView;
     Button riderConfirmPickupButton, cancelRequestButton;
     boolean riderReady = false;
+    ListenerRegistration registration;
 
 
     /**
@@ -71,7 +72,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
 
         final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
 
-        ListenerRegistration registration =docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        registration = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
@@ -90,6 +91,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                         Intent i = new Intent(RiderConfirmPickup.this, RiderEndAndPay.class);
                         i.putExtra("username", username);
                         startActivity(i);
+                        finish();
                     }
                     if (request.getRiderConfirmation()) {
                         riderConfirmPickupButton.setVisibility(View.INVISIBLE);
@@ -142,12 +144,19 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                         startRiderOrDriverInitial.putExtra("username", username);
                         startRiderOrDriverInitial.putExtra("email", email);
                         startActivity(startRiderOrDriverInitial);
+                        finish();
                     }
                 });
             }
         });
 
 
+    }
+
+    @Override
+    public void onDestroy(){
+        registration.remove();
+        super.onDestroy();
     }
 
     /**

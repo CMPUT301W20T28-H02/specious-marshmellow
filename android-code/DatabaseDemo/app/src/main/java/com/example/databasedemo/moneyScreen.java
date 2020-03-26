@@ -23,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import org.w3c.dom.Text;
 
@@ -33,6 +34,7 @@ import org.w3c.dom.Text;
 public class moneyScreen extends AppCompatActivity {
     Button btn5, btn25, btn50, makeReq;
     TextView bal, bal_setter;
+    ListenerRegistration registration;
 
     /**
      *  Shows current balance and three buttons that allow user to add more money to their wallet
@@ -110,9 +112,10 @@ public class moneyScreen extends AppCompatActivity {
                 Intent intent = new Intent(moneyScreen.this, RiderDriverInitialActivity.class);
                 intent.putExtra("driver", false);
                 startActivity(intent);
+                finish();
             }
         });
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        registration = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 Rider rider = documentSnapshot.toObject(Rider.class);
@@ -136,8 +139,12 @@ public class moneyScreen extends AppCompatActivity {
 
 
 
+    }
 
-
-
+    @Override
+    public void onDestroy(){
+        registration.remove();
+        super.onDestroy();
     }
 }
+

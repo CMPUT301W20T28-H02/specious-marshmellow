@@ -90,6 +90,7 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
                 Intent intent = new Intent(DriverRideInfoActivity.this, DisplayUserInfoActivity.class);
                 intent.putExtra("username", riderUsername);
                 startActivity(intent);
+                finish();
             }
         });
         // get the ride
@@ -176,6 +177,7 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
                                         i.putExtra("riderUsername", riderUsername);
                                         i.putExtra("driverUsername",driverUsername);
                                         startActivity(i);
+                                        finish();
                                     }
                                 }
                             });

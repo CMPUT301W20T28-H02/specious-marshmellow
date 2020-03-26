@@ -153,6 +153,7 @@ public class TakeProfilePicture extends AppCompatActivity {
             public void onClick(View v) {
                 Intent showImage = new Intent(TakeProfilePicture.this, ProfilePictureFromFirebaseStorage.class);
                 startActivity(showImage);
+                finish();
             }
         });
     }

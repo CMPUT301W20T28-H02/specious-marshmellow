@@ -31,6 +31,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.zxing.WriterException;
 
 
@@ -56,6 +57,7 @@ public class GenerateQR extends AppCompatActivity{
     String username, email;
     Button start, makeNewRequestButton;
     String savePath = Environment.getExternalStorageDirectory().getPath() + "/QRCode/";
+    ListenerRegistration registration;
 
     /**
      * Called when activity is created
@@ -86,7 +88,7 @@ public class GenerateQR extends AppCompatActivity{
                 // Add a snapshot listener to the rider username in the user database
                 // If the payment is complete, display a thank you message and then let the user make another request
 
-                docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                registration = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                         if (documentSnapshot.exists()){
@@ -107,6 +109,7 @@ public class GenerateQR extends AppCompatActivity{
                                         intent.putExtra("email", email);
                                         Log.i("Hello", "We are about to start RiderDriverInitialActivity");
                                         startActivity(intent);
+                                        finish();
                                         makeNewRequestButton.setVisibility(View.VISIBLE);
 
                                     }
@@ -154,9 +157,16 @@ public class GenerateQR extends AppCompatActivity{
                 intent.putExtra("email", email);
                 Log.i("Hello", "We are about to start RiderDriverInitialActivity");
                 startActivity(intent);
+                finish();
             }
         });
 
+    }
+
+    @Override
+    public void onDestroy(){
+        registration.remove();
+        super.onDestroy();
     }
 
 }
