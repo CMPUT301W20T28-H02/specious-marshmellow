@@ -276,7 +276,7 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
         cancelRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(DriverRideInfoActivity.this, RiderDriverInitialActivity.class);  // Directions to start location and confirm pickup button
+                Intent i = new Intent(DriverRideInfoActivity.this, DriverStartActivity.class);  // Directions to start location and confirm pickup button
                 i.putExtra("driver", true);
                 i.putExtra("username", driverUsername);
                 i.putExtra("email", email);

@@ -209,7 +209,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                 docRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Intent startRiderOrDriverInitial = new Intent(RiderConfirmPickup.this, RiderDriverInitialActivity.class);
+                        Intent startRiderOrDriverInitial = new Intent(RiderConfirmPickup.this, RiderStartActivity.class);
                         // Activity expects:    boolean driver = intent.getBooleanExtra("driver", true);
                         //                      final String username = intent.getStringExtra("username");
                         //                      final String email = intent.getStringExtra("email");

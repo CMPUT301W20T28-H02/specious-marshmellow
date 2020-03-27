@@ -103,7 +103,7 @@ public class GenerateQR extends AppCompatActivity{
                                     public void onComplete(@NonNull Task<Void> task) {
 
                                         Log.i("Hello", "We have deleted the request from the database");
-                                        Intent intent = new Intent(GenerateQR.this, RiderDriverInitialActivity.class);
+                                        Intent intent = new Intent(GenerateQR.this, RiderStartActivity.class);
                                         intent.putExtra("username", username);
                                         intent.putExtra("driver", false);
                                         intent.putExtra("email", email);
@@ -151,7 +151,7 @@ public class GenerateQR extends AppCompatActivity{
         makeNewRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(GenerateQR.this, RiderDriverInitialActivity.class);
+                Intent intent = new Intent(GenerateQR.this, RiderStartActivity.class);
                 intent.putExtra("username", username);
                 intent.putExtra("driver", false);
                 intent.putExtra("email", email);
