@@ -1,6 +1,7 @@
 package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -15,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -25,10 +27,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -189,5 +194,89 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
     public void onDestroy(){
         registration.remove();
         super.onDestroy();
+    }
+    /**
+     * update map once permission is granted
+     * @param {@code int}requestCode
+     * @param {@code String[]}permissions
+     * @param {@code int[]}grantResults
+     */
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (permissions[0].equals(ACCESS_FINE_LOCATION)) {
+
+            map.setMyLocationEnabled(true);
+
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(DriverStartActivity.this, new OnSuccessListener<android.location.Location>() {
+                @Override
+                public void onSuccess(android.location.Location location) {
+                    if (location != null) {
+                        latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                    }
+
+                }
+            });
+            fusedLocationProviderClient.getLastLocation().addOnFailureListener(DriverStartActivity.this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(DriverStartActivity.this, "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG).show();
+
+                }
+            });
+        } else {
+            Toast.makeText(DriverStartActivity.this,
+                    "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG);
+        }
+
+
+        CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
+
+        registration = myRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                requestArrayList.clear();
+                map.clear();
+                for (QueryDocumentSnapshot doc: queryDocumentSnapshots){
+                    final Request request = doc.toObject(Request.class);
+                    if (!request.getRequestStatus()) {
+
+                        if (driver) {
+                            // set rider start point as latlng
+                            LatLng riderLocation = new LatLng(request.getStartLocation().getLatitude(), request.getStartLocation().getLongitude());
+                            // add markers to map for rider start location
+                            map.addMarker(new MarkerOptions().position(riderLocation).title(request.getRider().getUsername()));
+                        }
+
+                        fusedLocationProviderClient.getLastLocation().addOnSuccessListener( DriverStartActivity.this, new OnSuccessListener<android.location.Location>() {
+                            @Override
+                            public void onSuccess(android.location.Location location) {
+                                if(location != null){
+                                    double distance = Request.getDistance(new com.example.databasedemo.Location(location.getLatitude(),location.getLongitude()),
+                                            request.getStartLocation());
+                                    if (distance < globalBound){
+                                        addRequest(request);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+
+                map.setMyLocationEnabled(true);
+                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(DriverStartActivity.this, new OnSuccessListener<android.location.Location>() {
+                    @Override
+                    public void onSuccess(android.location.Location location) {
+                        if (location != null) {
+                            latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+
+                        }
+
+                    }
+                });
+            }
+        });
     }
 }
