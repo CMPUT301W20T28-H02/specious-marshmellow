@@ -12,10 +12,13 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -69,9 +72,10 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
     FusedLocationProviderClient fusedLocationProviderClient;
     LatLng latLng,latLng2, latLng3;
     MarkerOptions p1, p2;
-    TextView fareDisplay, offerDisplay,usrNameText,usrEmailText;
-    TextView tipAmount;
-    double fare, globalTip;
+    TextView offerDisplay,tipLabel,usrNameText,usrEmailText;
+    EditText tipAmount;
+    double globalFare = 0;
+    double globalTip = 0;
     FirebaseAuth mAuth;
     ImageView profile;
     DatabaseReference reff;
@@ -106,17 +110,14 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         final String username = intent.getStringExtra("username");
         final String email = intent.getStringExtra("email");
 
-
-
-
         btnGetFare = findViewById(R.id.btnGetFare);
 
-        btnAddTip = findViewById(R.id.addTipButton);
+        //btnAddTip = findViewById(R.id.addTipButton);
         btnConfirmRequest = findViewById(R.id.btnConfirmRequest);
         searchView = findViewById(R.id.sv_location);
         searchView2 = findViewById(R.id.sv2_location);
-        fareDisplay = findViewById(R.id.fareDisplay);
         offerDisplay = findViewById(R.id.offerDisplay);
+        tipLabel = findViewById(R.id.tipLabel);
         tipAmount = findViewById(R.id.tipAmount);
         usrNameText = headerView.findViewById(R.id.usrNameText);
         usrEmailText=headerView.findViewById(R.id.usrEmailText);
@@ -131,14 +132,8 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 String url = dataSnapshot.child("imageUrl").getValue().toString();
-
-
                 Log.d("Firebase", url);
-                Picasso.get()
-                        .load( url )
-                        .into( profile );
-
-
+                Picasso.get().load(url).into( profile );
             }
 
             @Override
@@ -162,9 +157,6 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         mapFragment = ( SupportMapFragment ) getSupportFragmentManager()
                 .findFragmentById( R.id.map);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
-
-
-        btnConfirmRequest.setVisibility(View.INVISIBLE);
 
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -317,22 +309,47 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 double distance = Request.getDistance(startLocation, endLocation);
                 Log.i(TAG, "the distance is" + distance);
 
-                fare = Request.calculateFare(distance);
+                globalFare = Request.calculateFare(distance);
                 DecimalFormat numberFormat = new DecimalFormat("#.00");
-                Log.i(TAG, "the fare is " + numberFormat.format(fare));
+                Log.i(TAG, "the fare is " + numberFormat.format(globalFare));
                 // String dist = String.valueOf(fare);
                 // String url = getUrl(p1.getPosition(), p2.getPosition(), "driving");
                 // new FetchURL(RiderNewRequestActivity.this).execute(url, "driving");
 
-                fareDisplay.setVisibility(View.VISIBLE);
                 offerDisplay.setVisibility(View.VISIBLE);
-                fareDisplay.setText("Calculated Fare: " + numberFormat.format(fare));
-                offerDisplay.setText("Offer: " + numberFormat.format(fare));
+                offerDisplay.setText("Offer: $" + numberFormat.format(globalFare));
 
+                tipLabel.setVisibility(View.VISIBLE);
+
+                tipAmount.setVisibility(View.VISIBLE);
 
                 btnConfirmRequest.setVisibility(View.VISIBLE);
 
+                btnGetFare.setVisibility(View.INVISIBLE);
                 // Toast.makeText(getApplicationContext(),dist,Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        tipAmount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(!charSequence.toString().equals("")) {
+                    globalTip = Double.valueOf(tipAmount.getText().toString());
+                    DecimalFormat numberFormat = new DecimalFormat("#.00");
+                    offerDisplay.setText("Offer: $" + numberFormat.format(globalFare + globalTip));
+                } else {
+                    DecimalFormat numberFormat = new DecimalFormat("#.00");
+                    offerDisplay.setText("Offer: $" + numberFormat.format(globalFare));
+                    globalTip = 0;
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
 
             }
         });
@@ -361,8 +378,6 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
                             addRequest(request, username, email);
 
-
-
                         }
                     }
                 });
@@ -371,23 +386,23 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         }));
 
 
-        btnAddTip.setOnClickListener((new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                String tipToAdd = tipAmount.getText().toString();
-                double tempTip = Double.valueOf(tipToAdd);
-                double farePlusTip = fare;
-                if( tempTip >= 0 )
-                {
-                    farePlusTip += tempTip;
-                }
-                globalTip = tempTip;
-                DecimalFormat numberFormat = new DecimalFormat("#.00");
-                // can put a "Toast" saying invalid tip amount
-                offerDisplay.setText("Offer: " + numberFormat.format(farePlusTip));
-            }
-        }));
+//        btnAddTip.setOnClickListener((new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                String tipToAdd = tipAmount.getText().toString();
+//                double tempTip = Double.valueOf(tipToAdd);
+//                double farePlusTip = fare;
+//                if( tempTip >= 0 )
+//                {
+//                    farePlusTip += tempTip;
+//                }
+//                globalTip = tempTip;
+//                DecimalFormat numberFormat = new DecimalFormat("#.00");
+//                // can put a "Toast" saying invalid tip amount
+//                offerDisplay.setText("Offer: " + numberFormat.format(farePlusTip));
+//            }
+//        }));
 
 
     }
