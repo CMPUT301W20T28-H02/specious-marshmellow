@@ -5,8 +5,14 @@ Date March 13 2020
  */
 package com.example.databasedemo;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -73,6 +79,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
      FirebaseFirestore db;
      CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
      String username = new String();
+     String email = new String();
      DatabaseReference reff;
      ListenerRegistration registration;
      /*FirebaseAuth mAuth;*/
@@ -107,7 +114,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
 
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
-        final String email = intent.getStringExtra("email");
+        email = intent.getStringExtra("email");
         usrNameText = headerview.findViewById(R.id.usrNameText);
         usrEmailText=headerview.findViewById(R.id.usrEmailText);
         usrNameText.setText(username);
@@ -213,6 +220,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                     if(request.getRequestStatus() == true){
                         // Change this line so that it switches to Rider on a ride activity
                         Log.d("Database", "here");
+                        sendNotification();
 
                         Intent i = new Intent(currentRequest.this,RiderConfirmPickup.class);
                         i.putExtra("username", username);
@@ -231,6 +239,71 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
     public void onDestroy(){
         registration.remove();
         super.onDestroy();
+    }
+
+    public void sendNotification() {
+
+        //Get an instance of NotificationManager//
+
+//        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+//                        .setSmallIcon(R.mipmap.marshmellow)
+//                        .setContentTitle("My notification")
+//                        .setContentText("Hello World!");
+//
+//        mBuilder.setAutoCancel(true);
+
+        //Create an intent that’ll fire when the user taps the notification
+
+//        Intent i = new Intent(currentRequest.this,RiderConfirmPickup.class);
+//        i.putExtra("username", username);
+//        i.putExtra("email", email);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, 0);
+//
+//        mBuilder.setContentIntent(pendingIntent);
+//
+//        //mBuilder.setSmallIcon(R.drawable.notification_icon);
+//        mBuilder.setContentTitle("My notification");
+//        mBuilder.setContentText("Hello World!");
+
+//        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        mNotificationManager.notify(001, mBuilder.build());
+
+
+        NotificationManager mNotificationManager;
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "notify_001");
+        Intent i = new Intent(this,RiderConfirmPickup.class);
+        i.putExtra("username", username);
+        i.putExtra("email", email);
+        //startActivity(i);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, 0);
+
+        NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
+        bigText.setBigContentTitle("Your Marshmellow is on its way!");
+
+        mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setSmallIcon(R.mipmap.marshmellow);
+        mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), (R.mipmap.marshmellow)));
+        mBuilder.setContentTitle("Your Marshmellow is on its way!");    // Shows initially on the pop up
+        mBuilder.setContentText("Your driver has selected you and is on their way to you!");    // Body text inside Notification Center
+        mBuilder.setPriority(Notification.PRIORITY_MAX);
+        mBuilder.setStyle(bigText);
+        mBuilder.setAutoCancel(true);
+
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+// === Removed some obsoletes
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            String channelId = "Your_channel_id";
+            NotificationChannel channel = new NotificationChannel(channelId, "Channel human readable title",
+                    NotificationManager.IMPORTANCE_HIGH);
+            mNotificationManager.createNotificationChannel(channel);
+            mBuilder.setChannelId(channelId);
+        }
+
+        mNotificationManager.notify(0, mBuilder.build());
     }
 
 
