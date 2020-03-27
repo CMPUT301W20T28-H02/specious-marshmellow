@@ -48,6 +48,7 @@ public class EditContactInformationActivity extends AppCompatActivity {
     Button finishEdit;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
+    String called,riderusername;
 
     /**
      *  Called when activity is created
@@ -74,6 +75,7 @@ public class EditContactInformationActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         final String username = i.getStringExtra("username");
+
 
         // get the user class by the username given
         final DocumentReference docRef = db.collection("users").document(username);
@@ -128,7 +130,7 @@ public class EditContactInformationActivity extends AppCompatActivity {
     }
 
     /**
-     * Updates user, on success goes to {@link MainActivity MainActivity}
+     * Updates user, on success goes to the Previous Activity
      * @param {@code User} user
      * @param {@code FirebaseUser} authUser
      */
@@ -167,10 +169,12 @@ public class EditContactInformationActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "DocumentSnapshot successfully written!");
-                        Intent intent = new Intent(EditContactInformationActivity.this, MainActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
                         finish();
+                        /*Intent intent = new Intent(getBaseContext(),called.getClass());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);*/
+
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

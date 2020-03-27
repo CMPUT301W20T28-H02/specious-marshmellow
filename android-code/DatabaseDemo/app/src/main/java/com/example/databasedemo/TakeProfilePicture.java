@@ -54,6 +54,7 @@ public class TakeProfilePicture extends AppCompatActivity {
     Button loadImageBtn;
     Button mButtonUpload;
     Button mShowImageFromFirebaseBtn;
+    Button done_add;
     ProgressBar mProgressBar;
     EditText mEditTextFileName;
     private static final int PICK_IMAGE = 100;
@@ -92,6 +93,7 @@ public class TakeProfilePicture extends AppCompatActivity {
 
         mButtonUpload = findViewById( R.id.btn_upload_image );
         mEditTextFileName = findViewById( R.id.edit_image_name );
+        done_add=findViewById(R.id.done);
 
         mProgressBar = findViewById( R.id.progress_bar );
 
@@ -169,6 +171,13 @@ public class TakeProfilePicture extends AppCompatActivity {
             public void onClick(View v) {
                 Intent showImage = new Intent(TakeProfilePicture.this, ProfilePictureFromFirebaseStorage.class);
                 startActivity(showImage);
+
+            }
+        });
+        /*Takes you back to previous activity*/
+        done_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 finish();
             }
         });

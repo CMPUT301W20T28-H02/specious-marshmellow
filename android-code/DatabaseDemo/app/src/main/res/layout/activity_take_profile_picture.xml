@@ -54,4 +54,10 @@
         android:layout_height="wrap_content"
         android:text="Show Image From Firebase" />
 
+    <Button
+        android:id="@+id/done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DONE" />
+
 </LinearLayout>

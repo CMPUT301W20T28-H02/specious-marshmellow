@@ -29,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -74,15 +75,17 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
      LatLng latLng, startPoint, endPoint;
      FusedLocationProviderClient fusedLocationProviderClient;
      Button can_Request;
-     TextView usrNameText,usrEmailText,usrEditInfo;
+     TextView usrNameText,usrEmailText;
      ImageView profile;
      FirebaseFirestore db;
      CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
      String username = new String();
      String email = new String();
-     DatabaseReference reff;
      ListenerRegistration registration;
-     /*FirebaseAuth mAuth;*/
+     DatabaseReference reff;
+     String url;
+     boolean hasProfilePicture;
+     DrawerLayout drawerLayout;
 
 
      NotificationCompat.Builder riderMatchedWithDriverNotification;
@@ -100,18 +103,12 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_current_request);
 
         can_Request = findViewById(R.id.can_request);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setActionBar(toolbar);
-        }
+        /*Finding the Navigation menu*/
         NavigationView navi = findViewById(R.id.nav_view);
         View headerview = navi.getHeaderView(0);
         navi.setNavigationItemSelectedListener(this);
-        /*mAuth = FirebaseAuth.getInstance();*/
 
-
-
-
+        /*Setting username, user email, profile pic in navigation menu*/
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
         email = intent.getStringExtra("email");
@@ -119,54 +116,65 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
         usrEmailText=headerview.findViewById(R.id.usrEmailText);
         usrNameText.setText(username);
         usrEmailText.setText(email);
+        profile = headerview.findViewById(R.id.profilepic);
 
-        reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
-        // here gonna have to adjust reff to accurately go to the correct
-        // user, so i think add an if statement
-        // at dataSnapshot.child("//username").getValue().toString();
-
-
-        reff.addValueEventListener(new ValueEventListener() {
+        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               String url = dataSnapshot.child("imageUrl").getValue().toString();
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    Rider rider = task.getResult().toObject(Rider.class);
+                    hasProfilePicture = rider.getHasProfilePicture();
+                }
+
+                if( hasProfilePicture )
+                {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
+                } else {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+                }
+                reff.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        url = dataSnapshot.child("imageUrl").getValue().toString();
 
 
-                Log.d("Firebase", url);
-                Picasso.get()
-                        .load( url )
-                        .into( profile );
+                        Log.d("Firebase", url);
+                        Picasso.get()
+                                .load( url )
+                                .into( profile );
 
 
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
         });
 
-        profile = headerview.findViewById(R.id.profilepic);
+
+
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(currentRequest.this, TakeProfilePicture.class);
                 startActivity(intent);
-                finish();
+
             }
         });
 
         can_Request = findViewById(R.id.can_request);
 
-
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-
         requestPermission();
         if(ActivityCompat.checkSelfPermission(currentRequest.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
             return;
@@ -210,9 +218,9 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
             }
         });
 
-        DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
+        DocumentReference docRef1 = FirebaseFirestore.getInstance().collection("requests").document(username);
 
-        registration = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        registration = docRef1.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if(documentSnapshot.exists()){
@@ -398,8 +406,8 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
             case R.id.nav_money:
                 Intent intent = new Intent(currentRequest.this, moneyScreen.class);
                 intent.putExtra("username", username);
+                intent.putExtra("activity",currentRequest.class.toString());
                 startActivity(intent);
-                finish();
                 break;
             case R.id.sign_out_tab:
                 /*mAuth.signOut();
@@ -414,7 +422,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 Intent intent1 = new Intent(currentRequest.this,EditContactInformationActivity.class);
                 intent1.putExtra("username", username);
                 startActivity(intent1);
-                finish();
+
                 break;
 
 

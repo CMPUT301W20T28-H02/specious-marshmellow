@@ -8,9 +8,12 @@ package com.example.databasedemo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,11 +31,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 
@@ -40,7 +51,7 @@ import java.text.DecimalFormat;
  * Displays ride information to the driver
  * @author Marcus Blar and Michael Antifaoff
  */
-public class DriverRideInfoActivity extends FragmentActivity implements OnMapReadyCallback {
+public class DriverRideInfoActivity extends FragmentActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private static String TAG = "DRIVER_RIDE_INFO";
     private GoogleMap map;
@@ -50,8 +61,14 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
     TextView rideFareTextView;
     TextView distanceToRiderTextView;
     TextView rideDistanceTextView;
+    TextView usrNameText,usrEmailText;
+    ImageView profile;
     LatLng startPoint, endPoint;
     FusedLocationProviderClient fusedLocationProviderClient;
+    String email;
+    boolean hasProfilePicture;
+    DatabaseReference reff;
+    FirebaseAuth mAuth;
 
     /**
      * Displays ride information and allows driver accept it or cancel it
@@ -62,6 +79,7 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
         // display the ride information for the driver
         // and allow them to accept or deny it
         // takes the rider and driver usernames as intent extras
+        // sets the profile pic, username and useremail in the navigation menu/
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_ride_info);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -70,7 +88,69 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
         Intent i = getIntent();
         final String riderUsername = i.getStringExtra("riderUsername");
         final String driverUsername = i.getStringExtra("driverUsername");
-        final String email = i.getStringExtra("email");
+        mAuth = FirebaseAuth.getInstance();
+
+        NavigationView navi = findViewById(R.id.nav_view);
+        View headerview = navi.getHeaderView(0);
+        navi.setNavigationItemSelectedListener(this);
+        usrNameText = headerview.findViewById(R.id.usrNameText);
+        usrEmailText=headerview.findViewById(R.id.usrEmailText);
+        profile=headerview.findViewById(R.id.profilepic);
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        usrNameText.setText(driverUsername);
+        usrEmailText.setText(email);
+        final DocumentReference docRef_2 = FirebaseFirestore.getInstance().collection("users").document(driverUsername);
+        docRef_2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    Rider rider = task.getResult().toObject(Rider.class);
+                    hasProfilePicture = rider.getHasProfilePicture();
+                }
+
+                if( hasProfilePicture )
+                {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(driverUsername);
+                } else {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+                }
+                reff.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String url = dataSnapshot.child("imageUrl").getValue().toString();
+
+
+                        Log.d("Firebase", url);
+                        Picasso.get()
+                                .load( url )
+                                .into( profile );
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+
+        });
+
+
+
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getBaseContext(), TakeProfilePicture.class);
+                startActivity(intent);
+            }
+        });
+
+        /*final String email = i.getStringExtra("email");*/
+
 
         riderUsernameTextView = findViewById(R.id.rider_username_TextView);
         riderUsernameTextView.setText(getString(R.string.driver_confirm_rider_username, riderUsername));
@@ -212,5 +292,42 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        String driverUsername = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        final DocumentReference docRef_2 = FirebaseFirestore.getInstance().collection("users").document(driverUsername);
+
+        switch (menuItem.getItemId()) {
+            case R.id.nav_money:
+                docRef_2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Driver driver = task.getResult().toObject(Driver.class);
+                            Wallet wallet = driver.getWallet();
+                            Toast.makeText(getApplicationContext(), "YOUR BALANCE:"+ wallet.getBalance(), Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+                });
+                break;
+            case R.id.sign_out_tab:
+                mAuth.signOut();
+                finish();
+                Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
+                startActivity(intent_2);
+                break;
+            case R.id.contact_info:
+                Intent intent1 = new Intent(getBaseContext(),EditContactInformationActivity.class);
+                intent1.putExtra("username", driverUsername);
+                startActivity(intent1);
+
+                break;
+
+
+        }
+        return false;
     }
 }

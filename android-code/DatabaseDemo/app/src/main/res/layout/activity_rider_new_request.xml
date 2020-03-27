@@ -19,18 +19,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/common_google_signin_btn_text_light_pressed"
-            android:elevation="4dp"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
+		<Space
+			android:layout_width="match_parent"
+			android:layout_height="16dp"
+			android:backgroundTint="@color/common_google_signin_btn_text_light"
+			android:visibility="invisible"
+			tools:visibility="invisible" />
 
-
-	    <SearchView
+		<SearchView
 	        android:id="@+id/sv_location"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"

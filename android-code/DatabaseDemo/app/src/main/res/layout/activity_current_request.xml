@@ -4,13 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:orientation="vertical"
-
     tools:context=".currentRequest"
     android:background="@color/common_google_signin_btn_text_light_default"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start"
+
     >
 
 
@@ -46,6 +43,7 @@
             android:background="@android:drawable/dialog_holo_dark_frame"
             android:text="Cancel Request"
             android:textColor="#FFFFFF" />
+
     </LinearLayout>
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
