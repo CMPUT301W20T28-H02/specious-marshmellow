@@ -125,10 +125,13 @@ public class MainActivity extends AppCompatActivity{
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         User currentUser = document.toObject(User.class);
-                        Intent intent = new Intent(MainActivity.this, RiderDriverInitialActivity.class);
+                        Intent intent;
+                       ;
                         if (currentUser.getDriver()) {
+                            intent = new Intent(MainActivity.this, DriverStartActivity.class);
                             intent.putExtra("driver", true);
                         } else {
+                            intent = new Intent(MainActivity.this, RiderStartActivity.class);
                             intent.putExtra("driver", false);
                         }
                         intent.putExtra("username", currentUser.getUsername());
