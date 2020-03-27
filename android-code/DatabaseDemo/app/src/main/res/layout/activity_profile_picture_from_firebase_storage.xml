@@ -21,4 +21,10 @@
         android:scaleType="centerCrop"
         android:src="@drawable/ic_image_black_24dp" />
 
+    <Button
+        android:id="@+id/done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DONE" />
+
 </LinearLayout>

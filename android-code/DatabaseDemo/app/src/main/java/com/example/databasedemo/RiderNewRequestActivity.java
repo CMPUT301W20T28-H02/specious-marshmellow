@@ -75,6 +75,8 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
     FirebaseAuth mAuth;
     ImageView profile;
     DatabaseReference reff;
+    String url;
+    boolean hasProfilePicture;
 
     private static String TAG = "Hello";
 
@@ -92,10 +94,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_new_request);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setActionBar(toolbar);
-        }
+
         NavigationView navi = findViewById(R.id.nav_view);
         View headerView = navi.getHeaderView(0);
         navi.setNavigationItemSelectedListener(this);
@@ -121,37 +120,51 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         usrNameText = headerView.findViewById(R.id.usrNameText);
         usrEmailText=headerView.findViewById(R.id.usrEmailText);
         profile=headerView.findViewById(R.id.profilepic);
-        reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
-        // here gonna have to adjust reff to accurately go to the correct
-        // user, so i think add an if statement
-        // at dataSnapshot.child("//username").getValue().toString();
-
-
-        reff.addValueEventListener(new ValueEventListener() {
+        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String url = dataSnapshot.child("imageUrl").getValue().toString();
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    Rider rider = task.getResult().toObject(Rider.class);
+                    hasProfilePicture = rider.getHasProfilePicture();
+                }
+
+                if( hasProfilePicture )
+                {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
+                } else {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+                }
+                reff.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        url = dataSnapshot.child("imageUrl").getValue().toString();
 
 
-                Log.d("Firebase", url);
-                Picasso.get()
-                        .load( url )
-                        .into( profile );
+                        Log.d("Firebase", url);
+                        Picasso.get()
+                                .load( url )
+                                .into( profile );
 
 
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
         });
+
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(RiderNewRequestActivity.this,TakeProfilePicture.class);
                 startActivity(intent);
-                finish();
+
             }
         });
 
@@ -445,12 +458,12 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 Intent intent = new Intent(RiderNewRequestActivity.this, moneyScreen.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
-                finish();
                 break;
             case R.id.sign_out_tab:
                 mAuth.signOut();
                 finish();
                 Intent intent_2 = new Intent(RiderNewRequestActivity.this, SignInActivity.class);
+                intent_2.putExtra("activity",moneyScreen.class.toString());
                 startActivity(intent_2);
                 finish();
                 break;
@@ -458,7 +471,6 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 Intent intent1 = new Intent(RiderNewRequestActivity.this,EditContactInformationActivity.class);
                 intent1.putExtra("username", username);
                 startActivity(intent1);
-                finish();
                 break;
 
         }

@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -40,7 +42,7 @@ public class ProfilePictureFromFirebaseStorage extends AppCompatActivity {
     ImageView profile;
     static String url;
     DatabaseReference reff;
-
+    Button done;
     FirebaseAuth mAuth;
     String username;
 
@@ -52,28 +54,13 @@ public class ProfilePictureFromFirebaseStorage extends AppCompatActivity {
         setContentView(R.layout.activity_profile_picture_from_firebase_storage);
 
         firebaseImage = findViewById( R.id.firebase_image );
-
+        done = findViewById(R.id.done);
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         username = user.getDisplayName();
 
 
         final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
-
-
-//        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-//                Rider rider = documentSnapshot.toObject(Rider.class);
-//                hasProfilePicture = rider.getHasProfilePicture();
-//                String temp = String.valueOf( hasProfilePicture );
-//                Toast.makeText(ProfilePictureFromFirebaseStorage.this, temp, Toast.LENGTH_SHORT).show();
-//                Toast.makeText( ProfilePictureFromFirebaseStorage.this, username, Toast.LENGTH_SHORT).show();
-//
-//            }
-//        });
-
-
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -88,14 +75,6 @@ public class ProfilePictureFromFirebaseStorage extends AppCompatActivity {
                 } else {
                     reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
                 }
-
-
-
-                // here gonna have to adjust reff to accurately go to the correct
-                // user, so i think add an if statement
-                // at dataSnapshot.child("//username").getValue().toString();
-
-
                 reff.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -119,6 +98,13 @@ public class ProfilePictureFromFirebaseStorage extends AppCompatActivity {
 
 
         });
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
     }
 
 

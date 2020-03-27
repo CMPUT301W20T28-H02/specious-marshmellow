@@ -98,10 +98,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
 
         Intent intent = getIntent();
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setActionBar(toolbar);
-        }
+
         //NavigationView navi = findViewById(R.id.nav_view);
 
 

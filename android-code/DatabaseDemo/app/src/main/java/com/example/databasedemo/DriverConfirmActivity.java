@@ -11,8 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,26 +24,40 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.squareup.picasso.Picasso;
 
 /**
  * Shows map to driver and asks to confirm pickup
  * @author Micheal Antifaoff
  */
-public class DriverConfirmActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class DriverConfirmActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     GoogleMap map;
     TextView waiting;
     Button driverConfirmPickupButton, cancelPickupButton;
     boolean driverReady = false;
     ListenerRegistration registration;
+    DatabaseReference reff;
+    String url;
+    boolean hasProfilePicture;
+    TextView usrNameText,usrEmailText;
+    String email;
+    ImageView profile;
+
 
     /**
      * Called when activity is created
@@ -55,6 +72,12 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
         waiting = findViewById(R.id.waiting_for_rider);
         driverConfirmPickupButton = findViewById(R.id.driver_confirm_pickup_button);
         cancelPickupButton = findViewById(R.id.cancel_pickup_button_confirm_activity);
+        NavigationView navi = findViewById(R.id.nav_view);
+        View headerview = navi.getHeaderView(0);
+        navi.setNavigationItemSelectedListener(this);
+        usrNameText = headerview.findViewById(R.id.usrNameText);
+        usrEmailText=headerview.findViewById(R.id.usrEmailText);
+        profile=headerview.findViewById(R.id.profilepic);
 
 
 
@@ -65,6 +88,59 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
         Intent i = getIntent();
         final String riderUsername = i.getStringExtra("riderUsername");
         final String driverUsername = i.getStringExtra("driverUsername");
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        usrNameText.setText(driverUsername);
+        usrEmailText.setText(email);
+        final DocumentReference docRef_2 = FirebaseFirestore.getInstance().collection("users").document(driverUsername);
+        docRef_2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    Rider rider = task.getResult().toObject(Rider.class);
+                    hasProfilePicture = rider.getHasProfilePicture();
+                }
+
+                if( hasProfilePicture )
+                {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(driverUsername);
+                } else {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+                }
+                reff.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        url = dataSnapshot.child("imageUrl").getValue().toString();
+
+
+                        Log.d("Firebase", url);
+                        Picasso.get()
+                                .load( url )
+                                .into( profile );
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+
+        });
+
+
+
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getBaseContext(), TakeProfilePicture.class);
+                startActivity(intent);
+            }
+        });
+
 
         final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(riderUsername);
 
@@ -130,7 +206,6 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                         //                      final String email = intent.getStringExtra("email");
                         startRiderOrDriverInitial.putExtra("driver", true);
                         startRiderOrDriverInitial.putExtra("username", driverUsername);
-                        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
                         startRiderOrDriverInitial.putExtra("email", email);
                         startActivity(startRiderOrDriverInitial);
                         finish();
@@ -159,5 +234,46 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
         /*LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
         map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
         map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        String driverUsername = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        final DocumentReference docRef_2 = FirebaseFirestore.getInstance().collection("users").document(driverUsername);
+
+        switch (menuItem.getItemId()) {
+            case R.id.nav_money:
+                docRef_2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Driver driver = task.getResult().toObject(Driver.class);
+                            Wallet wallet = driver.getWallet();
+                            Toast.makeText(getApplicationContext(), String.valueOf(wallet.getBalance()), Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+                });
+
+                break;
+            case R.id.sign_out_tab:
+                /*mAuth.signOut();
+                finish();
+                Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
+
+                startActivity(intent_2);*/
+                Toast.makeText(this, "Action restricted, cancel your request and try again", Toast.LENGTH_LONG).show();
+
+                break;
+            case R.id.contact_info:
+                Intent intent1 = new Intent(getBaseContext(),EditContactInformationActivity.class);
+                intent1.putExtra("username", driverUsername);
+                startActivity(intent1);
+
+                break;
+
+
+        }
+        return false;
     }
 }
