@@ -80,7 +80,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
      FirebaseFirestore db;
      CollectionReference myRef = FirebaseFirestore.getInstance().collection("requests");
      String username = new String();
-     String email = new String();
+     String email;
      ListenerRegistration registration;
      DatabaseReference reff;
      String url;
