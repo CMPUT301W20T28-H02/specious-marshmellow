@@ -200,7 +200,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                 docRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Intent startRiderOrDriverInitial = new Intent(DriverConfirmActivity.this, RiderDriverInitialActivity.class);
+                        Intent startRiderOrDriverInitial = new Intent(DriverConfirmActivity.this, DriverStartActivity.class);
                         // Activity expects:    boolean driver = intent.getBooleanExtra("driver", true);
                         //                      final String username = intent.getStringExtra("username");
                         //                      final String email = intent.getStringExtra("email");
