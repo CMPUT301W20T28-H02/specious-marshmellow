@@ -210,6 +210,7 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
                 Intent i = new Intent(RiderDriverInitialActivity.this, DriverRideInfoActivity.class);  // Directions to start location and confirm pickup button
                 i.putExtra("riderUsername", request.getRider().getUsername());
                 i.putExtra("driverUsername",username);
+                i.putExtra("email", email);
                 startActivity(i);
                 finish();
             }

@@ -149,6 +149,9 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
             }
         });
 
+        /*final String email = i.getStringExtra("email");*/
+
+
         riderUsernameTextView = findViewById(R.id.rider_username_TextView);
         riderUsernameTextView.setText(getString(R.string.driver_confirm_rider_username, riderUsername));
 
@@ -168,7 +171,6 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
                 Intent intent = new Intent(DriverRideInfoActivity.this, DisplayUserInfoActivity.class);
                 intent.putExtra("username", riderUsername);
                 startActivity(intent);
-                finish();
             }
         });
         // get the ride
@@ -274,6 +276,11 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
         cancelRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i = new Intent(DriverRideInfoActivity.this, RiderDriverInitialActivity.class);  // Directions to start location and confirm pickup button
+                i.putExtra("driver", true);
+                i.putExtra("username", driverUsername);
+                i.putExtra("email", email);
+                startActivity(i);
                 finish();
             }
         });
