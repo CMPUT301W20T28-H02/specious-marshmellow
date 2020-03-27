@@ -110,8 +110,37 @@ public class CreateAccount extends AppCompatActivity {
                                     usernameEditText.setError("Username is not unique.");
                                     Toast.makeText(CreateAccount.this, "Username is not unique.", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Log.d(TAG, "Document does not exist!");
-                                    createUser();
+                                    // increment Idling resource for UI test
+                                    EspressoIdlingResource.increment();
+
+                                    FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
+                                    CollectionReference collectionRef = rootRef.collection("users");
+                                    collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                                            // decrement Idling resource
+                                            EspressoIdlingResource.decrement();
+
+                                            if (task.isSuccessful()){
+                                                List<User> users = task.getResult().toObjects(User.class);
+                                                boolean emailExists = false;
+                                                for (User user : users){
+                                                    if (user.getEmail().equals(emailEditText.getText().toString())){
+                                                        emailEditText.setError("Email is in use by another user");
+                                                        emailExists = true;
+                                                    }
+                                                }
+                                                if (!emailExists){
+                                                    Log.d(TAG, "Document and email do not exist (email does not exist in the user table)!");
+                                                    createUser();
+                                                } else {
+                                                    Log.d(TAG, "Document does not exist, but email does!");
+                                                }
+
+                                            }
+                                        }
+                                    });
                                 }
                             } else {
                                 Log.d(TAG, "Failed with: ", task.getException());
@@ -144,32 +173,6 @@ public class CreateAccount extends AppCompatActivity {
             passwordEditText.setError("Password must be at least 6 characters");
             return false;
         }
-        // increment Idling resource for UI test
-        EspressoIdlingResource.increment();
-
-        FirebaseFirestore rootRef = FirebaseFirestore.getInstance();
-        CollectionReference collectionRef = rootRef.collection("users");
-        collectionRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
-                // decrement Idling resource
-                EspressoIdlingResource.decrement();
-
-                if (task.isSuccessful()){
-                    List<User> users = task.getResult().toObjects(User.class);
-                    for (User user : users){
-                        if (user.getEmail().equals(emailEditText.getText().toString())){
-                            emailEditText.setError("Email is in use by another user");
-                            returnVal = false;
-                            // checkInputReturnsFalse()
-                        }
-                    }
-                    // checkInputReturnsTrue()
-
-                }
-            }
-        });
 
         if(returnVal == false){
             returnVal = true;
@@ -215,6 +218,10 @@ public class CreateAccount extends AppCompatActivity {
                         }
                         else{
                             Log.d(TAG, "Task not successful");
+                            Log.d(TAG, "Failed with: " + task.getException());
+                            if (task.getException().toString().equals("com.google.firebase.auth.FirebaseAuthUserCollisionException: The email address is already in use by another account.")){
+                                emailEditText.setError("Email is in use by another user");
+                            }
                             Toast.makeText(CreateAccount.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                     }
