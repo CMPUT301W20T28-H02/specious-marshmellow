@@ -7,6 +7,7 @@ package com.example.databasedemo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.zxing.Result;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -68,8 +70,10 @@ public class SimpleScannerActivity extends BaseScannerActivity implements ZXingS
      */
     @Override
     public void handleResult(Result rawResult) {
-        Toast.makeText(this, "Contents = " + rawResult.getText() +
-                ", Format = " + rawResult.getBarcodeFormat().toString(), Toast.LENGTH_SHORT).show();
+        DynamicToast.make(SimpleScannerActivity.this, "Contents = " + rawResult.getText() +
+                ", Format = " + rawResult.getBarcodeFormat().toString(), Color.parseColor("#E38249"),
+                Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+
 
         // Note:
         // * Wait 2 seconds to resume the preview.

@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -58,6 +59,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -219,7 +221,8 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
         makeRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(RiderDriverInitialActivity.this, "Make Request", 10);
+                // DynamicToast.make(RiderDriverInitialActivity.this, "Make Request", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+
                 Log.i("Hello", "Rider Driver Initial Activity: inside make request button onItemClickListener");
                 Intent intent = new Intent(RiderDriverInitialActivity.this, RiderNewRequestActivity.class);
                 intent.putExtra("username", username);
@@ -300,13 +303,15 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
             fusedLocationProviderClient.getLastLocation().addOnFailureListener(RiderDriverInitialActivity.this, new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(RiderDriverInitialActivity.this, "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG).show();
+                    DynamicToast.make(RiderDriverInitialActivity.this, "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                 }
             });
         } else {
-            Toast.makeText(RiderDriverInitialActivity.this,
-                    "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG);
+            DynamicToast.make(RiderDriverInitialActivity.this,
+                    "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.",
+                    Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+
         }
 
 

@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -37,6 +38,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,7 +56,6 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
     ArrayAdapter<Request> requestArrayAdapter;
     ArrayList<Request> requestArrayList;
     double globalBound = 10000;
-    boolean driver;
     ListenerRegistration registration;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,12 +104,10 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
                                     final Request request = doc.toObject(Request.class);
                                     if (!request.getRequestStatus()) {
 
-                                        if (driver) {
-                                            // set rider start point as latlng
-                                            LatLng riderLocation = new LatLng(request.getStartLocation().getLatitude(), request.getStartLocation().getLongitude());
-                                            // add markers to map for rider start location
-                                            map.addMarker(new MarkerOptions().position(riderLocation).title(request.getRider().getUsername()));
-                                        }
+                                        // set rider start point as latlng
+                                        LatLng riderLocation = new LatLng(request.getStartLocation().getLatitude(), request.getStartLocation().getLongitude());
+                                        // add markers to map for rider start location
+                                        map.addMarker(new MarkerOptions().position(riderLocation).title(request.getRider().getUsername()));
 
                                         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(DriverStartActivity.this, new OnSuccessListener<android.location.Location>() {
                                             @Override
@@ -145,6 +144,8 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
                             }
                         }
                     });
+                } else {
+                    requestArrayAdapter.notifyDataSetChanged();
                 }
             }
 
@@ -222,13 +223,13 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
             fusedLocationProviderClient.getLastLocation().addOnFailureListener(DriverStartActivity.this, new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(DriverStartActivity.this, "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG).show();
-
+                    DynamicToast.make(DriverStartActivity.this, "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 }
             });
         } else {
-            Toast.makeText(DriverStartActivity.this,
-                    "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG);
+            DynamicToast.make(DriverStartActivity.this,
+                    "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.",
+                    Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
         }
 
 
@@ -243,12 +244,10 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
                     final Request request = doc.toObject(Request.class);
                     if (!request.getRequestStatus()) {
 
-                        if (driver) {
-                            // set rider start point as latlng
-                            LatLng riderLocation = new LatLng(request.getStartLocation().getLatitude(), request.getStartLocation().getLongitude());
-                            // add markers to map for rider start location
-                            map.addMarker(new MarkerOptions().position(riderLocation).title(request.getRider().getUsername()));
-                        }
+                        // set rider start point as latlng
+                        LatLng riderLocation = new LatLng(request.getStartLocation().getLatitude(), request.getStartLocation().getLongitude());
+                        // add markers to map for rider start location
+                        map.addMarker(new MarkerOptions().position(riderLocation).title(request.getRider().getUsername()));
 
                         fusedLocationProviderClient.getLastLocation().addOnSuccessListener( DriverStartActivity.this, new OnSuccessListener<android.location.Location>() {
                             @Override

@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -37,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -199,7 +201,8 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
                         finish();
                     }
                 } else {
-                    Toast.makeText(this, "Please grant camera permission to use the QR Scanner", Toast.LENGTH_SHORT).show();
+                    DynamicToast.make(DriverEndAndPay.this, "Please grant camera permission to use the QR Scanner", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+
                 }
                 return;
         }
@@ -220,7 +223,7 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
                         if (task.isSuccessful()) {
                             Driver driver = task.getResult().toObject(Driver.class);
                             Wallet wallet = driver.getWallet();
-                            Toast.makeText(getApplicationContext(), "YOUR BALANCE:" + wallet.getBalance(), Toast.LENGTH_LONG).show();
+                            DynamicToast.make(DriverEndAndPay.this, "Your Balance:" + wallet.getBalance(), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                         }
                     }
@@ -231,7 +234,8 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
                 finish();
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
                 startActivity(intent_2);*/
-                Toast.makeText(getApplicationContext(), "Action Restricted, In between a ride", Toast.LENGTH_LONG).show();
+                DynamicToast.make(DriverEndAndPay.this, "Action Restricted, In between a ride", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+
                 break;
             case R.id.contact_info:
                 Intent intent1 = new Intent(getBaseContext(), EditContactInformationActivity.class);

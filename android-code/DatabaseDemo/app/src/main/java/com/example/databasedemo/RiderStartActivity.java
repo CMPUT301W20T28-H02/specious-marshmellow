@@ -7,6 +7,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -47,12 +51,12 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rider_initial);
+        makeRequestButton = findViewById(R.id.make_request_button);
 
         Intent intent = getIntent();
 
 
         //NavigationView navi = findViewById(R.id.nav_view);
-
 
         final String username = intent.getStringExtra("username");
         final String email = intent.getStringExtra("email");
@@ -62,11 +66,27 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
         mapFragment.getMapAsync(this);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        makeRequestButton = findViewById(R.id.make_request_button);
+
+        if(ActivityCompat.checkSelfPermission(RiderStartActivity.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderStartActivity.this, new OnSuccessListener<android.location.Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null){
+                    latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                    MarkerOptions p3 = new MarkerOptions().position(latLng);
+                    map.setMyLocationEnabled(true);
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                }
+            }
+        });
+
         makeRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(RiderDriverInitialActivity.this, "Make Request", 10);
+                // DynamicToast.make(RiderStartActivity.this, "Make Request", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+
                 Log.i("Hello", "Rider Driver Initial Activity: inside make request button onItemClickListener");
                 Intent intent = new Intent(getBaseContext(), RiderNewRequestActivity.class);
                 intent.putExtra("username", username);
@@ -112,13 +132,15 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
             fusedLocationProviderClient.getLastLocation().addOnFailureListener(RiderStartActivity.this, new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(RiderStartActivity.this, "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG).show();
-
+                    DynamicToast.make(RiderStartActivity.this,
+                            "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.",
+                            Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 }
             });
         } else {
-            Toast.makeText(RiderStartActivity.this,
-                    "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG);
+            DynamicToast.make(RiderStartActivity.this,
+                    "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.",
+                    Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
         }
     }
 }

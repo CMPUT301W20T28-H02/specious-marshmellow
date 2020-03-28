@@ -6,6 +6,7 @@ Date March 13 2020
 package com.example.databasedemo;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,6 +31,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -122,7 +124,7 @@ public class EditContactInformationActivity extends AppCompatActivity {
                                 }
                             });
                 } else {
-                    Toast.makeText(EditContactInformationActivity.this, "Enter Your Password", Toast.LENGTH_SHORT).show();
+                    DynamicToast.make(EditContactInformationActivity.this, "Enter Your Password", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 }
 
             }
