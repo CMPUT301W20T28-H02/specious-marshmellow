@@ -60,6 +60,7 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.driver_initial);
+        Log.i("Hello", "We are inside OnCreate of DriverStartActivity");
 
         Intent intent = getIntent();
 

@@ -96,9 +96,13 @@ public class MainActivity extends AppCompatActivity{
                             }
                         }
                         else {
-                            // Rider does not have an open request, or it is a driver
-                            displayDriverOrRiderScreen(username, email);
-                            Log.d(TAG, "When we do get here?");
+                            new Thread(new Runnable() {
+                                public void run() {
+                                // Rider does not have an open request, or it is a driver
+                                displayDriverOrRiderScreen(username, email);
+                                Log.d(TAG, "When we do get here?");
+                                }
+                            }).start();
                         }
                     }
                 }
@@ -151,36 +155,41 @@ public class MainActivity extends AppCompatActivity{
                                             List<Request> requests = task.getResult().toObjects(Request.class);
                                             FirebaseUser thisUser = FirebaseAuth.getInstance().getCurrentUser();
                                             Log.i("Hello", "This user's display name is " + thisUser.getDisplayName().trim());
+                                            Request driverRequest = null;
                                             for (Request request : requests) {
                                                 Log.i("Hello", "This request's username name is " + request.getRider().getUsername());
                                                 if (request.getDriver() != null) {
                                                     if (request.getDriver().getUsername() != null){
                                                         if (request.getDriver().getUsername().trim().equals(thisUser.getDisplayName().trim())) {
-                                                            Log.i("Hello", "This request's username name is " + request.getDriver().getUsername().trim()
-                                                                + " and the username of the rider is " + request.getRider().getUsername().trim());
-                                                            // This driver is part of a request, send them to the confirm activity (and let it flow from there)
-                                                            Intent q = new Intent(MainActivity.this, DriverConfirmActivity.class);
-                                                            q.putExtra("riderUsername", request.getRider().getUsername());
-                                                            q.putExtra("driverUsername", request.getDriver().getUsername());
-                                                            Log.i("Hello", "This request's username name is " + request.getDriver().getUsername().trim()
-                                                                    + " and the username of the rider is " + request.getRider().getUsername().trim());
-                                                            Log.i("Hello", "Hi");
-                                                            startActivity(q);
-                                                            Log.i("Hello", "Hi Hi");
-                                                            finish();
-                                                            Log.i("Hello", "Hi Hi Hi");
+                                                            driverRequest = request;
                                                         }
                                                     }
                                                 }
                                             }
-                                            Log.i("Hello", "Yo");
-                                            // This driver is not a part of any request in the database
-                                            Intent intent = new Intent(MainActivity.this, DriverStartActivity.class);
-                                            intent.putExtra("driver", true);
-                                            intent.putExtra("username", currentUser.getUsername());
-                                            intent.putExtra("email", currentUser.getEmail());
-                                            startActivity(intent);
-                                            finish();
+                                            if (driverRequest!=null){
+                                                Log.i("Hello", "This request's username name is " + driverRequest.getDriver().getUsername().trim()
+                                                        + " and the username of the rider is " + driverRequest.getRider().getUsername().trim());
+                                                // This driver is part of a request, send them to the confirm activity (and let it flow from there)
+                                                Intent q = new Intent(MainActivity.this, DriverConfirmActivity.class);
+                                                q.putExtra("riderUsername", driverRequest.getRider().getUsername());
+                                                q.putExtra("driverUsername", driverRequest.getDriver().getUsername());
+                                                Log.i("Hello", "This request's username name is " + driverRequest.getDriver().getUsername().trim()
+                                                        + " and the username of the rider is " + driverRequest.getRider().getUsername().trim());
+                                                Log.i("Hello", "Hi");
+                                                startActivity(q);
+                                                Log.i("Hello", "Hi Hi");
+                                                finish();
+                                                Log.i("Hello", "Hi Hi Hi");
+                                            } else {
+                                                Log.i("Hello", "Yo");
+                                                // This driver is not a part of any request in the database
+                                                Intent intent = new Intent(MainActivity.this, DriverStartActivity.class);
+                                                intent.putExtra("driver", true);
+                                                intent.putExtra("username", currentUser.getUsername());
+                                                intent.putExtra("email", currentUser.getEmail());
+                                                startActivity(intent);
+                                                finish();
+                                            }
                                         }
                                     }
 

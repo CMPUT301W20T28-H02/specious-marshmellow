@@ -142,7 +142,6 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
 
 
 
-
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -221,71 +220,81 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
         registration = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                final Request request = documentSnapshot.toObject(Request.class);
-                riderUsernameTextView.setText(getString(R.string.rider_confirm_driver_username, request.getRider().getUsername()));
-                // Take user to info activity telling them about the driver
-                riderUsernameTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent i = new Intent(DriverConfirmActivity.this, DisplayUserInfoActivity.class);
-                        i.putExtra("username", request.getRider().getUsername());
+                if (documentSnapshot.exists()) {
+                    final Request request = documentSnapshot.toObject(Request.class);
+                    riderUsernameTextView.setText(getString(R.string.rider_confirm_driver_username, request.getRider().getUsername()));
+                    // Take user to info activity telling them about the driver
+                    riderUsernameTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent i = new Intent(DriverConfirmActivity.this, DisplayUserInfoActivity.class);
+                            i.putExtra("username", request.getRider().getUsername());
+                            startActivity(i);
+                        }
+                    });
+                    riderPhoneNumberTextView.setText(getString(R.string.rider_confirm_driver_phone_number, request.getRider().getPhone()));
+                    riderPhoneNumberTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String uri = "tel:" + request.getRider().getPhone().trim();
+                            Intent intent = new Intent(Intent.ACTION_DIAL);
+                            intent.setData(Uri.parse(uri));
+                            startActivity(intent);
+                        }
+                    });
+                    riderEmailTextView.setText(getString(R.string.rider_confirm_driver_email, request.getRider().getEmail()));
+
+                    if (driverReady) {
+                        driverConfirmPickupButton.setVisibility(View.INVISIBLE);
+                        waiting.setVisibility(View.VISIBLE);
+                        cancelPickupButton.setVisibility(View.VISIBLE);
+                    }
+                    if (request.getRiderConfirmation() && request.getDriverConfirmation()) {
+                        Intent i = new Intent(DriverConfirmActivity.this, DriverEndAndPay.class);
+                        // Activity expects: final String riderUsername = i.getStringExtra("riderUsername");
+                        //                   final String driverUsername = i.getStringExtra("driverUsername");
+                        i.putExtra("riderUsername", riderUsername);
+                        i.putExtra("driverUsername", driverUsername);
                         startActivity(i);
+                        finish();
                     }
-                });
-                riderPhoneNumberTextView.setText(getString(R.string.rider_confirm_driver_phone_number, request.getRider().getPhone()));
-                riderPhoneNumberTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String uri = "tel:" + request.getRider().getPhone().trim();
-                        Intent intent = new Intent(Intent.ACTION_DIAL);
-                        intent.setData(Uri.parse(uri));
-                        startActivity(intent);
+                    if (request.getDriverConfirmation()) {
+                        driverConfirmPickupButton.setVisibility(View.INVISIBLE);
+                        waiting.setVisibility(View.VISIBLE);
+                        cancelPickupButton.setVisibility(View.VISIBLE);
                     }
-                });
-                riderEmailTextView.setText(getString(R.string.rider_confirm_driver_email, request.getRider().getEmail()));
 
-                if (driverReady) {
-                    driverConfirmPickupButton.setVisibility(View.INVISIBLE);
-                    waiting.setVisibility(View.VISIBLE);
-                    cancelPickupButton.setVisibility(View.VISIBLE);
-                }
-                if(request.getRiderConfirmation()&&request.getDriverConfirmation()){
-                    Intent i = new Intent(DriverConfirmActivity.this, DriverEndAndPay.class);
-                    // Activity expects: final String riderUsername = i.getStringExtra("riderUsername");
-                    //                   final String driverUsername = i.getStringExtra("driverUsername");
-                    i.putExtra("riderUsername", riderUsername);
-                    i.putExtra("driverUsername", driverUsername);
+                    com.example.databasedemo.Location startLocation = request.getStartLocation();
+                    com.example.databasedemo.Location endLocation = request.getEndLocation();
+
+                    // set start and end points as latlng
+                    LatLng startPoint = new LatLng(startLocation.getLatitude(), startLocation.getLongitude());
+                    LatLng endPoint = new LatLng(endLocation.getLatitude(), endLocation.getLongitude());
+
+                    // add markers to map for start and end points
+                    map.addMarker(new MarkerOptions().position(startPoint).title("Start Location"));
+                    map.addMarker(new MarkerOptions().position(endPoint).title("End Location"));
+
+
+                    // move map to show the start and end points
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                    // set builder with start and end locations
+                    builder.include(startPoint);
+                    builder.include(endPoint);
+                    LatLngBounds bounds = builder.build();
+                    // construct a cameraUpdate with a buffer of 200
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 200);
+                    // move the camera
+                    map.animateCamera(cameraUpdate);
+                } else {
+                    Toast.makeText(DriverConfirmActivity.this,
+                            riderUsername + " has cancelled their request", Toast.LENGTH_LONG).show();
+                    Intent i = new Intent(DriverConfirmActivity.this, DriverStartActivity.class);
+                    i.putExtra("username", driverUsername);
+                    i.putExtra("email", email);
                     startActivity(i);
-                    finish();
+
                 }
-                if (request.getDriverConfirmation()){
-                    driverConfirmPickupButton.setVisibility(View.INVISIBLE);
-                    waiting.setVisibility(View.VISIBLE);
-                    cancelPickupButton.setVisibility(View.VISIBLE);
-                }
-
-                com.example.databasedemo.Location startLocation = request.getStartLocation();
-                com.example.databasedemo.Location endLocation = request.getEndLocation();
-
-                // set start and end points as latlng
-                LatLng startPoint = new LatLng(startLocation.getLatitude(), startLocation.getLongitude());
-                LatLng endPoint = new LatLng(endLocation.getLatitude(), endLocation.getLongitude());
-
-                // add markers to map for start and end points
-                map.addMarker(new MarkerOptions().position(startPoint).title("Start Location"));
-                map.addMarker(new MarkerOptions().position(endPoint).title("End Location"));
-
-
-                // move map to show the start and end points
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                // set builder with start and end locations
-                builder.include(startPoint);
-                builder.include(endPoint);
-                LatLngBounds bounds = builder.build();
-                // construct a cameraUpdate with a buffer of 200
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 200);
-                // move the camera
-                map.animateCamera(cameraUpdate);
             }
         });
     }
