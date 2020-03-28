@@ -15,28 +15,12 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <ListView
-        android:id="@+id/requestListView"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="98dp"
-        android:visibility="invisible"/>
-
-    <EditText
-        android:id="@+id/global_bounds_EditText"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:ems="10"
-        android:inputType="number"
-        android:visibility="invisible"/>
 
     <Button
         android:id="@+id/make_request_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:drawable/dialog_holo_dark_frame"
         android:text="@string/make_request"
-        android:textColor="#FFFFFF" />
-    </LinearLayout>
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#E38349"/>
+</LinearLayout>

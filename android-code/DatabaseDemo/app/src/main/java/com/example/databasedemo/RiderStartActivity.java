@@ -1,5 +1,7 @@
 package com.example.databasedemo;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -10,14 +12,25 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -71,5 +84,41 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap){
         map = googleMap;
         requestPermission();
+    }
+
+    /**
+     * update map once permission is granted
+     * @param {@code int}requestCode
+     * @param {@code String[]}permissions
+     * @param {@code int[]}grantResults
+     */
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (permissions[0].equals(ACCESS_FINE_LOCATION)) {
+
+            map.setMyLocationEnabled(true);
+
+            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderStartActivity.this, new OnSuccessListener<android.location.Location>() {
+                @Override
+                public void onSuccess(android.location.Location location) {
+                    if (location != null) {
+                        latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
+                    }
+
+                }
+            });
+            fusedLocationProviderClient.getLastLocation().addOnFailureListener(RiderStartActivity.this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(RiderStartActivity.this, "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG).show();
+
+                }
+            });
+        } else {
+            Toast.makeText(RiderStartActivity.this,
+                    "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Toast.LENGTH_LONG);
+        }
     }
 }
