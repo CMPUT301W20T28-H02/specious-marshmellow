@@ -124,41 +124,49 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         usrNameText = headerView.findViewById(R.id.usrNameText);
         usrEmailText=headerView.findViewById(R.id.usrEmailText);
         profile=headerView.findViewById(R.id.profilepic);
-        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+        navi.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    Rider rider = task.getResult().toObject(Rider.class);
-                    hasProfilePicture = rider.getHasProfilePicture();
-                }
-
-                if (hasProfilePicture) {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
-                } else {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
-                }
-                reff.addValueEventListener(new ValueEventListener() {
+            public void onClick(View v) {
+                final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        url = dataSnapshot.child("imageUrl").getValue().toString();
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Rider rider = task.getResult().toObject(Rider.class);
+                            hasProfilePicture = rider.getHasProfilePicture();
+                        }
+
+                        if (hasProfilePicture) {
+                            reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
+                        } else {
+                            reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+                        }
+                        reff.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                url = dataSnapshot.child("imageUrl").getValue().toString();
 
 
-                        Log.d("Firebase", url);
-                        Picasso.get()
-                                .load(url)
-                                .into(profile);
+                                Log.d("Firebase", url);
+                                Picasso.get()
+                                        .load(url)
+                                        .into(profile);
 
 
-                    }
+                            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                            }
+                        });
                     }
                 });
+
             }
         });
+
 
 
 
