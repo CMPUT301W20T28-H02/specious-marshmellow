@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
@@ -234,8 +236,7 @@ public class moneyScreen extends AppCompatActivity implements NavigationView.OnN
 
         switch (menuItem.getItemId()) {
             case R.id.nav_money:
-                Toast.makeText(this, "Action restricted, Already in Money Screen", Toast.LENGTH_LONG).show();
-
+                DynamicToast.make(moneyScreen.this, "Action restricted, Already in Money Screen", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 break;
             case R.id.sign_out_tab:
                 mAuth.signOut();

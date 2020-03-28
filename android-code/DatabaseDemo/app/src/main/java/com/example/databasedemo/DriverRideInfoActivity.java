@@ -6,6 +6,7 @@ Date March 13 2020
 package com.example.databasedemo;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -43,6 +44,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -307,8 +309,7 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
                         if (task.isSuccessful()) {
                             Driver driver = task.getResult().toObject(Driver.class);
                             Wallet wallet = driver.getWallet();
-                            Toast.makeText(getApplicationContext(), "YOUR BALANCE:"+ wallet.getBalance(), Toast.LENGTH_LONG).show();
-
+                            DynamicToast.make(DriverRideInfoActivity.this, "Your Balance:", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                         }
                     }
                 });

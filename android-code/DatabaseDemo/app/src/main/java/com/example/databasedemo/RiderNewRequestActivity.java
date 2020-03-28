@@ -7,6 +7,7 @@ package com.example.databasedemo;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
@@ -50,6 +52,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -361,7 +364,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 btnConfirmRequest.setVisibility(View.VISIBLE);
 
                 btnGetFare.setVisibility(View.INVISIBLE);
-                // Toast.makeText(getApplicationContext(),dist,Toast.LENGTH_LONG).show();
+                // DynamicToast.make(RiderNewRequestActivity.this, "Distance: " + dist, Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
             }
         });

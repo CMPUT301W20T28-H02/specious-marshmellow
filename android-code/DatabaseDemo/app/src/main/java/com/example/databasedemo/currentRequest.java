@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -60,6 +61,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -229,7 +231,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                     if(request.getRequestStatus() == true){
                         // Change this line so that it switches to Rider on a ride activity
                         Log.d("Database", "here");
-                        sendNotification();
+                        sendNotification(request.getDriver().getUsername());
 
                         Intent i = new Intent(currentRequest.this,RiderConfirmPickup.class);
                         i.putExtra("username", username);
@@ -250,7 +252,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
         super.onDestroy();
     }
 
-    public void sendNotification() {
+    public void sendNotification(String driverUsername) {
 
         // https://www.androidauthority.com/how-to-create-android-notifications-707254/
         NotificationManager mNotificationManager;
@@ -269,7 +271,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
         mBuilder.setSmallIcon(R.mipmap.marshmellow);
         mBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), (R.mipmap.marshmellow)));
         mBuilder.setContentTitle("Your Marshmellow is on its way!");    // Shows initially on the pop up
-        mBuilder.setContentText("Your driver has selected you and is on their way to you!");    // Body text inside Notification Center
+        mBuilder.setContentText("Your driver, " + driverUsername + ", has selected you and is on their way to you!");    // Body text inside Notification Center
         mBuilder.setPriority(Notification.PRIORITY_MAX);
         mBuilder.setStyle(bigText);
         mBuilder.setAutoCancel(true);
@@ -390,7 +392,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
 
                 startActivity(intent_2);*/
-                Toast.makeText(this, "Action restricted, cancel your request and try again", Toast.LENGTH_LONG).show();
+                DynamicToast.make(currentRequest.this, "Action restricted, cancel your request and try again", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                 break;
             case R.id.contact_info:

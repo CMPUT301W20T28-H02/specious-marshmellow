@@ -6,6 +6,7 @@ Date March 13 2020
 package com.example.databasedemo;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 import com.google.zxing.Result;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
@@ -83,7 +85,9 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
      */
     @Override
     public void handleResult(Result rawResult) {
-        Toast.makeText(this, "Amount = " + rawResult.getText(), Toast.LENGTH_SHORT).show();
+        // TODO Make two decimal places only
+        DynamicToast.make(DriverScannerActivity.this, "Amount = " + rawResult.getText(), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+
 
         final double amount = Double.valueOf(rawResult.getText());
 

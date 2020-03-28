@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -336,7 +338,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
 
                 startActivity(intent_2);*/
-                Toast.makeText(this, "Action restricted, ride on way", Toast.LENGTH_LONG).show();
+                DynamicToast.make(RiderConfirmPickup.this, "Action restricted, ride on way", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                 break;
             case R.id.contact_info:

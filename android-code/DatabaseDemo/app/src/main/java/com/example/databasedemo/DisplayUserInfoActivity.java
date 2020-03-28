@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,6 +26,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseUser;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 /**
  * Displays user information
@@ -123,7 +126,8 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
             editAccount.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Toast.makeText(MainActivity.this, R.string.welcome_message, Toast.LENGTH_LONG).show();
+                    // DynamicToast.make(DisplayUserInfoActivity.this, R.string.welcome_message, Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+
                     Intent intent = new Intent(DisplayUserInfoActivity.this, EditContactInformationActivity.class);
                     intent.putExtra("username", username);
                     startActivity(intent);

@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 public class TakeProfilePicture extends AppCompatActivity {
 
@@ -223,10 +225,11 @@ public class TakeProfilePicture extends AppCompatActivity {
 //                                }
 //                            }, 500);
 //
-//                            Toast.makeText(MainActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
+//                            DynamicToast.make(TakeProfilePhoto.this, "Upload successful", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+//
 //                            Upload upload = new Upload(mEditTextFileName.getText().toString().trim(),
 //                                    mStorageRef.getDownloadUrl().toString());     // here, need to get a valid uri or a valid url
-////                            String uploadId = mDatabaseRef.push().getKey();
+//                            String uploadId = mDatabaseRef.push().getKey();
 //                            String uploadId = "Hi";     // this will be username of person
 //                            mDatabaseRef.child(uploadId).setValue(upload);
 //                        }
@@ -263,7 +266,8 @@ public class TakeProfilePicture extends AppCompatActivity {
                                             }
                                         }, 500);
 
-                                        Toast.makeText(TakeProfilePicture.this, "Upload successful", Toast.LENGTH_LONG).show();
+                                        DynamicToast.make(TakeProfilePicture.this, "Upload successful", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+
                                         Upload upload = new Upload( mEditTextFileName.getText().toString().trim(),
                                                 thumb_download_url );     // here, need to get a valid uri or a valid url
 
@@ -304,7 +308,7 @@ public class TakeProfilePicture extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(TakeProfilePicture.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            DynamicToast.make(TakeProfilePicture.this, e.getMessage(), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -315,7 +319,8 @@ public class TakeProfilePicture extends AppCompatActivity {
                         }
                     });
         } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+            DynamicToast.make(TakeProfilePicture.this, "No file selected", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+
         }
     }
     //----------------------------------------------------------------------------------
@@ -368,7 +373,7 @@ public class TakeProfilePicture extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
-        // this method caleed when user presses allow or deny from permission request popup
+        // this method called when user presses allow or deny from permission request popup
         switch( requestCode )
         {
             case PERMISSION_CODE: {
@@ -378,7 +383,7 @@ public class TakeProfilePicture extends AppCompatActivity {
                     openCamera();
                 } else {
                     //permission from popup denied
-                    Toast.makeText(this, "Permission denied ...", Toast.LENGTH_SHORT ).show();
+                    DynamicToast.make(TakeProfilePicture.this, "Permission denied, please provide camera access to continue", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 }
             }
         }

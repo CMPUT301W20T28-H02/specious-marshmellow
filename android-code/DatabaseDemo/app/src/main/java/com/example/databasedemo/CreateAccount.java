@@ -6,6 +6,7 @@ Date March 13 2020
 package com.example.databasedemo;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,7 +110,7 @@ public class CreateAccount extends AppCompatActivity {
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     usernameEditText.setError("Username is not unique.");
-                                    Toast.makeText(CreateAccount.this, "Username is not unique.", Toast.LENGTH_SHORT).show();
+                                    DynamicToast.make(CreateAccount.this, "Username is not unique", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                                 } else {
                                     // increment Idling resource for UI test
                                     EspressoIdlingResource.increment();
@@ -165,7 +167,7 @@ public class CreateAccount extends AppCompatActivity {
         for (EditText e : editTextList) {
             if (TextUtils.isEmpty(e.getText())) {
                 e.setError(e.getHint().toString() + " is required");
-                Toast.makeText(CreateAccount.this, e.getHint().toString() + "is required", Toast.LENGTH_SHORT).show();
+                DynamicToast.make(CreateAccount.this, e.getHint().toString() + " is required", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 return false;
             }
         }
@@ -222,7 +224,8 @@ public class CreateAccount extends AppCompatActivity {
                             if (task.getException().toString().equals("com.google.firebase.auth.FirebaseAuthUserCollisionException: The email address is already in use by another account.")){
                                 emailEditText.setError("Email is in use by another user");
                             }
-                            Toast.makeText(CreateAccount.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            DynamicToast.make(CreateAccount.this, "Authentication failed", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+
                         }
                     }
                 });

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -167,7 +169,8 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
 
                 startActivity(intent_2);*/
-                Toast.makeText(this, "Action restricted, In Ride", Toast.LENGTH_LONG).show();
+                DynamicToast.make(RiderEndAndPay.this, "Action restricted, In Ride", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+
 
                 break;
             case R.id.contact_info:

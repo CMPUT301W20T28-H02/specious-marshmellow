@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,6 +45,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -287,8 +289,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                     // move the camera
                     map.animateCamera(cameraUpdate);
                 } else {
-                    Toast.makeText(DriverConfirmActivity.this,
-                            riderUsername + " has cancelled their request", Toast.LENGTH_LONG).show();
+                    DynamicToast.make(DriverConfirmActivity.this, riderUsername + " has cancelled their request", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                     Intent i = new Intent(DriverConfirmActivity.this, DriverStartActivity.class);
                     i.putExtra("username", driverUsername);
                     i.putExtra("email", email);
@@ -312,8 +313,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                         if (task.isSuccessful()) {
                             Driver driver = task.getResult().toObject(Driver.class);
                             Wallet wallet = driver.getWallet();
-                            Toast.makeText(getApplicationContext(), String.valueOf(wallet.getBalance()), Toast.LENGTH_LONG).show();
-
+                            DynamicToast.make(DriverConfirmActivity.this, String.valueOf(wallet.getBalance()), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -325,7 +325,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
 
                 startActivity(intent_2);*/
-                Toast.makeText(this, "Action restricted, cancel your request and try again", Toast.LENGTH_LONG).show();
+                DynamicToast.make(DriverConfirmActivity.this, "Action restricted, cancel your request and try again", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                 break;
             case R.id.contact_info:
