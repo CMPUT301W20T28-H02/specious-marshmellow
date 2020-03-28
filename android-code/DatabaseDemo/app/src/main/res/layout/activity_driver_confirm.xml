@@ -45,7 +45,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:visibility="invisible"
-                    android:text="Cancel Pickup" />
+                    android:text="Cancel Pickup"
+                    android:backgroundTint="#E38349"/>
 
             </LinearLayout>
 
@@ -53,7 +54,8 @@
                 android:id="@+id/driver_confirm_pickup_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Confirm pickup" />
+                android:text="Confirm pickup"
+                android:backgroundTint="#E38349"/>
 
         </FrameLayout>
     </LinearLayout>

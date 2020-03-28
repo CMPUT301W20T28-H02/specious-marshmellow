@@ -55,7 +55,7 @@ public class GenerateQR extends AppCompatActivity{
     Bitmap bitmap;
     String inputValue;
     String username, email;
-    Button start, makeNewRequestButton;
+    Button start;
     String savePath = Environment.getExternalStorageDirectory().getPath() + "/QRCode/";
     ListenerRegistration registration;
 
@@ -75,10 +75,6 @@ public class GenerateQR extends AppCompatActivity{
         qrImage = (ImageView) findViewById(R.id.QR_Image);
         thankYouTextView = findViewById(R.id.thank_you_TextView);
         start = (Button) findViewById(R.id.start);
-        makeNewRequestButton = findViewById(R.id.make_new_request_button);
-
-
-
 
         new Thread(new Runnable() {
             public void run() {
@@ -110,8 +106,6 @@ public class GenerateQR extends AppCompatActivity{
                                         Log.i("Hello", "We are about to start RiderDriverInitialActivity");
                                         startActivity(intent);
                                         finish();
-                                        makeNewRequestButton.setVisibility(View.VISIBLE);
-
                                     }
                                 });
 
@@ -147,19 +141,6 @@ public class GenerateQR extends AppCompatActivity{
                 });
             }
         }).start();
-
-        makeNewRequestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(GenerateQR.this, RiderStartActivity.class);
-                intent.putExtra("username", username);
-                intent.putExtra("driver", false);
-                intent.putExtra("email", email);
-                Log.i("Hello", "We are about to start RiderDriverInitialActivity");
-                startActivity(intent);
-                finish();
-            }
-        });
 
     }
 

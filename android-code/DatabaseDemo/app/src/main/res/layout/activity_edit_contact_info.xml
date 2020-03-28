@@ -21,7 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:inputType="textEmailAddress"
-        android:importantForAutofill="no"/>
+        android:importantForAutofill="no"
+        android:backgroundTint="#E38349"/>
 
     <TextView
         android:id="@+id/phone_edit_text"
@@ -35,7 +36,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="0"
         android:inputType="phone"
-        android:importantForAutofill="no"/>
+        android:importantForAutofill="no"
+        android:backgroundTint="#E38349"/>
 
     <EditText
         android:id="@+id/input_password"
@@ -44,7 +46,8 @@
         android:layout_weight="0"
         android:inputType="textPassword"
         android:importantForAutofill="no"
-        android:hint="@string/input_password" />
+        android:hint="@string/input_password"
+        android:backgroundTint="#E38349"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,7 +61,8 @@
             android:layout_width="145dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center"
-            android:text="@string/finish_edit_button"/>
+            android:text="@string/finish_edit_button"
+            android:backgroundTint="#E38349"/>
 
     </LinearLayout>
 

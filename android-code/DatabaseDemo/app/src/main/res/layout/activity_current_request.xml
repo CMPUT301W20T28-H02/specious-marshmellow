@@ -39,10 +39,9 @@
             android:id="@+id/can_request"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:background="@android:drawable/dialog_holo_dark_frame"
             android:text="Cancel Request"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#E38349"/>
 
     </LinearLayout>
     <com.google.android.material.navigation.NavigationView

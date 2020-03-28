@@ -25,7 +25,8 @@
             android:id="@+id/driver_end_and_pay_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="End Ride" />
+            android:text="End Ride"
+            android:backgroundTint="#E38349"/>
     </LinearLayout>
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"

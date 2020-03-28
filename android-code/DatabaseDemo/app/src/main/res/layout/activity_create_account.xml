@@ -14,7 +14,8 @@
         android:importantForAutofill="no"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textNoSuggestions"/>
+        android:inputType="textNoSuggestions"
+        android:backgroundTint="#E38349"/>
 
     <EditText
         android:id="@+id/password"
@@ -22,7 +23,8 @@
         android:importantForAutofill="no"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"/>
+        android:inputType="textPassword"
+        android:backgroundTint="#E38349"/>
 
     <EditText
         android:id="@+id/email"
@@ -30,7 +32,8 @@
         android:importantForAutofill="no"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"/>
+        android:inputType="textEmailAddress"
+        android:backgroundTint="#E38349"/>
 
     <EditText
         android:id="@+id/phone"
@@ -38,7 +41,8 @@
         android:importantForAutofill="no"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="phone"/>
+        android:inputType="phone"
+        android:backgroundTint="#E38349"/>
 
     <EditText
         android:id="@+id/address"
@@ -46,14 +50,16 @@
         android:importantForAutofill="no"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPostalAddress"/>
+        android:inputType="textPostalAddress"
+        android:backgroundTint="#E38349"/>
 
     <Spinner
         android:id="@+id/driver_or_rider"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown">
+        android:spinnerMode="dropdown"
+        android:backgroundTint="#E38349">
 
     </Spinner>
 
@@ -67,7 +73,8 @@
             android:text="@string/finish_create_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center"/>
+            android:layout_gravity="center_horizontal|center"
+            android:backgroundTint="#E38349"/>
     </LinearLayout>
 
 </LinearLayout>

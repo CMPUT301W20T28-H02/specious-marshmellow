@@ -22,42 +22,49 @@
         android:text="Take Picture"
         style = "@style/Base.Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:backgroundTint="#E38349"/>
 
     <Button
         android:id="@+id/load_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Load an image" />
+        android:text="Load an image"
+        android:backgroundTint="#E38349"/>
 
     <EditText
         android:id="@+id/edit_image_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Name image" />
+        android:hint="Name image"
+        android:backgroundTint="#E38349"/>
 
     <Button
         android:id="@+id/btn_upload_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Upload image" />
+        android:text="Upload image"
+        android:backgroundTint="#E38349"/>
 
     <ProgressBar
         android:id="@+id/progress_bar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:backgroundTint="#E38349"/>
 
     <Button
         android:id="@+id/show_image_from_firebase"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Show Image From Firebase" />
+        android:text="Show Image From Firebase"
+        android:backgroundTint="#E38349"/>
 
     <Button
         android:id="@+id/done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="DONE" />
+        android:text="DONE"
+        android:backgroundTint="#E38349"/>
 
 </LinearLayout>

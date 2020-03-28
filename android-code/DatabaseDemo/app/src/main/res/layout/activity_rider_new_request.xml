@@ -20,13 +20,6 @@
         android:orientation="vertical">
 
 
-		<Space
-			android:layout_width="match_parent"
-			android:layout_height="16dp"
-			android:backgroundTint="@color/common_google_signin_btn_text_light"
-			android:visibility="invisible"
-			tools:visibility="invisible" />
-
 		<SearchView
 	        android:id="@+id/sv_location"
 	        android:layout_width="match_parent"
@@ -75,7 +68,8 @@
 						android:text="Offer:  "
 						android:textSize="20dp"
 						android:layout_alignParentLeft="true"
-						android:visibility="invisible" />
+						android:visibility="invisible"
+						android:backgroundTint="#E38349"/>
 
 					<TextView
 						android:id="@+id/tipLabel"
@@ -85,7 +79,8 @@
 						android:text="Tip: "
 						android:textSize="20dp"
 						android:layout_toLeftOf="@+id/tipAmount"
-						android:visibility="invisible" />
+						android:visibility="invisible"
+						android:backgroundTint="#E38349"/>
 
 					<EditText
 						android:id="@+id/tipAmount"
@@ -98,7 +93,8 @@
 						android:hint="$0"
 						android:inputType="number"
 						android:textSize="17dp"
-						android:visibility="invisible" />
+						android:visibility="invisible"
+						android:backgroundTint="#E38349"/>
 
 				</RelativeLayout>
 
@@ -106,10 +102,10 @@
 					android:id="@+id/btnConfirmRequest"
 					android:layout_width="match_parent"
 					android:layout_height="wrap_content"
-					android:background="@android:drawable/dialog_holo_dark_frame"
 					android:text="CONFIRM REQUEST"
 					android:textColor="#FFFFFF"
-					android:visibility="invisible"/>
+					android:visibility="invisible"
+					android:backgroundTint="#E38349"/>
 
 			</LinearLayout>
 
@@ -118,10 +114,10 @@
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
 				android:layout_gravity="center_vertical"
-				android:background="@android:drawable/dialog_holo_dark_frame"
 				android:padding="22dp"
 				android:text="Get Fare"
-				android:textColor="#FFFFFF" />
+				android:textColor="#FFFFFF"
+				android:backgroundTint="#E38349"/>
 
 		</FrameLayout>
 	</LinearLayout>
