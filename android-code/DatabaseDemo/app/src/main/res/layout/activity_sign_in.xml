@@ -19,7 +19,8 @@
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/marshmellow_TextView" />
+        app:layout_constraintTop_toBottomOf="@+id/marshmellow_TextView"
+        android:backgroundTint="#E38349"/>
 
     <EditText
         android:id="@+id/input_password"
@@ -32,7 +33,8 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_email" />
+        app:layout_constraintTop_toBottomOf="@+id/input_email"
+        android:backgroundTint="#E38349"/>
 
     <Button
         android:id="@+id/sign_in"
@@ -43,7 +45,8 @@
         android:text="@string/sign_in_button"
         app:layout_constraintBottom_toTopOf="@+id/create_account"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="#E38349"/>
 
 
     <Button
@@ -56,7 +59,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="#E38349"/>
 
     <TextView
         android:id="@+id/marshmellow_TextView"
@@ -70,16 +74,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/profile_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Go to profile picture activity"
-        app:layout_constraintBottom_toTopOf="@+id/sign_in"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
