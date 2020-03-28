@@ -199,7 +199,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                             @Override
                             public void onSuccess(Void aVoid) {
                                 // Log.i(TAG, "Data deletion successful");
-                                Intent intent = new Intent(currentRequest.this, RiderDriverInitialActivity.class);
+                                Intent intent = new Intent(currentRequest.this, RiderStartActivity.class);
                                 intent.putExtra("driver", false);
                                 intent.putExtra("username", username);
                                 intent.putExtra("email", email);

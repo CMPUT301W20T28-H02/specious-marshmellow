@@ -125,7 +125,7 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
                                     //runOnUiThread(new Runnable() {
                                         //public void run() {
                                             Log.i("Hello", "After rider pays driver");
-                                            Intent i = new Intent(DriverScannerActivity.this, RiderDriverInitialActivity.class);
+                                            Intent i = new Intent(DriverScannerActivity.this, DriverStartActivity.class);
                                             i.putExtra("driver", true);
                                             Log.i("Hello", "Driver username:" + driverUsername);
                                             i.putExtra("username", driverUsername);
