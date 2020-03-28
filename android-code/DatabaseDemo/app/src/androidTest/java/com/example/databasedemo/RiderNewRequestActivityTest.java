@@ -62,17 +62,10 @@ public class RiderNewRequestActivityTest {
         onView(withId(R.id.btnGetFare))
                 .perform(click());
 
-         //enter tip amount
+
+        //enter tip amount
         onView(withId(R.id.tipAmount))
                 .perform(typeText(String.valueOf(tipAmount)), closeSoftKeyboard());
-
-         //add tip to fare
-        onView(withId(R.id.addTipButton))
-                .perform(click());
-
-        // get fare
-        onView(withId(R.id.btnGetFare))
-                .perform(click());
 
 
 

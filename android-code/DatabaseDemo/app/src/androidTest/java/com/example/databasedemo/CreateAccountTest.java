@@ -59,7 +59,7 @@ public class CreateAccountTest {
     @Before
     public void addUsername(){
         // create user object
-        testUser = new User(username, email, wallet, phone, rating, numOfRatings, driver);
+        testUser = new User(username, email, wallet, phone, rating, numOfRatings, driver, false);
 
         // add user to firestore and set user data
         db.collection("users").document(username).set(testUser)
