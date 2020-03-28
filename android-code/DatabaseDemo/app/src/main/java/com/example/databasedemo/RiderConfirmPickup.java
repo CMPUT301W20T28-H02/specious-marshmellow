@@ -8,8 +8,11 @@ package com.example.databasedemo;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,10 +22,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +51,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.squareup.picasso.Picasso;
 
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+
 /**
  * ConfirmPickup from the rider side
  * @author Hussein Warsame, Michael Antifaoff
@@ -49,6 +62,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
     GoogleMap map;
     TextView waiting, driverUsernameTextView, driverPhoneNumberTextView, driverEmailTextView;
     Button riderConfirmPickupButton, cancelRequestButton;
+    FusedLocationProviderClient fusedLocationProviderClient;
     boolean riderReady = false;
     ListenerRegistration registration;
     TextView usrNameText,usrEmailText;
@@ -56,6 +70,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
     DatabaseReference reff;
     String url;
     boolean hasProfilePicture;
+    String username;
 
 
     /**
@@ -84,8 +99,24 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                 .findFragmentById(R.id.rider_pickup_map);
         mapFragment.getMapAsync(this);
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        if(ActivityCompat.checkSelfPermission(RiderConfirmPickup.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderConfirmPickup.this, new OnSuccessListener<android.location.Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null){
+                    LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                    MarkerOptions p3 = new MarkerOptions().position(latLng);
+                    map.setMyLocationEnabled(true);
+
+                }
+            }
+        });
+
         Intent i = getIntent();
-        final String username = i.getStringExtra("username");
+        username = i.getStringExtra("username");
         Log.i("Hello", "RCP: The username is " + username);
         // TODO: Email is null here: Check to see if email is passed through MainActivity
         final String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
@@ -131,9 +162,6 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
 
         });
 
-
-
-
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,40 +169,6 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                 startActivity(intent);
             }
         });
-
-
-        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
-
-        registration = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                if (documentSnapshot.exists()) {
-                    Request request = documentSnapshot.toObject(Request.class);
-                    // TODO: Take user to a display info activity instead that tells them all about the driver
-                    driverUsernameTextView.setText(getString(R.string.rider_confirm_driver_username, request.getDriver().getUsername()));
-                    driverPhoneNumberTextView.setText(getString(R.string.rider_confirm_driver_phone_number, request.getDriver().getPhone()));
-                    driverEmailTextView.setText(getString(R.string.rider_confirm_driver_email, request.getDriver().getEmail()));
-                    if (riderReady) {
-                        riderConfirmPickupButton.setVisibility(View.INVISIBLE);
-                        waiting.setVisibility(View.VISIBLE);
-                        cancelRequestButton.setVisibility(View.VISIBLE);
-                    }
-                    if (request.getRiderConfirmation()&&request.getDriverConfirmation()) {
-
-                        Intent i = new Intent(RiderConfirmPickup.this, RiderEndAndPay.class);
-                        i.putExtra("username", username);
-                        startActivity(i);
-                        finish();
-                    }
-                    if (request.getRiderConfirmation()) {
-                        riderConfirmPickupButton.setVisibility(View.INVISIBLE);
-                        waiting.setVisibility(View.VISIBLE);
-                        cancelRequestButton.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-        });
-
 
 
         riderConfirmPickupButton.setOnClickListener(new View.OnClickListener() {
@@ -239,10 +233,75 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        map.setMyLocationEnabled(true);
 
         /*LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
         map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
         map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
+
+        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
+
+        registration = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot.exists()) {
+                    final Request request = documentSnapshot.toObject(Request.class);
+                    driverUsernameTextView.setText(getString(R.string.rider_confirm_driver_username, request.getDriver().getUsername()));
+                    // Take user to info activity telling them about the driver
+                    driverUsernameTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent i = new Intent(RiderConfirmPickup.this, DisplayUserInfoActivity.class);
+                            i.putExtra("username", request.getDriver().getUsername());
+                            startActivity(i);
+                        }
+                    });
+                    driverPhoneNumberTextView.setText(getString(R.string.rider_confirm_driver_phone_number, request.getDriver().getPhone()));
+                    driverEmailTextView.setText(getString(R.string.rider_confirm_driver_email, request.getDriver().getEmail()));
+                    if (riderReady) {
+                        riderConfirmPickupButton.setVisibility(View.INVISIBLE);
+                        waiting.setVisibility(View.VISIBLE);
+                        cancelRequestButton.setVisibility(View.VISIBLE);
+                    }
+                    if (request.getRiderConfirmation()&&request.getDriverConfirmation()) {
+
+                        Intent i = new Intent(RiderConfirmPickup.this, RiderEndAndPay.class);
+                        i.putExtra("username", username);
+                        startActivity(i);
+                        finish();
+                    }
+                    if (request.getRiderConfirmation()) {
+                        riderConfirmPickupButton.setVisibility(View.INVISIBLE);
+                        waiting.setVisibility(View.VISIBLE);
+                        cancelRequestButton.setVisibility(View.VISIBLE);
+                    }
+
+                    com.example.databasedemo.Location startLocation = request.getStartLocation();
+                    com.example.databasedemo.Location endLocation = request.getEndLocation();
+
+
+                    // set start and end points as latlng
+                    LatLng startPoint = new LatLng(startLocation.getLatitude(), startLocation.getLongitude());
+                    LatLng endPoint = new LatLng(endLocation.getLatitude(), endLocation.getLongitude());
+
+                    // add markers to map for start and end points
+                    map.addMarker(new MarkerOptions().position(startPoint).title("Start Location"));
+                    map.addMarker(new MarkerOptions().position(endPoint).title("End Location"));
+
+
+                    // move map to show the start and end points
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                    // set builder with start and end locations
+                    builder.include(startPoint);
+                    builder.include(endPoint);
+                    LatLngBounds bounds = builder.build();
+                    // construct a cameraUpdate with a buffer of 200
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 200);
+                    // move the camera
+                    map.animateCamera(cameraUpdate);
+                }
+            }
+        });
     }
 
     @Override

@@ -190,7 +190,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 if(location != null){
                     latLng = new LatLng(location.getLatitude(),location.getLongitude());
                     MarkerOptions p3 = new MarkerOptions().position(latLng);
-                    map.addMarker(p3);
+                    map.setMyLocationEnabled(true);
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
 
                 }
@@ -238,7 +238,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                         latLng = new LatLng(address.getLatitude(), address.getLongitude());
                         p1 = new MarkerOptions().position(latLng);
                         map.addMarker(p1);
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                     } else {
                         searchView.setQuery("Please Enter a Valid Location", false);
                         searchView.clearFocus();
@@ -254,6 +254,14 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 if (errorString.equals("Please Enter a Valid Location")) {
                     //searchView.setQuery("", false);
                 }
+
+                btnGetFare.setVisibility(View.VISIBLE);
+                offerDisplay.setVisibility(View.INVISIBLE);
+                tipLabel.setVisibility(View.INVISIBLE);
+                tipAmount.setVisibility(View.INVISIBLE);
+                btnConfirmRequest.setVisibility(View.INVISIBLE);
+
+
                 return false;
             }
         });
@@ -291,7 +299,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                         latLng2 = new LatLng(address.getLatitude(), address.getLongitude());
                         p2 = new MarkerOptions().position(latLng2);
                         map.addMarker(p2);
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2, 10));
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2, 15));
                     } else {
                         searchView2.setQuery("Please Enter a Valid Location", false);
                         searchView2.clearFocus();
@@ -304,6 +312,13 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
             @Override
             public boolean onQueryTextChange(String s) {
+
+                btnGetFare.setVisibility(View.VISIBLE);
+                offerDisplay.setVisibility(View.INVISIBLE);
+                tipLabel.setVisibility(View.INVISIBLE);
+                tipAmount.setVisibility(View.INVISIBLE);
+                btnConfirmRequest.setVisibility(View.INVISIBLE);
+
                 return false;
             }
 
@@ -322,6 +337,8 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                     return;
                 }
 
+                Log.i(TAG, "Latitude: " + latLng.latitude + " Longitude: " + latLng.longitude);
+                Log.i(TAG, "Latitude: " + latLng2.latitude + " Longitude: " + latLng2.longitude);
                 com.example.databasedemo.Location startLocation = new com.example.databasedemo.Location(latLng.latitude,latLng.longitude);
                 com.example.databasedemo.Location endLocation = new com.example.databasedemo.Location(latLng2.latitude,latLng2.longitude);
                 double distance = Request.getDistance(startLocation, endLocation);

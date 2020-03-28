@@ -35,7 +35,8 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="22dp"
-            android:text="Username: " />
+            android:text="Username: "
+            android:clickable="true"/>
 
         <TextView
             android:id="@+id/driver_phone_number_rider_confirm_pickup"

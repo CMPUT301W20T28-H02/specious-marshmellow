@@ -21,6 +21,40 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/rider_driver_confirm_pickup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="22dp"
+            android:text="Rider Info: " />
+
+        <TextView
+            android:id="@+id/rider_username_driver_confirm_pickup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="22dp"
+            android:text="Username: "
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/rider_phone_number_driver_confirm_pickup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="22dp"
+            android:text="Phone Number: " />
+
+        <TextView
+            android:id="@+id/rider_email_driver_confirm_pickup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="22dp"
+            android:text="Email: " />
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

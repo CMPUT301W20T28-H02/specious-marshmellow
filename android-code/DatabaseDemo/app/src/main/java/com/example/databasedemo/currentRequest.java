@@ -185,7 +185,8 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 if(location != null){
                     latLng = new LatLng(location.getLatitude(),location.getLongitude());
                     MarkerOptions p3 = new MarkerOptions().position(latLng);
-                    map.addMarker(p3.title("Current Location"));
+                    map.setMyLocationEnabled(true);
+                    //map.addMarker(p3.title("Current Location"));
                 }
             }
         });
@@ -251,33 +252,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
 
     public void sendNotification() {
 
-        //Get an instance of NotificationManager//
-
-//        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-//                        .setSmallIcon(R.mipmap.marshmellow)
-//                        .setContentTitle("My notification")
-//                        .setContentText("Hello World!");
-//
-//        mBuilder.setAutoCancel(true);
-
-        //Create an intent that’ll fire when the user taps the notification
-
-//        Intent i = new Intent(currentRequest.this,RiderConfirmPickup.class);
-//        i.putExtra("username", username);
-//        i.putExtra("email", email);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, i, 0);
-//
-//        mBuilder.setContentIntent(pendingIntent);
-//
-//        //mBuilder.setSmallIcon(R.drawable.notification_icon);
-//        mBuilder.setContentTitle("My notification");
-//        mBuilder.setContentText("Hello World!");
-
-//        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//        mNotificationManager.notify(001, mBuilder.build());
-
-
+        // https://www.androidauthority.com/how-to-create-android-notifications-707254/
         NotificationManager mNotificationManager;
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), "notify_001");

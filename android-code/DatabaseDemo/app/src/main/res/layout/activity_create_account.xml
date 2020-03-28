@@ -52,16 +52,21 @@
         android:layout_height="wrap_content"
         android:inputType="textPostalAddress"
         android:backgroundTint="#E38349"/>
-
-    <Spinner
-        android:id="@+id/driver_or_rider"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown"
-        android:backgroundTint="#E38349">
+        android:layout_height="wrap_content">
 
-    </Spinner>
+
+        <Spinner
+            android:id="@+id/driver_or_rider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown">
+        </Spinner>
+
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -19,9 +19,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
@@ -47,7 +52,7 @@ import com.squareup.picasso.Picasso;
 public class DriverConfirmActivity extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     GoogleMap map;
-    TextView waiting;
+    TextView waiting, riderUsernameTextView, riderPhoneNumberTextView, riderEmailTextView;
     Button driverConfirmPickupButton, cancelPickupButton;
     boolean driverReady = false;
     ListenerRegistration registration;
@@ -57,6 +62,8 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
     TextView usrNameText,usrEmailText;
     String email;
     ImageView profile;
+    String riderUsername;
+    String driverUsername;
 
 
     /**
@@ -72,6 +79,9 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
         waiting = findViewById(R.id.waiting_for_rider);
         driverConfirmPickupButton = findViewById(R.id.driver_confirm_pickup_button);
         cancelPickupButton = findViewById(R.id.cancel_pickup_button_confirm_activity);
+        riderUsernameTextView = findViewById(R.id.rider_username_driver_confirm_pickup);
+        riderPhoneNumberTextView = findViewById(R.id.rider_phone_number_driver_confirm_pickup);
+        riderEmailTextView = findViewById(R.id.rider_email_driver_confirm_pickup);
         NavigationView navi = findViewById(R.id.nav_view);
         View headerview = navi.getHeaderView(0);
         navi.setNavigationItemSelectedListener(this);
@@ -86,8 +96,8 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
         mapFragment.getMapAsync(this);
 
         Intent i = getIntent();
-        final String riderUsername = i.getStringExtra("riderUsername");
-        final String driverUsername = i.getStringExtra("driverUsername");
+        riderUsername = i.getStringExtra("riderUsername");
+        driverUsername = i.getStringExtra("driverUsername");
         email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         usrNameText.setText(driverUsername);
         usrEmailText.setText(email);
@@ -113,9 +123,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
 
 
                         Log.d("Firebase", url);
-                        Picasso.get()
-                                .load( url )
-                                .into( profile );
+                        Picasso.get().load( url ).into( profile );
 
 
                     }
@@ -138,35 +146,6 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
             public void onClick(View view) {
                 Intent intent = new Intent(getBaseContext(), TakeProfilePicture.class);
                 startActivity(intent);
-            }
-        });
-
-
-        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(riderUsername);
-
-        registration = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                Request request = documentSnapshot.toObject(Request.class);
-                if (driverReady) {
-                    driverConfirmPickupButton.setVisibility(View.INVISIBLE);
-                    waiting.setVisibility(View.VISIBLE);
-                    cancelPickupButton.setVisibility(View.VISIBLE);
-                }
-                if(request.getRiderConfirmation()&&request.getDriverConfirmation()){
-                    Intent i = new Intent(DriverConfirmActivity.this, DriverEndAndPay.class);
-                    // Activity expects: final String riderUsername = i.getStringExtra("riderUsername");
-                    //                   final String driverUsername = i.getStringExtra("driverUsername");
-                    i.putExtra("riderUsername", riderUsername);
-                    i.putExtra("driverUsername", driverUsername);
-                    startActivity(i);
-                    finish();
-                }
-                if (request.getDriverConfirmation()){
-                    driverConfirmPickupButton.setVisibility(View.INVISIBLE);
-                    waiting.setVisibility(View.VISIBLE);
-                    cancelPickupButton.setVisibility(View.VISIBLE);
-                }
             }
         });
 
@@ -234,6 +213,70 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
         /*LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
         map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
         map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
+
+        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(riderUsername);
+
+        registration = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                final Request request = documentSnapshot.toObject(Request.class);
+                riderUsernameTextView.setText(getString(R.string.rider_confirm_driver_username, request.getRider().getUsername()));
+                // Take user to info activity telling them about the driver
+                riderUsernameTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent i = new Intent(DriverConfirmActivity.this, DisplayUserInfoActivity.class);
+                        i.putExtra("username", request.getRider().getUsername());
+                        startActivity(i);
+                    }
+                });
+                riderPhoneNumberTextView.setText(getString(R.string.rider_confirm_driver_phone_number, request.getRider().getPhone()));
+                riderEmailTextView.setText(getString(R.string.rider_confirm_driver_email, request.getRider().getEmail()));
+
+                if (driverReady) {
+                    driverConfirmPickupButton.setVisibility(View.INVISIBLE);
+                    waiting.setVisibility(View.VISIBLE);
+                    cancelPickupButton.setVisibility(View.VISIBLE);
+                }
+                if(request.getRiderConfirmation()&&request.getDriverConfirmation()){
+                    Intent i = new Intent(DriverConfirmActivity.this, DriverEndAndPay.class);
+                    // Activity expects: final String riderUsername = i.getStringExtra("riderUsername");
+                    //                   final String driverUsername = i.getStringExtra("driverUsername");
+                    i.putExtra("riderUsername", riderUsername);
+                    i.putExtra("driverUsername", driverUsername);
+                    startActivity(i);
+                    finish();
+                }
+                if (request.getDriverConfirmation()){
+                    driverConfirmPickupButton.setVisibility(View.INVISIBLE);
+                    waiting.setVisibility(View.VISIBLE);
+                    cancelPickupButton.setVisibility(View.VISIBLE);
+                }
+
+                com.example.databasedemo.Location startLocation = request.getStartLocation();
+                com.example.databasedemo.Location endLocation = request.getEndLocation();
+
+                // set start and end points as latlng
+                LatLng startPoint = new LatLng(startLocation.getLatitude(), startLocation.getLongitude());
+                LatLng endPoint = new LatLng(endLocation.getLatitude(), endLocation.getLongitude());
+
+                // add markers to map for start and end points
+                map.addMarker(new MarkerOptions().position(startPoint).title("Start Location"));
+                map.addMarker(new MarkerOptions().position(endPoint).title("End Location"));
+
+
+                // move map to show the start and end points
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                // set builder with start and end locations
+                builder.include(startPoint);
+                builder.include(endPoint);
+                LatLngBounds bounds = builder.build();
+                // construct a cameraUpdate with a buffer of 200
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 200);
+                // move the camera
+                map.animateCamera(cameraUpdate);
+            }
+        });
     }
 
     @Override
