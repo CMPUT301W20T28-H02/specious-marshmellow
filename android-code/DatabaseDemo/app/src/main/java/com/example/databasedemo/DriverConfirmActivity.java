@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -76,6 +77,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_confirm);
+        Log.i("Hello", "We are inside OnCreate of DriverConfirmActivity");
         waiting = findViewById(R.id.waiting_for_rider);
         driverConfirmPickupButton = findViewById(R.id.driver_confirm_pickup_button);
         cancelPickupButton = findViewById(R.id.cancel_pickup_button_confirm_activity);
@@ -231,6 +233,15 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                     }
                 });
                 riderPhoneNumberTextView.setText(getString(R.string.rider_confirm_driver_phone_number, request.getRider().getPhone()));
+                riderPhoneNumberTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String uri = "tel:" + request.getRider().getPhone().trim();
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse(uri));
+                        startActivity(intent);
+                    }
+                });
                 riderEmailTextView.setText(getString(R.string.rider_confirm_driver_email, request.getRider().getEmail()));
 
                 if (driverReady) {

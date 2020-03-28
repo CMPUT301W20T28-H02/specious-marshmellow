@@ -21,8 +21,7 @@ public class TestRider {
     @Before
     public void SetUp(){
         Wallet wallet = new Wallet(123);
-        rider = new Rider("sample","sample@sampl.e",wallet,
-                "1234567890",3.5,2,false);
+        rider = new Rider("sample","sample@sampl.e",wallet,"1234567890",3.5,2,false);
         Random rnd = new Random();
         StartLocation = new Location(rnd.nextDouble()*90,rnd.nextDouble()*120);
         EndLocation = new Location (rnd.nextDouble()*90,rnd.nextDouble()*120);

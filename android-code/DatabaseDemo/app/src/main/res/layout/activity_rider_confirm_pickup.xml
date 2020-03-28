@@ -39,6 +39,15 @@
             android:clickable="true"/>
 
         <TextView
+            android:id="@+id/driver_rating_rider_confirm_pickup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="22dp"
+            android:text="Rating: "
+            android:clickable="true"/>
+
+        <TextView
             android:id="@+id/driver_phone_number_rider_confirm_pickup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

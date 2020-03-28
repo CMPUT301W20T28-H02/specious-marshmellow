@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -51,6 +52,8 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 /**
@@ -60,7 +63,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     GoogleMap map;
-    TextView waiting, driverUsernameTextView, driverPhoneNumberTextView, driverEmailTextView;
+    TextView waiting, driverUsernameTextView, driverRatingTextView, driverPhoneNumberTextView, driverEmailTextView;
     Button riderConfirmPickupButton, cancelRequestButton;
     FusedLocationProviderClient fusedLocationProviderClient;
     boolean riderReady = false;
@@ -85,6 +88,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
         riderConfirmPickupButton = findViewById(R.id.rider_confirm_pickup_button);
         cancelRequestButton = findViewById(R.id.cancel_request_button_confirm_activity);
         driverUsernameTextView = findViewById(R.id.driver_username_rider_confirm_pickup);
+        driverRatingTextView = findViewById(R.id.driver_rating_rider_confirm_pickup);
         driverPhoneNumberTextView = findViewById(R.id.driver_phone_number_rider_confirm_pickup);
         driverEmailTextView = findViewById(R.id.driver_email_rider_confirm_pickup);
         NavigationView navi = findViewById(R.id.nav_view);
@@ -256,7 +260,18 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                             startActivity(i);
                         }
                     });
+                    DecimalFormat numberFormat = new DecimalFormat("#.00");
+                    driverRatingTextView.setText(getString(R.string.rider_confirm_driver_rating, numberFormat.format(request.getDriver().getRating())));
                     driverPhoneNumberTextView.setText(getString(R.string.rider_confirm_driver_phone_number, request.getDriver().getPhone()));
+                    driverPhoneNumberTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String uri = "tel:" + request.getDriver().getPhone().trim();
+                            Intent intent = new Intent(Intent.ACTION_DIAL);
+                            intent.setData(Uri.parse(uri));
+                            startActivity(intent);
+                        }
+                    });
                     driverEmailTextView.setText(getString(R.string.rider_confirm_driver_email, request.getDriver().getEmail()));
                     if (riderReady) {
                         riderConfirmPickupButton.setVisibility(View.INVISIBLE);
