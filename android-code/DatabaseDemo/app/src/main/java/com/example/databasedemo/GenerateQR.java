@@ -7,8 +7,10 @@ package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -100,7 +102,7 @@ public class GenerateQR extends AppCompatActivity{
                             if (request.getPaymentComplete()) {
                                 thankYouTextView.setVisibility(View.VISIBLE);
                                 Log.i("Hello", "We have set the TextView to say thank you!");
-                                rateDriver();
+                                promptRating();
 
                             } else {
 
@@ -136,137 +138,101 @@ public class GenerateQR extends AppCompatActivity{
         }).start();
 
     }
+    // show alert Dialog with thumbs up and thumbs down
+    public void promptRating(){
 
-    public void rateDriver(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Add the buttons
+        builder.setPositiveButton("Thumbs up", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User thumbs up the driver
+                setDriverRating(5);
+            }
+        });
+        builder.setNegativeButton("Thumbs down", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User thumbs down the driver
+                setDriverRating(0);
+            }
+        });
+
+        // do nothing when user touches area outside dialog
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+
+            }
+        });
+
+
+        builder.setMessage("Don't forget to give your driver a thumbs up or thumbs down!")
+                .setTitle("How Was Your Driver?")
+                .setCancelable(false);
+
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
 
         Log.i("rateDriver", "we are inside rateDriver");
 
-        ratingsLayout = findViewById(R.id.rating_layout);
 
-        thumbs_up = findViewById(R.id.thumbs_up);
-        thumbs_down = findViewById(R.id.thumbs_down);
+    }
+    // get Driver from request collection and set new rating locally
+    public void setDriverRating(final double rating){
+        db.collection("requests").document(username)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Request request = documentSnapshot.toObject(Request.class);
 
-        ratingsLayout.setVisibility(View.VISIBLE);
+                        Driver driver = request.getDriver();
+                        String driver_username = driver.getUsername();
+                        double new_rating = driver.calculateNewRating(rating);
+                        driver.setRating(new_rating);
+
+                        changeDriverRatingFirestore(driver_username, driver);
 
 
+                    }
+                });
+    }
 
-        thumbs_up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.collection("requests").document(username)
-                        .get()
-                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+    // update Firestore with new Driver rating and go back to RiderStartActivity
+    public void changeDriverRatingFirestore(String driver_username, Driver driver) {
+
+        db.collection("users").document(driver_username)
+                .set(driver)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i("Driver rating", "new driver rating");
+
+                        DocumentReference innerRef = FirebaseFirestore.getInstance().collection("requests").document(username);
+                        innerRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                Request request = documentSnapshot.toObject(Request.class);
+                            public void onComplete(@NonNull Task<Void> task) {
 
-                                Driver driver = request.getDriver();
-                                String driver_username = driver.getUsername();
-                                double rating = driver.calculateNewRating(5);
-                                driver.setRating(rating);
-
-                                db.collection("users").document(driver_username)
-                                        .set(driver)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Log.i("Driver rating", "new driver rating");
-
-                                                DocumentReference innerRef = FirebaseFirestore.getInstance().collection("requests").document(username);
-                                                innerRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-
-                                                        Log.i("Hello", "We have deleted the request from the database");
-                                                        Intent intent = new Intent(GenerateQR.this, RiderStartActivity.class);
-                                                        intent.putExtra("username", username);
-                                                        intent.putExtra("driver", false);
-                                                        intent.putExtra("email", email);
-                                                        Log.i("Hello", "We are about to start RiderDriverInitialActivity");
-                                                        startActivity(intent);
-                                                        finish();
-                                                    }
-                                                });
-                                            }
-                                        });
-
-
+                                Log.i("Hello", "We have deleted the request from the database");
+                                Intent intent = new Intent(GenerateQR.this, RiderStartActivity.class);
+                                intent.putExtra("username", username);
+                                intent.putExtra("driver", false);
+                                intent.putExtra("email", email);
+                                Log.i("Hello", "We are about to start RiderDriverInitialActivity");
+                                startActivity(intent);
+                                finish();
                             }
                         });
 
-
-
-            }
-
-
-        });
-
-        thumbs_down.setOnClickListener(new View.OnClickListener() {
-                                           @Override
-                                           public void onClick(View v) {
-
-                                               db.collection("requests").document(username)
-                                                       .get()
-                                                       .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                           @Override
-                                                           public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                               Request request = documentSnapshot.toObject(Request.class);
-
-                                                               Driver driver = request.getDriver();
-                                                               String driver_username = driver.getUsername();
-                                                               double rating = driver.calculateNewRating(0);
-                                                               driver.setRating(rating);
-
-                                                               db.collection("users").document(driver_username)
-                                                                       .set(driver)
-                                                                       .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                           @Override
-                                                                           public void onSuccess(Void aVoid) {
-                                                                               Log.i("Driver rating", "new driver rating");
-
-                                                                               DocumentReference innerRef = FirebaseFirestore.getInstance().collection("requests").document(username);
-                                                                               innerRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                   @Override
-                                                                                   public void onComplete(@NonNull Task<Void> task) {
-
-                                                                                       Log.i("Hello", "We have deleted the request from the database");
-                                                                                       Intent intent = new Intent(GenerateQR.this, RiderStartActivity.class);
-                                                                                       intent.putExtra("username", username);
-                                                                                       intent.putExtra("driver", false);
-                                                                                       intent.putExtra("email", email);
-                                                                                       Log.i("Hello", "We are about to start RiderDriverInitialActivity");
-                                                                                       startActivity(intent);
-                                                                                       finish();
-                                                                                   }
-                                                                               });
-
-                                                                           }
-                                                                       });
-
-
-                                                           }
-                                                       });
-
-
-
-                                           }
-
-
-                                       }
-
-
-
-        );
-
-
-
-
-
-
-
+                    }
+                });
 
 
     }
+
+
 
     @Override
     public void onDestroy(){
