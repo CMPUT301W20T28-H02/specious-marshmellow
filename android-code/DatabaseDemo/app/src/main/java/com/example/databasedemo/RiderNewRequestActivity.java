@@ -365,7 +365,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 // new FetchURL(RiderNewRequestActivity.this).execute(url, "driving");
 
                 offerDisplay.setVisibility(View.VISIBLE);
-                offerDisplay.setText("Offer: $" + numberFormat.format(globalFare));
+                offerDisplay.setText(getString(R.string.offer_rider_new_request, numberFormat.format(globalFare)));
 
                 tipLabel.setVisibility(View.VISIBLE);
 
@@ -388,10 +388,10 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 if(!charSequence.toString().equals("")) {
                     globalTip = Double.valueOf(tipAmount.getText().toString());
                     DecimalFormat numberFormat = new DecimalFormat("#.00");
-                    offerDisplay.setText("Offer: $" + numberFormat.format(globalFare + globalTip));
+                    offerDisplay.setText(getString(R.string.offer_rider_new_request, numberFormat.format(globalFare + globalTip)));
                 } else {
                     DecimalFormat numberFormat = new DecimalFormat("#.00");
-                    offerDisplay.setText("Offer: $" + numberFormat.format(globalFare));
+                    offerDisplay.setText(getString(R.string.offer_rider_new_request, numberFormat.format(globalFare)));
                     globalTip = 0;
                 }
             }
@@ -448,7 +448,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 //                globalTip = tempTip;
 //                DecimalFormat numberFormat = new DecimalFormat("#.00");
 //                // can put a "Toast" saying invalid tip amount
-//                offerDisplay.setText("Offer: " + numberFormat.format(farePlusTip));
+//                offerDisplay.setText(getString(R.string.offer_rider_new_request, numberFormat.format(farePlusTip)));
 //            }
 //        }));
 

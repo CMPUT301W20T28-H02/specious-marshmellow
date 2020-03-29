@@ -73,7 +73,7 @@
     <string name="cancel_request_rider_confirm_pickup">Cancel Request</string>
     <string name="confirm_pickup_rider_confirm_pickup">Confirm pickup</string>
     <string name="end_ride_and_pay_rider_end_and_pay">End Ride and Pay</string>
-    <string name="offer_rider_new_request">Offer:</string>
+    <string name="offer_rider_new_request">Offer: $%1$s</string>
     <string name="_0_hint_rider_new_request">$0</string>
     <string name="tip_rider_new_request">Tip:</string>
     <string name="confirm_request_rider_new_request">CONFIRM REQUEST</string>
@@ -89,5 +89,6 @@
     <string name="km_driver_initial">km</string>
     <string name="username_nav_header">Username</string>
     <string name="user_email_nav_header">User Email</string>
+    <string name="thank_you_generate_qr">Thank you for riding with Marshmellow!</string>
 
 </resources>

@@ -91,7 +91,7 @@ public class GenerateQR extends AppCompatActivity{
                             final Request request = documentSnapshot.toObject(Request.class);
 
                             if (request.getPaymentComplete()) {
-                                thankYouTextView.setText("Thank you for riding with Marshmellow!");
+                                thankYouTextView.setVisibility(View.VISIBLE);
                                 Log.i("Hello", "We have set the TextView to say thank you!");
                                 DocumentReference innerRef = FirebaseFirestore.getInstance().collection("requests").document(username);
                                 innerRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Adapter class for request
- * @author Michael Antifaoff
+ * @author Hussein Warsame
  */
 public class RequestAdapter extends ArrayAdapter<Request> {
     private Context context;
