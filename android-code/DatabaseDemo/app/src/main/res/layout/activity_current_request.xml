@@ -30,7 +30,7 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="MATCHING ..."
+            android:text="@string/matching"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textSize="30sp" />
@@ -39,7 +39,7 @@
             android:id="@+id/can_request"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cancel Request"
+            android:text="@string/cancel_request_current_request_activity"
             android:textColor="#FFFFFF"
             android:backgroundTint="#E38349"/>
 

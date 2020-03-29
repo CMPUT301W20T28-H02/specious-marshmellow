@@ -8,7 +8,9 @@ package com.example.databasedemo;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +39,7 @@ public class SignInActivity extends AppCompatActivity {
     EditText enterEmailEditText;
     EditText enterPasswordEditText;
     FirebaseAuth mAuth;
+    boolean complete;
 
     /**
      * Called when activity is created
@@ -69,10 +72,15 @@ public class SignInActivity extends AppCompatActivity {
                     final String email = enterEmailEditText.getText().toString();
                     final String password = enterPasswordEditText.getText().toString();
 
+                    Log.i("Hello", "We are inside check input, just before logging the user in");
+
+                    complete = false;
+
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
+                                    complete = true;
                                     if (task.isSuccessful()) {
                                         FirebaseUser user = mAuth.getCurrentUser();
                                         Intent intent = new Intent(SignInActivity.this, MainActivity.class);
@@ -81,10 +89,20 @@ public class SignInActivity extends AppCompatActivity {
                                         finish();
                                     } else {
                                         DynamicToast.make(SignInActivity.this, "Authentication failed", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
-
                                     }
                                 }
                             });
+
+                    final Handler handler = new Handler();
+                    final Runnable r = new Runnable() {
+                        public void run() {
+                            if (!complete){
+                                DynamicToast.make(SignInActivity.this, "Please check your internet connection and try again once you have a strong connection", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    };
+                    handler.postDelayed(r, 7000);
+
                 }
             }
         });

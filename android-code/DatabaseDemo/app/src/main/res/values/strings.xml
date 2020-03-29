@@ -44,5 +44,7 @@
     <string name="show_address">Address: %1$s</string>
     <string name="show_rating">Rating: %1$s</string>
     <string name="make_request">Make Request</string>
+    <string name="matching">MATCHING ...</string>
+    <string name="cancel_request_current_request_activity">Cancel Request</string>
 
 </resources>
