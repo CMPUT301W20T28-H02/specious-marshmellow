@@ -85,6 +85,7 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+
         globalBoundsEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
@@ -99,6 +100,10 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
                     myRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+
+
+
                             if (task.isSuccessful()){
                                 for (QueryDocumentSnapshot doc : task.getResult()) {
                                     final Request request = doc.toObject(Request.class);
@@ -142,18 +147,22 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
                                     }
                                 });
                             }
+
                         }
                     });
                 } else {
                     requestArrayAdapter.notifyDataSetChanged();
+
                 }
             }
+
 
             @Override
             public void afterTextChanged(Editable editable) {
 
             }
         });
+
 
         requestListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
