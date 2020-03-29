@@ -175,7 +175,6 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 
             }
         });
-
         usrNameText.setText(username);
         usrEmailText.setText(email);
 
