@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="22dp"
-            android:text="Driver Info: " />
+            android:text="@string/driver_info_rider_confirm_pickup" />
 
         <TextView
             android:id="@+id/driver_username_rider_confirm_pickup"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="22dp"
-            android:text="Username: "
+            android:text="@string/rider_confirm_pickup"
             android:clickable="true"/>
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="22dp"
-            android:text="Rating: "
+            android:text="@string/rating_rider_confirm_pickup"
             android:clickable="true"/>
 
         <TextView
@@ -53,7 +53,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="22dp"
-            android:text="Phone Number: " />
+            android:text="@string/phone_number_rider_confirm_pickup" />
 
         <TextView
             android:id="@+id/driver_email_rider_confirm_pickup"
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="22dp"
-            android:text="Email: " />
+            android:text="@string/email_rider_confirm_pickup" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -76,7 +76,7 @@
                     android:id="@+id/waiting_for_driver"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Waiting for driver..."
+                    android:text="@string/waiting_for_driver_rider_confirm_pickup"
                     android:textAlignment="center"
                     android:textSize="22sp"
                     android:visibility="invisible" />
@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:visibility="invisible"
-                    android:text="Cancel Request"
+                    android:text="@string/cancel_request_rider_confirm_pickup"
                     android:backgroundTint="#E38349"/>
 
             </LinearLayout>
@@ -96,7 +96,7 @@
                 android:id="@+id/rider_confirm_pickup_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Confirm pickup"
+                android:text="@string/confirm_pickup_rider_confirm_pickup"
                 android:backgroundTint="#E38349"/>
 
         </FrameLayout>

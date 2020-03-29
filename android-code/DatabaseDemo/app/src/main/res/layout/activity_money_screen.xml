@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Wallet"
+            android:text="@string/wallet_money_screen"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textSize="32dp" />
@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Balance:"
+                android:text="@string/balance_money_screen"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:textSize="27sp" />
 
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:padding="20dp"
-            android:text="ADD $5"
+            android:text="@string/add_5_money_screen"
             android:textColor="#FFFFFF"
             android:backgroundTint="#E38349"
             android:textSize="24sp" />
@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:padding="20dp"
-            android:text="ADD $25"
+            android:text="@string/add_25_money_screen"
             android:textColor="#FFFFFF"
             android:backgroundTint="#E38349"
             android:textSize="24sp" />
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:padding="20dp"
-            android:text="ADD $50"
+            android:text="@string/add_50_money_screen"
             android:textColor="#FFFFFF"
             android:backgroundTint="#E38349"
             android:textSize="24sp" />
@@ -98,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="DONE"
+            android:text="@string/done_money_screen"
             android:padding="20dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"
             android:textColor="#EFEDED"

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
-        android:text="Hello" />
+        android:text="@string/hello_firebase_profile_picture_activity" />
 
     <ImageView
         android:id="@+id/firebase_image"
@@ -25,7 +25,7 @@
         android:id="@+id/done"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="DONE"
+        android:text="@string/done_firebase_profile_photo_activity"
         android:backgroundTint="#E38349"/>
 
 </LinearLayout>
