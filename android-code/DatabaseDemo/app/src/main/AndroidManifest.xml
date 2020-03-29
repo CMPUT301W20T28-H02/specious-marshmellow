@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/applogo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".DriverStartActivity"></activity>
+        <activity android:name=".DriverStartActivity" />
         <activity android:name=".RiderStartActivity" />
 
         <service
