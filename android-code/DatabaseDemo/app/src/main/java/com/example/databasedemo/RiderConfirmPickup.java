@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -204,6 +206,10 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
         cancelRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.cancel(22);
+
                 final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(username);
 
                 docRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {

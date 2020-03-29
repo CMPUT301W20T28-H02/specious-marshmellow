@@ -60,56 +60,69 @@ public class MainActivity extends AppCompatActivity{
             final String username = user.getDisplayName();
             final String email = user.getEmail();
 
-            DocumentReference docRef = db.collection("requests").document(username);
-
-            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()){
-                        DocumentSnapshot doc = task.getResult();
-                        if (doc.exists()) {
-                            Request request = doc.toObject(Request.class);
-                            if (request.getRequestStatus())
-                            { // If rider has already been matched with a driver
-                                // If rider has already confirmed pickup
-                                if (request.getRiderConfirmation()&&request.getDriverConfirmation()){
-                                    Intent startRiderEndandPay = new Intent(MainActivity.this, RiderEndAndPay.class);
-                                    // Activity expects: final String username = i.getStringExtra("username");
-                                    startRiderEndandPay.putExtra("username",username);
-                                    startActivity(startRiderEndandPay);
-                                    finish();
-                                } else { // If rider has not yet confirmed pickup
-                                    Intent startRiderConfirmPickup = new Intent(MainActivity.this, RiderConfirmPickup.class);
-                                    // Activity expects: final String username = i.getStringExtra("username");
-                                    startRiderConfirmPickup.putExtra("username", username);
-                                    startActivity(startRiderConfirmPickup);
-                                    finish();
+            new Thread(new Runnable() {
+                public void run() {
+                    DocumentReference docRef = db.collection("requests").document(username);
+                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()){
+                                DocumentSnapshot doc = task.getResult();
+                                if (doc.exists()) {
+                                    Request request = doc.toObject(Request.class);
+                                    if (request.getRequestStatus())
+                                    { // If rider has already been matched with a driver
+                                        // If rider has already confirmed pickup
+                                        if (request.getRiderConfirmation()&&request.getDriverConfirmation()){
+                                            Intent startRiderEndandPay = new Intent(MainActivity.this, RiderEndAndPay.class);
+                                            // Activity expects: final String username = i.getStringExtra("username");
+                                            startRiderEndandPay.putExtra("username",username);
+                                            startActivity(startRiderEndandPay);
+                                            finish();
+                                        } else { // If rider has not yet confirmed pickup
+                                            Intent startRiderConfirmPickup = new Intent(MainActivity.this, RiderConfirmPickup.class);
+                                            // Activity expects: final String username = i.getStringExtra("username");
+                                            startRiderConfirmPickup.putExtra("username", username);
+                                            startActivity(startRiderConfirmPickup);
+                                            finish();
+                                        }
+                                    } else { // If rider has not yet been matched with a driver
+                                        Intent startCurrentRequest = new Intent(MainActivity.this, currentRequest.class);
+                                        // Activity expects:    final String username = intent.getStringExtra("username");
+                                        //                      final String email = intent.getStringExtra("email");
+                                        startCurrentRequest.putExtra("username", username);
+                                        startCurrentRequest.putExtra("email", email);
+                                        startActivity(startCurrentRequest);
+                                        finish();
+                                    }
                                 }
-                            } else { // If rider has not yet been matched with a driver
-                                Intent startCurrentRequest = new Intent(MainActivity.this, currentRequest.class);
-                                // Activity expects:    final String username = intent.getStringExtra("username");
-                                //                      final String email = intent.getStringExtra("email");
-                                startCurrentRequest.putExtra("username", username);
-                                startCurrentRequest.putExtra("email", email);
-                                startActivity(startCurrentRequest);
-                                finish();
+                                else {
+                                    new Thread(new Runnable() {
+                                        public void run() {
+                                            // Rider does not have an open request, or it is a driver
+                                            Log.d("Hello", "Right before entering displayDriverOrRider");
+                                            displayDriverOrRiderScreen(username, email);
+                                        }
+                                    }).start();
+                                }
+                            } else {
+                                // If request task was unsuccessful
+                                new Thread(new Runnable() {
+                                    public void run() {
+                                        // Rider does not have an open request, or it is a driver
+                                        Log.d("Hello", "Right before entering displayDriverOrRider");
+                                        displayDriverOrRiderScreen(username, email);
+                                    }
+                                }).start();
                             }
                         }
-                        else {
-                            new Thread(new Runnable() {
-                                public void run() {
-                                // Rider does not have an open request, or it is a driver
-                                displayDriverOrRiderScreen(username, email);
-                                Log.d(TAG, "When we do get here?");
-                                }
-                            }).start();
-                        }
-                    }
+                    });
                 }
-            });
+            }).start();
 
         } else {
             // No user is signed in
+            Log.i("Hello", "No user is signed in");
             Intent intent = new Intent(MainActivity.this, SignInActivity.class);
             startActivity(intent);
             finish();
@@ -123,9 +136,8 @@ public class MainActivity extends AppCompatActivity{
      * @param {@code String} email
      */
     private void displayDriverOrRiderScreen(String username, String email) {
+
         final DocumentReference docRef = db.collection("users").document(username);
-
-
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {

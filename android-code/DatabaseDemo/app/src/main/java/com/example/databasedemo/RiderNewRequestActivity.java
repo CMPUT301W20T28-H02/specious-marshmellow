@@ -253,6 +253,9 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                     } else {
                         searchView.setQuery("Please Enter a Valid Location", false);
                         searchView.clearFocus();
+                        DynamicToast.make(RiderNewRequestActivity.this,
+                                "Please check that your internet connection is secure and that you have entered a valid location.",
+                                Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                         Log.i("Hello", "Bad News");
                     }
                 }
@@ -314,6 +317,9 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                     } else {
                         searchView2.setQuery("Please Enter a Valid Location", false);
                         searchView2.clearFocus();
+                        DynamicToast.make(RiderNewRequestActivity.this,
+                                "Please check that your internet connection is secure and that you have entered a valid location.",
+                                Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                         Log.i("Hello", "Bad News");
                     }
 

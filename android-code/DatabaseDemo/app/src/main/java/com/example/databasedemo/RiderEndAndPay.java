@@ -8,6 +8,8 @@ package com.example.databasedemo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -71,6 +73,10 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
         usrEmail = headerview.findViewById(R.id.usrEmailText);
         profile = headerview.findViewById(R.id.profilepic);
         usrEmail.setText(email);
+
+        // Cancel any leftover notifications to prevent user from clicking on them after
+        NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(22);
 
         Intent i = getIntent();
         final String username = i.getStringExtra("username");

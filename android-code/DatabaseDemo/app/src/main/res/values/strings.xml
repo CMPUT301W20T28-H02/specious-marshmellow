@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Database Demo</string>
     <string name="create_account_name">Create Account</string>
-    <string name="sign_in_name">Sign In</string>
+    <string name="sign_in_name">Marshmellow</string>
 
     <string name="sign_in_button">Sign In</string>
     <string name="sign_out_button">Sign Out</string>

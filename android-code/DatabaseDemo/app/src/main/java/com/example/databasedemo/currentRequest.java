@@ -290,7 +290,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
 
         notificationBuilder
                 .setAutoCancel(true)
-                .setSmallIcon(R.mipmap.marshmellow)
+                .setSmallIcon(R.mipmap.marshmellow_transparent)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), (R.mipmap.marshmellow)))
                 .setStyle(bigText)
                 .setPriority(Notification.PRIORITY_MAX)
@@ -300,7 +300,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 .setContentIntent(pendingIntent);
         // .setDefaults(Notification.DEFAULT_ALL)
 
-        notificationManager.notify(/*notification id*/1, notificationBuilder.build());
+        notificationManager.notify(/*notification id*/22, notificationBuilder.build());
 
     }
 

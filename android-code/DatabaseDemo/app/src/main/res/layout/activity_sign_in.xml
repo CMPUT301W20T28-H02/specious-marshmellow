@@ -7,34 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:background="@color/common_google_signin_btn_text_light_default">
-
-    <EditText
-        android:id="@+id/input_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="64dp"
-        android:ems="10"
-        android:gravity="center_horizontal"
-        android:hint="@string/input_email"
-        android:inputType="textEmailAddress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/marshmellow_TextView"
-        android:backgroundTint="#E38349"/>
-
-    <EditText
-        android:id="@+id/input_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:gravity="center_horizontal"
-        android:hint="@string/input_password"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_email"
-        android:backgroundTint="#E38349"/>
+    <!-- android:background="#91204D"-->
 
     <Button
         android:id="@+id/sign_in"
@@ -62,18 +35,68 @@
         app:layout_constraintStart_toStartOf="parent"
         android:backgroundTint="#E38349"/>
 
-    <TextView
+
+    <!--<TextView
         android:id="@+id/marshmellow_TextView"
         android:layout_width="266dp"
         android:layout_height="52dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="8dp"
         android:text="Marshmellow"
         android:textAlignment="center"
-        android:textColor="#FFFFFF"
+        android:textColor="#E7BE54"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />-->
+
+    <EditText
+        android:id="@+id/input_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:backgroundTint="#E38349"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:hint="@string/input_password"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_email" />
+
+    <EditText
+        android:id="@+id/input_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:backgroundTint="#E38349"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:hint="@string/input_email"
+        android:inputType="textEmailAddress"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/marshmellow_yellow" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="139dp"
+        android:layout_height="129dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/marshmellow" />
+
+    <ImageView
+        android:id="@+id/marshmellow_yellow"
+        android:layout_width="251dp"
+        android:layout_height="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        android:backgroundTint="#E38349"
+        app:srcCompat="@mipmap/marshmellow_yellow" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
