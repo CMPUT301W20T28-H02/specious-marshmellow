@@ -46,5 +46,15 @@
     <string name="make_request">Make Request</string>
     <string name="matching">MATCHING ...</string>
     <string name="cancel_request_current_request_activity">Cancel Request</string>
+    <string name="email_driver_confirm">Email:</string>
+    <string name="phone_number_driver_confirm">Phone Number:</string>
+    <string name="waiting_for_rider_driver_confirm">Waiting for rider...</string>
+    <string name="username_driver_confirm">Username:</string>
+    <string name="cancel_pickup_driver_pickup">Cancel Pickup</string>
+    <string name="confirm_pickup_driver_confirm">Confirm pickup</string>
+    <string name="rider_info_driver_confirm">Rider Info:</string>
+    <string name="end_ride_driver_end_and_pay">End Ride</string>
+    <string name="please_present_qr_code_to_driver_generate_qr">Please present QR code to Driver</string>
+    <string name="qr_code_generate_qr">QR Code</string>
 
 </resources>

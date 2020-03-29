@@ -14,14 +14,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/empty_tall_divider" />
+        app:srcCompat="@drawable/empty_tall_divider"
+        android:contentDescription="@string/qr_code_generate_qr" />
 
     <TextView
         android:id="@+id/rider_pay_textview"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:gravity="center_horizontal|center_vertical"
-        android:text="Please present QR code to Driver"
+        android:text="@string/please_present_qr_code_to_driver_generate_qr"
         android:textSize="18dp"
         app:layout_constraintBottom_toTopOf="@+id/QR_Image"
         app:layout_constraintEnd_toEndOf="parent"
