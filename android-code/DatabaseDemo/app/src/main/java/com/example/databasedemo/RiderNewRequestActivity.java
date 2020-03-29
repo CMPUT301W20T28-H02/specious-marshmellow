@@ -125,46 +125,43 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         usrEmailText=headerView.findViewById(R.id.usrEmailText);
         profile=headerView.findViewById(R.id.profilepic);
 
-        navi.setOnClickListener(new View.OnClickListener() {
+        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onClick(View v) {
-                final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
-                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    Rider rider = task.getResult().toObject(Rider.class);
+                    hasProfilePicture = rider.getHasProfilePicture();
+                }
+
+                if( hasProfilePicture )
+                {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
+                } else {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+                }
+                reff.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            Rider rider = task.getResult().toObject(Rider.class);
-                            hasProfilePicture = rider.getHasProfilePicture();
-                        }
-
-                        if (hasProfilePicture) {
-                            reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
-                        } else {
-                            reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
-                        }
-                        reff.addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                url = dataSnapshot.child("imageUrl").getValue().toString();
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String url = dataSnapshot.child("imageUrl").getValue().toString();
 
 
-                                Log.d("Firebase", url);
-                                Picasso.get()
-                                        .load(url)
-                                        .into(profile);
+                        Log.d("Firebase", url);
+                        Picasso.get()
+                                .load( url )
+                                .into( profile );
 
 
-                            }
+                    }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            }
-                        });
                     }
                 });
-
             }
+
+
         });
 
 
@@ -173,7 +170,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RiderNewRequestActivity.this,TakeProfilePicture.class);
+                Intent intent = new Intent(getBaseContext(), TakeProfilePicture.class);
                 startActivity(intent);
 
             }

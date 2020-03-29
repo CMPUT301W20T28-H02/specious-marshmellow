@@ -238,12 +238,7 @@ public class moneyScreen extends AppCompatActivity implements NavigationView.OnN
             case R.id.nav_money:
                 DynamicToast.make(moneyScreen.this, "Action restricted, Already in Money Screen", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 break;
-            case R.id.sign_out_tab:
-                mAuth.signOut();
-                finish();
-                Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
-                startActivity(intent_2);
-                break;
+
             case R.id.contact_info:
                 Intent intent1 = new Intent(getBaseContext(),EditContactInformationActivity.class);
                 intent1.putExtra("username", username);
