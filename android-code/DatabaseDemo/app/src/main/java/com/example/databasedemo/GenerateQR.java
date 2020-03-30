@@ -144,13 +144,13 @@ public class GenerateQR extends AppCompatActivity{
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         // Add the buttons
-        builder.setPositiveButton("Thumbs up", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.thumbs_up), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User thumbs up the driver
                 setDriverRating(5);
             }
         });
-        builder.setNegativeButton("Thumbs down", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.thumbs_down), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User thumbs down the driver
                 setDriverRating(0);
@@ -166,8 +166,8 @@ public class GenerateQR extends AppCompatActivity{
         });
 
 
-        builder.setMessage("Don't forget to give your driver a thumbs up or thumbs down!")
-                .setTitle("How Was Your Driver?")
+        builder.setMessage(getString(R.string.ratings_message))
+                .setTitle(getString(R.string.ratings_title))
                 .setCancelable(false);
 
 
