@@ -11,8 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +49,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
@@ -59,14 +64,13 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
     Button driverConfirmPickupButton, cancelPickupButton;
     boolean driverReady = false;
     ListenerRegistration registration;
-    DatabaseReference reff;
-    String url;
-    boolean hasProfilePicture;
+    boolean riderCancelled = true;
     TextView usrNameText,usrEmailText;
     String email;
-    ImageView profile;
+    CircularImageView profile;
     String riderUsername;
     String driverUsername;
+    CircularImageView riderProfilePic;
 
 
     /**
@@ -92,6 +96,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
         usrNameText = headerview.findViewById(R.id.usrNameText);
         usrEmailText=headerview.findViewById(R.id.usrEmailText);
         profile=headerview.findViewById(R.id.profilepic);
+        riderProfilePic=findViewById(R.id.driver_confirm_rider_profile_pic);
 
 
 
@@ -105,43 +110,6 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
         email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         usrNameText.setText(driverUsername);
         usrEmailText.setText(email);
-        final DocumentReference docRef_2 = FirebaseFirestore.getInstance().collection("users").document(driverUsername);
-        docRef_2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    Rider rider = task.getResult().toObject(Rider.class);
-                    hasProfilePicture = rider.getHasProfilePicture();
-                }
-
-                if( hasProfilePicture )
-                {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(driverUsername);
-                } else {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
-                }
-                reff.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        url = dataSnapshot.child("imageUrl").getValue().toString();
-
-
-                        Log.d("Firebase", url);
-                        Picasso.get().load( url ).into( profile );
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-
-        });
-
 
 
         profile.setOnClickListener(new View.OnClickListener() {
@@ -177,8 +145,9 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
         cancelPickupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(riderUsername);
+                riderCancelled = false;
 
+                final DocumentReference docRef = FirebaseFirestore.getInstance().collection("requests").document(riderUsername);
                 docRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -225,6 +194,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                 if (documentSnapshot.exists()) {
                     final Request request = documentSnapshot.toObject(Request.class);
                     riderUsernameTextView.setText(getString(R.string.rider_confirm_driver_username, request.getRider().getUsername()));
+                    setUnderLineText(riderUsernameTextView, request.getRider().getUsername());
                     // Take user to info activity telling them about the driver
                     riderUsernameTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -235,6 +205,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                         }
                     });
                     riderPhoneNumberTextView.setText(getString(R.string.rider_confirm_driver_phone_number, request.getRider().getPhone()));
+                    setUnderLineText(riderPhoneNumberTextView, request.getRider().getPhone());
                     riderPhoneNumberTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -288,13 +259,19 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 200);
                     // move the camera
                     map.animateCamera(cameraUpdate);
+
+
+                    ImageLoader.loadImage(profile, driverUsername);
+                    ImageLoader.loadImage(riderProfilePic, riderUsername);
+
                 } else {
-                    DynamicToast.make(DriverConfirmActivity.this, getString(R.string.rider_has_cancelled_request, riderUsername), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                    if (riderCancelled) {
+                        DynamicToast.make(DriverConfirmActivity.this, getString(R.string.rider_has_cancelled_request, riderUsername), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                    }
                     Intent i = new Intent(DriverConfirmActivity.this, DriverStartActivity.class);
                     i.putExtra("username", driverUsername);
                     i.putExtra("email", email);
                     startActivity(i);
-
                 }
             }
         });
@@ -338,5 +315,23 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
 
         }
         return false;
+    }
+
+    // Taken from: https://code.i-harness.com/en/q/248b37
+    public void setUnderLineText(TextView tv, String textToUnderLine) {
+        String tvt = tv.getText().toString();
+        int ofe = tvt.indexOf(textToUnderLine, 0);
+
+        UnderlineSpan underlineSpan = new UnderlineSpan();
+        SpannableString wordToSpan = new SpannableString(tv.getText());
+        for (int ofs = 0; ofs < tvt.length() && ofe != -1; ofs = ofe + 1) {
+            ofe = tvt.indexOf(textToUnderLine, ofs);
+            if (ofe == -1)
+                break;
+            else {
+                wordToSpan.setSpan(underlineSpan, ofe, ofe + textToUnderLine.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tv.setText(wordToSpan, TextView.BufferType.SPANNABLE);
+            }
+        }
     }
 }

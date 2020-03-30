@@ -28,19 +28,19 @@
     <string name="confirm_request">Confirm Request</string>
     <string name="cancel_request">Cancel Request</string>
 
-    <string name="driver_confirm_rider_username">Rider Username: %1$s</string>
+    <string name="driver_confirm_rider_username"><u>Rider Username:</u> %1$s</string>
     <string name="driver_confirm_ride_fare">Ride Fare: %1$s Dollars</string>
     <string name="driver_to_rider_distance">Distance to Rider: %1$s Kilometers</string>
     <string name="driver_confirm_ride_distance">Ride Distance: %1$s Kilometers</string>
 
-    <string name="rider_confirm_driver_username">Username: %1$s</string>
+    <string name="rider_confirm_driver_username"><u>Username: %1$s</u></string>
     <string name="rider_confirm_driver_rating">Rating: %1$s</string>
-    <string name="rider_confirm_driver_phone_number">Phone Number: %1$s</string>
+    <string name="rider_confirm_driver_phone_number"><u>Phone Number: %1$s</u></string>
     <string name="rider_confirm_driver_email">Email: %1$s</string>
 
     <string name="show_username">Username: %1$s</string>
     <string name="show_email">Email: %1$s</string>
-    <string name="show_phone">Phone Number: %1$s</string>
+    <string name="show_phone"><u>Phone Number: %1$s</u></string>
     <string name="show_address">Address: %1$s</string>
     <string name="show_rating">Rating: %1$s</string>
     <string name="make_request">Make Request</string>
@@ -113,6 +113,7 @@
     <string name="cancel_request_and_try_again">Action restricted, cancel your request and try again</string>
     <string name="already_in_money_screen">Action restricted, Already in Money Screen</string>
     <string name="rider_has_cancelled_request">%1$s has cancelled their request</string>
+    <string name="driver_has_cancelled_pickup">%1$s is no longer able to pick you up</string>
     <string name="internet">Please check your internet connection and try again once you have a strong connection</string>
     <string name="internet_and_valid_location">Please check that your internet connection is secure and that you have entered a valid location.</string>
     <string name="username_not_unique">Username is not unique</string>

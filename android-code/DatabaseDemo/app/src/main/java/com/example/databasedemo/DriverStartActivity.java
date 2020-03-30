@@ -57,6 +57,7 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
     ArrayList<Request> requestArrayList;
     double globalBound = 10000;
     ListenerRegistration registration;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

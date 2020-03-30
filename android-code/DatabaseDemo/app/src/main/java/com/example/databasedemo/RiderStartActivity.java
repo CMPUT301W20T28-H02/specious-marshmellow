@@ -52,6 +52,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
@@ -65,7 +66,7 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
     private static String TAG = "Hello";
     LatLng latLng, latLngDriver;
     TextView usrNameText,usrEmailText;
-    ImageView profile;
+    CircularImageView profile;
     DatabaseReference reff;
     FirebaseAuth mAuth;
     boolean hasProfilePicture;
@@ -79,13 +80,8 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
         makeRequestButton = findViewById(R.id.make_request_button);
         mAuth = FirebaseAuth.getInstance();
 
-
-        Intent intent = getIntent();
-
-
-
         //NavigationView navi = findViewById(R.id.nav_view);
-
+        Intent intent = getIntent();
         final String username = intent.getStringExtra("username");
         final String email = intent.getStringExtra("email");
         NavigationView navi = findViewById(R.id.nav_view);
@@ -96,46 +92,8 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
         usrNameText.setText(username);
         usrEmailText.setText(email);
         profile = headerview.findViewById(R.id.profilepic);
-        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    Rider rider = task.getResult().toObject(Rider.class);
-                    hasProfilePicture = rider.getHasProfilePicture();
-                }
 
-                if( hasProfilePicture )
-                {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
-                } else {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
-                }
-                reff.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String url = dataSnapshot.child("imageUrl").getValue().toString();
-
-
-                        Log.d("Firebase", url);
-                        Picasso.get()
-                                .load( url )
-                                .into( profile );
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-
-        });
-
-
+        ImageLoader.loadImage(profile, username);
 
 
         profile.setOnClickListener(new View.OnClickListener() {

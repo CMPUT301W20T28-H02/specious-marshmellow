@@ -29,19 +29,19 @@
     <string name="confirm_request">Confirmez la demande</string>
     <string name="cancel_request">Annulez la demande</string>
 
-    <string name="driver_confirm_rider_username">Nom d\'utilisateur du passager: %1$s</string>
+    <string name="driver_confirm_rider_username">Nom d\'utilisateur du passager: <u>%1$s</u></string>
     <string name="driver_confirm_ride_fare">Paiement pour la conduite: %1$s Dollars</string>
     <string name="driver_to_rider_distance">Distance au passager: %1$s Kilometers</string>
     <string name="driver_confirm_ride_distance">Distance de conduitee: %1$s Kilometers</string>
 
-    <string name="rider_confirm_driver_username">Nom d\'utilisateur: %1$s</string>
+    <string name="rider_confirm_driver_username">Nom d\'utilisateur: <u>%1$s</u></string>
     <string name="rider_confirm_driver_rating">Note: %1$s</string>
-    <string name="rider_confirm_driver_phone_number">Numéro de téléphone: %1$s</string>
+    <string name="rider_confirm_driver_phone_number">Numéro de téléphone: <u>%1$s</u></string>
     <string name="rider_confirm_driver_email">Courriel: %1$s</string>
 
     <string name="show_username">Nom d\'utilisateur: %1$s</string>
     <string name="show_email">Courriel: %1$s</string>
-    <string name="show_phone">Numéro de téléphone: %1$s</string>
+    <string name="show_phone">Numéro de téléphone: <u>%1$s</u></string>
     <string name="show_address">Adresse: %1$s</string>
     <string name="show_rating">Note: %1$s</string>
     <string name="make_request">Faire une demande</string>
@@ -114,6 +114,7 @@
     <string name="cancel_request_and_try_again">Action interdite, annulez votre demande et réessayer</string>
     <string name="already_in_money_screen">Action interdite, vous êtes déjà sur l\'écran de l\'argent</string>
     <string name="rider_has_cancelled_request">%1$s a annulé sa demande</string>
+    <string name="driver_has_cancelled_pickup">%1$s n\'est plus en mesure de vous conduire</string>
     <string name="internet">S\'il vous plait, vérifiez votre connexion internet et réessayez quand quand vous aurez une meilleure connexion</string>
     <string name="internet_and_valid_location">S\'il vous plait, vérifiez votre connexion internet et assurez-vous que vous avez entré un emplacement valide.</string>
     <string name="username_not_unique">Nom d\'utilisateur n\'est pas unique</string>
