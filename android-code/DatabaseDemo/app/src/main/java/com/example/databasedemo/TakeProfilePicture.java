@@ -266,7 +266,7 @@ public class TakeProfilePicture extends AppCompatActivity {
                                             }
                                         }, 500);
 
-                                        DynamicToast.make(TakeProfilePicture.this, "Upload successful", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                                        DynamicToast.make(TakeProfilePicture.this, getString(R.string.upload_successful), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                                         Upload upload = new Upload( mEditTextFileName.getText().toString().trim(),
                                                 thumb_download_url );     // here, need to get a valid uri or a valid url
@@ -319,7 +319,7 @@ public class TakeProfilePicture extends AppCompatActivity {
                         }
                     });
         } else {
-            DynamicToast.make(TakeProfilePicture.this, "No file selected", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+            DynamicToast.make(TakeProfilePicture.this, getString(R.string.no_file_selected), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
         }
     }
@@ -383,7 +383,7 @@ public class TakeProfilePicture extends AppCompatActivity {
                     openCamera();
                 } else {
                     //permission from popup denied
-                    DynamicToast.make(TakeProfilePicture.this, "Permission denied, please provide camera access to continue", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                    DynamicToast.make(TakeProfilePicture.this, getString(R.string.no_camera_permissions), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 }
             }
         }

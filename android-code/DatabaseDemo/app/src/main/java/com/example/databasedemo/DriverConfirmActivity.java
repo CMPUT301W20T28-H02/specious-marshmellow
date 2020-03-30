@@ -289,7 +289,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                     // move the camera
                     map.animateCamera(cameraUpdate);
                 } else {
-                    DynamicToast.make(DriverConfirmActivity.this, riderUsername + " has cancelled their request", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                    DynamicToast.make(DriverConfirmActivity.this, getString(R.string.rider_has_cancelled_request, riderUsername), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                     Intent i = new Intent(DriverConfirmActivity.this, DriverStartActivity.class);
                     i.putExtra("username", driverUsername);
                     i.putExtra("email", email);
@@ -325,7 +325,7 @@ public class DriverConfirmActivity extends AppCompatActivity implements OnMapRea
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
 
                 startActivity(intent_2);*/
-                DynamicToast.make(DriverConfirmActivity.this, "Action restricted, cancel your request and try again", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                DynamicToast.make(DriverConfirmActivity.this, getString(R.string.cancel_request_and_try_again), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                 break;
             case R.id.contact_info:

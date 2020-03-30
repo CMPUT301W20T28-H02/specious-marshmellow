@@ -124,7 +124,7 @@ public class EditContactInformationActivity extends AppCompatActivity {
                                 }
                             });
                 } else {
-                    DynamicToast.make(EditContactInformationActivity.this, "Enter Your Password", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                    DynamicToast.make(EditContactInformationActivity.this, getString(R.string.enter_your_password), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 }
 
             }

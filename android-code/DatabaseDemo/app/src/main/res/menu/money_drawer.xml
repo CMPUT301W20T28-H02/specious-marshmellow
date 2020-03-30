@@ -5,10 +5,10 @@
     <group android:checkableBehavior="single">
         <item android:id='@+id/nav_money'
             android:icon="@drawable/ic_money"
-            android:title="Add QR Bucks"/>
+            android:title="@string/add_qr_bucks_money_drawer"/>
         <item android:id='@+id/contact_info'
             android:icon="@drawable/ic_contact_info"
-            android:title="EDIT CONTACT INFO"/>
+            android:title="@string/edit_contact_info_money_drawer"/>
 
     </group>
 

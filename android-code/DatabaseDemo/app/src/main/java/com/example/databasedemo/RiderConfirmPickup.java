@@ -344,7 +344,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
 
                 startActivity(intent_2);*/
-                DynamicToast.make(RiderConfirmPickup.this, "Action restricted, ride on way", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                DynamicToast.make(RiderConfirmPickup.this, getString(R.string.ride_on_way), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                 break;
             case R.id.contact_info:

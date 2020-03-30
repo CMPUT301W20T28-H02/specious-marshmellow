@@ -40,6 +40,8 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
+
 /**
  * Displays available money and allows user to add more
  * @author Sirjan Chawla
@@ -211,7 +213,8 @@ public class moneyScreen extends AppCompatActivity implements NavigationView.OnN
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 Rider rider = documentSnapshot.toObject(Rider.class);
                 Wallet wallet = rider.getWallet();
-                bal_setter.setText(String.valueOf(wallet.getBalance()));
+                DecimalFormat numberFormat = new DecimalFormat(".00");
+                bal_setter.setText("$" + String.valueOf(numberFormat.format(wallet.getBalance())));
             }
         });
 
@@ -236,7 +239,7 @@ public class moneyScreen extends AppCompatActivity implements NavigationView.OnN
 
         switch (menuItem.getItemId()) {
             case R.id.nav_money:
-                DynamicToast.make(moneyScreen.this, "Action restricted, Already in Money Screen", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                DynamicToast.make(moneyScreen.this, getString(R.string.already_in_money_screen), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 break;
 
             case R.id.contact_info:

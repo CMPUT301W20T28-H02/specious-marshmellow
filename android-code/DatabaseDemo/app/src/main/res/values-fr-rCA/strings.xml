@@ -4,14 +4,14 @@
     <string name="create_account_name">Créer un compte</string>
     <string name="sign_in_name">Marshmellow</string>
 
-    <string name="sign_in_button">Se connecter</string>
-    <string name="sign_out_button">Se déconnecter</string>
+    <string name="sign_in_button">Connectez-vous</string>
+    <string name="sign_out_button">Déconnectez-vous</string>
     <string name="edit_info_button">Modifiez votre compte</string>
-    <string name="create_account_button">Créer un compte</string>
+    <string name="create_account_button">Créez votre compte</string>
     <string name="finish_create_button">Continuez</string>
     <string name="finish_edit_button">Continuez</string>
 
-    <string name="input_username">Nom d'utilisateur</string>
+    <string name="input_username">Nom d\'utilisateur</string>
     <string name="input_password">Mot de passe</string>
     <string name="input_email">Courriel</string>
     <string name="input_phone">Numéro de téléphone</string>
@@ -20,7 +20,7 @@
     <string name="new_email">Entrez un nouveau courriel.\nCorriel actuel: %1$s</string>
     <string name="new_phone">Entrez un nouveau numéro de téléphone.\nNuméro de téléphone actuel: %1$s</string>
 
-    <string name="current_username">Nom d'utilisateur: %1$s</string>
+    <string name="current_username">Nom d\'utilisateur: %1$s</string>
     <string name="current_email">Courriel: %1$s</string>
     <string name="current_phone">Numéro de téléphone: %1$s</string>
     <string name="current_rating">Note: %1$s</string>
@@ -29,17 +29,17 @@
     <string name="confirm_request">Confirmez la demande</string>
     <string name="cancel_request">Annulez la demande</string>
 
-    <string name="driver_confirm_rider_username">Nom d'utilisateur du passager: %1$s</string>
+    <string name="driver_confirm_rider_username">Nom d\'utilisateur du passager: %1$s</string>
     <string name="driver_confirm_ride_fare">Paiement pour la conduite: %1$s Dollars</string>
     <string name="driver_to_rider_distance">Distance au passager: %1$s Kilometers</string>
     <string name="driver_confirm_ride_distance">Distance de conduitee: %1$s Kilometers</string>
 
-    <string name="rider_confirm_driver_username">Nom d'utilisateur: %1$s</string>
+    <string name="rider_confirm_driver_username">Nom d\'utilisateur: %1$s</string>
     <string name="rider_confirm_driver_rating">Note: %1$s</string>
     <string name="rider_confirm_driver_phone_number">Numéro de téléphone: %1$s</string>
     <string name="rider_confirm_driver_email">Courriel: %1$s</string>
 
-    <string name="show_username">Nom d'utilisateur: %1$s</string>
+    <string name="show_username">Nom d\'utilisateur: %1$s</string>
     <string name="show_email">Courriel: %1$s</string>
     <string name="show_phone">Numéro de téléphone: %1$s</string>
     <string name="show_address">Adresse: %1$s</string>
@@ -50,7 +50,7 @@
     <string name="email_driver_confirm">Courriel:</string>
     <string name="phone_number_driver_confirm">Numéro de téléphone:</string>
     <string name="waiting_for_rider_driver_confirm">Attendant le passager...</string>
-    <string name="username_driver_confirm">Nom d'utilisateur: </string>
+    <string name="username_driver_confirm">Nom d\'utilisateur: </string>
     <string name="cancel_pickup_driver_pickup">Annuler le ramassage</string>
     <string name="confirm_pickup_driver_confirm">Confirmez le ramassage</string>
     <string name="rider_info_driver_confirm">Informations sur le passager:</string>
@@ -66,7 +66,7 @@
     <string name="hello_firebase_profile_picture_activity">Bonjour</string>
     <string name="done_firebase_profile_photo_activity">Fini</string>
     <string name="driver_info_rider_confirm_pickup">Informations sur le conducteur:</string>
-    <string name="rider_confirm_pickup">Nom d'utilisateur: </string>
+    <string name="rider_confirm_pickup">Nom d\'utilisateur: </string>
     <string name="rating_rider_confirm_pickup">Note:</string>
     <string name="phone_number_rider_confirm_pickup">Numéro de téléphone:</string>
     <string name="email_rider_confirm_pickup">Courriel:</string>
@@ -88,7 +88,49 @@
     <string name="available_rides_driver_initial">Passagers disponibles pour le ramassage</string>
     <string name="within_driver_initial">Dans:</string>
     <string name="km_driver_initial">km</string>
-    <string name="username_nav_header">Nom d'utilisateur</string>
+    <string name="username_nav_header">Nom d\'utilisateur</string>
     <string name="user_email_nav_header">Courriel</string>
-    <string name="thank_you_generate_qr">Merci d'avoir roulé avec Marshmallow!</string>
+    <string name="thank_you_generate_qr">Merci d\'avoir roulé avec Marshmallow!</string>
+
+    <string name="query_current_location">Emplacement Actuelle</string>
+    <string name="query_invalid_location">Veuillez Entrez un Emplacement Valide</string>
+    <string name="query_start_location">Emplacement de Départ</string>
+    <string name="query_end_location">Emplacement Final</string>
+
+    <string name="add_qr_bucks_drawer_menu">Ajoutez QR Bucks</string>
+    <string name="sign_out_drawer_menu">Déconnectez-vous</string>
+    <string name="edit_contact_info_drawer_menu">Modifiez votre profil</string>
+    <string name="check_balance_driver_drawer_menu">Vérifiez votre solde</string>
+    <string name="sign_out_driver_drawer_menu">Déconnectez-vous</string>
+    <string name="edit_contact_info_driver_drawer_menu">Modifiez votre profil</string>
+    <string name="add_qr_bucks_money_drawer">Ajoutez QR Bucks</string>
+    <string name="edit_contact_info_money_drawer">Modifiez votre profil</string>
+
+    <string name="no_location_permissions">
+        Sans votre emplacement, nous ne pouvons pas montrer une liste de trajets près de vous. Veuillez activer l\'autorisation d\'emplacement et réessayez.
+    </string>
+    <string name="ride_on_way">Action interdite, votre Marshmellow est en route</string>
+    <string name="rider_in_ride">Action interdite, votre trajet est en cours</string>
+    <string name="cancel_request_and_try_again">Action interdite, annulez votre demande et réessayer</string>
+    <string name="already_in_money_screen">Action interdite, vous êtes déjà sur l\'écran de l\'argent</string>
+    <string name="rider_has_cancelled_request">%1$s a annulé sa demande</string>
+    <string name="internet">S\'il vous plait, vérifiez votre connexion internet et réessayez quand quand vous aurez une meilleure connexion</string>
+    <string name="internet_and_valid_location">S\'il vous plait, vérifiez votre connexion internet et assurez-vous que vous avez entré un emplacement valide.</string>
+    <string name="username_not_unique">Nom d\'utilisateur n\'est pas unique</string>
+    <string name="is_required">%1$s est requis</string>
+    <string name="authentication_failed">Authentification échouée</string>
+    <string name="your_balance">Votre solde: %1$f</string>
+    <string name="no_camera_permissions">L\'autorisation a été refusée, veuillez activer l\'autorisation de caméra pour continuer</string>
+    <string name="driver_no_camera_permissions">Veuillez activer l\'autorisation de caméra pour utiliser le scanner QR</string>
+    <string name="no_file_selected">Aucun fichier sélectionné</string>
+    <string name="upload_successful">Téléchargement a réussi</string>
+    <string name="enter_your_password">Tapez votre mot de passe</string>
+    <string name="driver_money_deposited">$%1$s a été ajouté à votre compte</string>
+
+    <string name="email_in_use">Ce courriel est utilisé par un autre utilisateur</string>
+    <string name="password_length">Votre mot de passe doit contenir au moins 6 caractères</string>
+
+    <string name="notifications_marshmellow_on_way">Votre Marshmellow est en route!</string>
+    <string name="notifications_driver_username">Votre conducteur,  $%1$s, vous a sélectionné et est en route!</string>
+
 </resources>

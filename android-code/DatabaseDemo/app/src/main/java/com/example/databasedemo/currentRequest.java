@@ -286,7 +286,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
 
         // Set notification style
         NotificationCompat.BigTextStyle bigText = new NotificationCompat.BigTextStyle();
-        bigText.setBigContentTitle("Your Marshmellow is on its way!");
+        bigText.setBigContentTitle(getString(R.string.notifications_marshmellow_on_way));
 
         notificationBuilder
                 .setAutoCancel(true)
@@ -294,8 +294,8 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), (R.mipmap.marshmellow)))
                 .setStyle(bigText)
                 .setPriority(Notification.PRIORITY_MAX)
-                .setContentTitle("Your Marshmellow is on its way!") // Shows initially on the pop up
-                .setContentText("Your driver, " + driverUsername + ", has selected you and is on their way to you!") // Body text inside Notification Center
+                .setContentTitle(getString(R.string.notifications_marshmellow_on_way)) // Shows initially on the pop up
+                .setContentText(getString(R.string.notifications_driver_username, driverUsername)) // Body text inside Notification Center
                 .setContentInfo("Info")
                 .setContentIntent(pendingIntent);
         // .setDefaults(Notification.DEFAULT_ALL)
@@ -405,7 +405,8 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
 
                 startActivity(intent_2);*/
-                DynamicToast.make(currentRequest.this, "Action restricted, cancel your request and try again", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                DynamicToast.make(currentRequest.this, getString(R.string.cancel_request_and_try_again),
+                        Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                 break;
             case R.id.contact_info:

@@ -26,6 +26,8 @@ import com.google.firebase.firestore.WriteBatch;
 import com.google.zxing.Result;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 
+import java.text.DecimalFormat;
+
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
@@ -85,8 +87,10 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
      */
     @Override
     public void handleResult(Result rawResult) {
-        // TODO Make two decimal places only
-        DynamicToast.make(DriverScannerActivity.this, "Amount = " + rawResult.getText(), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+        DecimalFormat numberFormat = new DecimalFormat("#.00");
+        DynamicToast.make(DriverScannerActivity.this,
+                getString(R.string.driver_money_deposited, numberFormat.format(Double.valueOf(rawResult.getText().toString()))),
+                Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
 
         final double amount = Double.valueOf(rawResult.getText());

@@ -201,8 +201,8 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
                         finish();
                     }
                 } else {
-                    DynamicToast.make(DriverEndAndPay.this, "Please grant camera permission to use the QR Scanner", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
-
+                    DynamicToast.make(DriverEndAndPay.this, getString(R.string.driver_no_camera_permissions),
+                            Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 }
                 return;
         }
@@ -223,7 +223,7 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
                         if (task.isSuccessful()) {
                             Driver driver = task.getResult().toObject(Driver.class);
                             Wallet wallet = driver.getWallet();
-                            DynamicToast.make(DriverEndAndPay.this, "Your Balance:" + wallet.getBalance(), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                            DynamicToast.make(DriverEndAndPay.this, getString(R.string.your_balance, wallet.getBalance()), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                         }
                     }
@@ -234,7 +234,7 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
                 finish();
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
                 startActivity(intent_2);*/
-                DynamicToast.make(DriverEndAndPay.this, "Action Restricted, In between a ride", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                DynamicToast.make(DriverEndAndPay.this, getString(R.string.rider_in_ride), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                 break;
             case R.id.contact_info:

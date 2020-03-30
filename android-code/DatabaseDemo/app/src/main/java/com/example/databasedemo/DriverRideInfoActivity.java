@@ -309,7 +309,7 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
                         if (task.isSuccessful()) {
                             Driver driver = task.getResult().toObject(Driver.class);
                             Wallet wallet = driver.getWallet();
-                            DynamicToast.make(DriverRideInfoActivity.this, "Your Balance:", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                            DynamicToast.make(DriverRideInfoActivity.this, getString(R.string.your_balance, wallet.getBalance()), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                         }
                     }
                 });

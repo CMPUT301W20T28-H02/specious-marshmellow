@@ -175,7 +175,7 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
 
                 startActivity(intent_2);*/
-                DynamicToast.make(RiderEndAndPay.this, "Action restricted, In Ride", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                DynamicToast.make(RiderEndAndPay.this, getString(R.string.rider_in_ride), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
 
                 break;

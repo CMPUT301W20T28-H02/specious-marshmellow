@@ -218,14 +218,12 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
             fusedLocationProviderClient.getLastLocation().addOnFailureListener(RiderStartActivity.this, new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    DynamicToast.make(RiderStartActivity.this,
-                            "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.",
+                    DynamicToast.make(RiderStartActivity.this, getString(R.string.no_location_permissions),
                             Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 }
             });
         } else {
-            DynamicToast.make(RiderStartActivity.this,
-                    "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.",
+            DynamicToast.make(RiderStartActivity.this, getString(R.string.no_location_permissions),
                     Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
         }
     }

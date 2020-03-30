@@ -91,4 +91,45 @@
     <string name="user_email_nav_header">User Email</string>
     <string name="thank_you_generate_qr">Thank you for riding with Marshmellow!</string>
 
+    <string name="query_current_location">Current Location</string>
+    <string name="query_invalid_location">Please Enter a Valid Location</string>
+    <string name="query_start_location">Start Location</string>
+    <string name="query_end_location">End Location</string>
+
+    <string name="add_qr_bucks_drawer_menu">Add QR Bucks</string>
+    <string name="sign_out_drawer_menu">SIGN OUT</string>
+    <string name="edit_contact_info_drawer_menu">EDIT CONTACT INFO</string>
+    <string name="check_balance_driver_drawer_menu">CHECK BALANCE</string>
+    <string name="sign_out_driver_drawer_menu">SIGN OUT</string>
+    <string name="edit_contact_info_driver_drawer_menu">EDIT CONTACT INFO</string>
+    <string name="add_qr_bucks_money_drawer">Add QR Bucks</string>
+    <string name="edit_contact_info_money_drawer">EDIT CONTACT INFO</string>
+
+    <string name="no_location_permissions">
+        Without your location, we cannot show you a list of rides near you. Please enable location services and try again.
+    </string>
+    <string name="ride_on_way">Action restricted, ride on way</string>
+    <string name="rider_in_ride">Action restricted, ride in progress</string>
+    <string name="cancel_request_and_try_again">Action restricted, cancel your request and try again</string>
+    <string name="already_in_money_screen">Action restricted, Already in Money Screen</string>
+    <string name="rider_has_cancelled_request">%1$s has cancelled their request</string>
+    <string name="internet">Please check your internet connection and try again once you have a strong connection</string>
+    <string name="internet_and_valid_location">Please check that your internet connection is secure and that you have entered a valid location.</string>
+    <string name="username_not_unique">Username is not unique</string>
+    <string name="is_required">%1$s is required</string>
+    <string name="authentication_failed">Authentication failed</string>
+    <string name="your_balance">Your Balance: %1$f</string>
+    <string name="no_camera_permissions">Permission denied, please provide camera access to continue</string>
+    <string name="driver_no_camera_permissions">Please grant camera permission to use the QR Scanner</string>
+    <string name="no_file_selected">No file selected</string>
+    <string name="upload_successful">Upload successful</string>
+    <string name="enter_your_password">Enter Your Password</string>
+    <string name="driver_money_deposited">$%1$s has been added to your account</string>
+
+    <string name="email_in_use">Email is in use by another user</string>
+    <string name="password_length">Password must be at least 6 characters</string>
+
+    <string name="notifications_marshmellow_on_way">Your Marshmellow is on its way!</string>
+    <string name="notifications_driver_username">Your driver,  $%1$s, has selected you and is on their way to you!</string>
+
 </resources>

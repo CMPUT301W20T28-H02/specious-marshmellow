@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,7 @@ import java.util.List;
  * @author Marcus Blair
  */
 public class SignInActivity extends AppCompatActivity {
+    ImageView logo;
     Button signInButton;
     Button createAccountButton;
     EditText enterEmailEditText;
@@ -52,6 +54,7 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
+        logo = findViewById(R.id.imageView);
         signInButton = findViewById(R.id.sign_in);
         createAccountButton = findViewById(R.id.create_account);
         enterEmailEditText = findViewById(R.id.input_email);
@@ -88,7 +91,7 @@ public class SignInActivity extends AppCompatActivity {
                                         startActivity(intent);
                                         finish();
                                     } else {
-                                        DynamicToast.make(SignInActivity.this, "Authentication failed", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                                        DynamicToast.make(SignInActivity.this, getString(R.string.authentication_failed), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -97,7 +100,7 @@ public class SignInActivity extends AppCompatActivity {
                     final Runnable r = new Runnable() {
                         public void run() {
                             if (!complete){
-                                DynamicToast.make(SignInActivity.this, "Please check your internet connection and try again once you have a strong connection", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                                DynamicToast.make(SignInActivity.this, getString(R.string.internet), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                             }
                         }
                     };
@@ -127,8 +130,8 @@ public class SignInActivity extends AppCompatActivity {
     private boolean checkInput(List<EditText> editTextList) {
         for (EditText e : editTextList) {
             if (TextUtils.isEmpty(e.getText())) {
-                e.setError(e.getHint().toString() + " is required");
-                DynamicToast.make(SignInActivity.this, e.getHint().toString() + " is required", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                e.setError(getString(R.string.is_required, e.getHint().toString()));
+                DynamicToast.make(SignInActivity.this, getString(R.string.is_required, e.getHint().toString()), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 return false;
             }
         }

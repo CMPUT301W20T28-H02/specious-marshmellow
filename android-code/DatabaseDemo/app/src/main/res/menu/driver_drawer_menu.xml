@@ -5,13 +5,13 @@
     <group android:checkableBehavior="single">
         <item android:id='@+id/nav_money'
             android:icon="@drawable/ic_money"
-            android:title="CHECK BALANCE"/>
+            android:title="@string/check_balance_driver_drawer_menu"/>
         <item android:id='@+id/sign_out_tab'
             android:icon="@drawable/ic_sign_out"
-            android:title="SIGN OUT"/>
+            android:title="@string/sign_out_driver_drawer_menu"/>
         <item android:id='@+id/contact_info'
             android:icon="@drawable/ic_contact_info"
-            android:title="EDIT CONTACT INFO"/>
+            android:title="@string/edit_contact_info_driver_drawer_menu"/>
 
     </group>
 

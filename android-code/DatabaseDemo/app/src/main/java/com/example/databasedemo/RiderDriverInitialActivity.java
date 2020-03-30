@@ -303,13 +303,13 @@ public class RiderDriverInitialActivity extends FragmentActivity implements OnMa
             fusedLocationProviderClient.getLastLocation().addOnFailureListener(RiderDriverInitialActivity.this, new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    DynamicToast.make(RiderDriverInitialActivity.this, "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                    DynamicToast.make(RiderDriverInitialActivity.this, getString(R.string.no_location_permissions),
+                            Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                 }
             });
         } else {
-            DynamicToast.make(RiderDriverInitialActivity.this,
-                    "Without your location, we cannot show you a list of rides near you. Please enable location services and try again.",
+            DynamicToast.make(RiderDriverInitialActivity.this, getString(R.string.no_location_permissions),
                     Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
         }

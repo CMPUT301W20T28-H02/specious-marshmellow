@@ -178,7 +178,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         usrNameText.setText(username);
         usrEmailText.setText(email);
 
-        searchView.setQuery("Current Location", false);
+        searchView.setQuery(getString(R.string.query_current_location), false);
         mapFragment = ( SupportMapFragment ) getSupportFragmentManager()
                 .findFragmentById( R.id.map);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
@@ -247,10 +247,9 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                         map.addMarker(p1);
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                     } else {
-                        searchView.setQuery("Please Enter a Valid Location", false);
+                        searchView.setQuery(getString(R.string.query_invalid_location), false);
                         searchView.clearFocus();
-                        DynamicToast.make(RiderNewRequestActivity.this,
-                                "Please check that your internet connection is secure and that you have entered a valid location.",
+                        DynamicToast.make(RiderNewRequestActivity.this, getString(R.string.internet_and_valid_location),
                                 Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                         Log.i("Hello", "Bad News");
                     }
@@ -311,10 +310,9 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                         map.addMarker(p2);
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng2, 15));
                     } else {
-                        searchView2.setQuery("Please Enter a Valid Location", false);
+                        searchView2.setQuery(getString(R.string.query_invalid_location), false);
                         searchView2.clearFocus();
-                        DynamicToast.make(RiderNewRequestActivity.this,
-                                "Please check that your internet connection is secure and that you have entered a valid location.",
+                        DynamicToast.make(RiderNewRequestActivity.this, getString(R.string.internet_and_valid_location),
                                 Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                         Log.i("Hello", "Bad News");
                     }
@@ -342,11 +340,11 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
             @Override
             public void onClick(View view) {
                 if(latLng == null){
-                    searchView.setQuery("Please Enter a Valid Location", false);
+                    searchView.setQuery(getString(R.string.query_invalid_location), false);
                     return;
                 }
                 if(latLng2 == null){
-                    searchView2.setQuery("Please Enter a Valid Location", false);
+                    searchView2.setQuery(getString(R.string.query_invalid_location), false);
                     return;
                 }
 

@@ -109,8 +109,8 @@ public class CreateAccount extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
-                                    usernameEditText.setError("Username is not unique.");
-                                    DynamicToast.make(CreateAccount.this, "Username is not unique", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                                    usernameEditText.setError(getString(R.string.username_not_unique));
+                                    DynamicToast.make(CreateAccount.this, getString(R.string.username_not_unique), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                                 } else {
                                     // increment Idling resource for UI test
                                     EspressoIdlingResource.increment();
@@ -129,7 +129,7 @@ public class CreateAccount extends AppCompatActivity {
                                                 boolean emailExists = false;
                                                 for (User user : users){
                                                     if (user.getEmail().equals(emailEditText.getText().toString())){
-                                                        emailEditText.setError("Email is in use by another user");
+                                                        emailEditText.setError(getString(R.string.email_in_use));
                                                         emailExists = true;
                                                     }
                                                 }
@@ -166,13 +166,13 @@ public class CreateAccount extends AppCompatActivity {
     private boolean checkInput(List<EditText> editTextList) {
         for (EditText e : editTextList) {
             if (TextUtils.isEmpty(e.getText())) {
-                e.setError(e.getHint().toString() + " is required");
-                DynamicToast.make(CreateAccount.this, e.getHint().toString() + " is required", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                e.setError(getString(R.string.is_required, e.getHint().toString()));
+                DynamicToast.make(CreateAccount.this, getString(R.string.is_required, e.getHint().toString()), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 return false;
             }
         }
         if (passwordEditText.getText().toString().length() < 6){
-            passwordEditText.setError("Password must be at least 6 characters");
+            passwordEditText.setError(getString(R.string.password_length));
             return false;
         }
 
@@ -222,9 +222,9 @@ public class CreateAccount extends AppCompatActivity {
                             Log.d(TAG, "Task not successful");
                             Log.d(TAG, "Failed with: " + task.getException());
                             if (task.getException().toString().equals("com.google.firebase.auth.FirebaseAuthUserCollisionException: The email address is already in use by another account.")){
-                                emailEditText.setError("Email is in use by another user");
+                                emailEditText.setError(getString(R.string.email_in_use));
                             }
-                            DynamicToast.make(CreateAccount.this, "Authentication failed", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                            DynamicToast.make(CreateAccount.this, getString(R.string.authentication_failed), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                         }
                     }
