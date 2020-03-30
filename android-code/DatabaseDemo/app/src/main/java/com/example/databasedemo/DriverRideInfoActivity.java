@@ -294,6 +294,7 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        map.setMyLocationEnabled(true);
     }
 
     @Override

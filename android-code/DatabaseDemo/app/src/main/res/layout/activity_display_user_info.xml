@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_layout"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -7,37 +8,72 @@
     android:layout_marginTop="16dp"
     android:showDividers="middle"
     android:divider="@drawable/empty_tall_divider"
-    android:background="@color/common_google_signin_btn_text_light_default">
+    android:background="@drawable/repeat_logo_background">
+    <!--android:background="@color/common_google_signin_btn_text_light_default"-->
+
+    <!--<ImageView
+        android:id="@+id/profilePictureLargeImage"
+        android:layout_width="268dp"
+        android:layout_height="335dp"
+        android:layout_weight="0"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center_horizontal"
+        app:srcCompat="@mipmap/marshmellow" />-->
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/profilePictureLargeImage"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@mipmap/marshmellow"
+        android:layout_weight="0"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
+        android:layout_gravity="center_horizontal"
+        app:civ_border_color="#E38349"
+        app:civ_border_width="4dp"/>
+        <!--app:civ_shadow="true"
+        app:civ_shadow_radius="10"
+        app:civ_shadow_color="#3f51b5"/>-->
 
     <TextView
         android:id="@+id/username_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"/>
+        android:layout_weight="0"
+        android:layout_marginLeft="22dp"
+        android:textSize="22dp"/>
 
     <TextView
         android:id="@+id/email_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"/>
+        android:layout_weight="0"
+        android:layout_marginLeft="22dp"
+        android:textSize="22dp"/>
 
     <TextView
         android:id="@+id/phone_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"/>
+        android:layout_weight="0"
+        android:layout_marginLeft="22dp"
+        android:textSize="22dp"/>
 
     <TextView
         android:id="@+id/rating_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"/>
+        android:layout_weight="0"
+        android:layout_marginLeft="22dp"
+        android:textSize="22dp" />
 
     <TextView
         android:id="@+id/num_ratings_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"/>
+        android:layout_weight="0"
+        android:layout_marginLeft="22dp"
+        android:textSize="22dp"/>
 
     <LinearLayout
         android:id="@+id/button_linear_layout"
@@ -45,7 +81,7 @@
         android:layout_height="0dip"
         android:layout_weight="1"
         android:gravity="center|bottom"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
     </LinearLayout>
 

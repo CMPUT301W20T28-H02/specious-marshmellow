@@ -22,9 +22,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
@@ -52,6 +57,7 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
     ImageView profile;
     boolean hasProfilePicture;
     DatabaseReference reff;
+    String username;
 
     /**
      * Called when activity is created
@@ -79,7 +85,7 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
         notificationManager.cancel(22);
 
         Intent i = getIntent();
-        final String username = i.getStringExtra("username");
+        username = i.getStringExtra("username");
         usrName.setText(username);
         final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -99,14 +105,8 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String url = dataSnapshot.child("imageUrl").getValue().toString();
-
-
                         Log.d("Firebase", url);
-                        Picasso.get()
-                                .load(url)
-                                .into(profile);
-
-
+                        Picasso.get().load(url).into(profile);
                     }
 
                     @Override
@@ -115,8 +115,6 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
                     }
                 });
             }
-
-
         });
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,6 +154,50 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
         /*LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
         map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
         map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
+
+        map.setMyLocationEnabled(true);
+
+        /*LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
+        map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
+        map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
+        FirebaseFirestore.getInstance()
+                .collection("requests")
+                .document(username)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot.exists()) {
+                                final Request request = documentSnapshot.toObject(Request.class);
+
+                                com.example.databasedemo.Location startLocation = request.getStartLocation();
+                                com.example.databasedemo.Location endLocation = request.getEndLocation();
+
+                                // set start and end points as latlng
+                                LatLng startPoint = new LatLng(startLocation.getLatitude(), startLocation.getLongitude());
+                                LatLng endPoint = new LatLng(endLocation.getLatitude(), endLocation.getLongitude());
+
+                                // add markers to map for start and end points
+                                map.addMarker(new MarkerOptions().position(startPoint).title("Start Location"));
+                                map.addMarker(new MarkerOptions().position(endPoint).title("End Location"));
+
+                                // move map to show the start and end points
+                                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                // set builder with start and end locations
+                                builder.include(startPoint);
+                                builder.include(endPoint);
+                                LatLngBounds bounds = builder.build();
+                                // construct a cameraUpdate with a buffer of 200
+                                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 200);
+                                // move the camera
+                                map.animateCamera(cameraUpdate);
+
+                            }
+                        }
+                    }
+                });
     }
 
     @Override

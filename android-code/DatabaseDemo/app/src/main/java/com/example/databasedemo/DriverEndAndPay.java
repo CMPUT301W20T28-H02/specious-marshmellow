@@ -23,10 +23,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -175,10 +181,49 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
+        map.setMyLocationEnabled(true);
 
         /*LatLng UofAQuad = new LatLng( 53.526891, -113.525914 ); // putting long lat of a pin
         map.addMarker( new MarkerOptions().position(UofAQuad).title("U of A Quad") );  // add a pin
         map.moveCamera(CameraUpdateFactory.newLatLng( UofAQuad ) ); // center camera around the pin*/
+        FirebaseFirestore.getInstance()
+                .collection("requests")
+                .document(riderUsername)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot.exists()) {
+                                final Request request = documentSnapshot.toObject(Request.class);
+
+                                com.example.databasedemo.Location startLocation = request.getStartLocation();
+                                com.example.databasedemo.Location endLocation = request.getEndLocation();
+
+                                // set start and end points as latlng
+                                LatLng startPoint = new LatLng(startLocation.getLatitude(), startLocation.getLongitude());
+                                LatLng endPoint = new LatLng(endLocation.getLatitude(), endLocation.getLongitude());
+
+                                // add markers to map for start and end points
+                                map.addMarker(new MarkerOptions().position(startPoint).title("Start Location"));
+                                map.addMarker(new MarkerOptions().position(endPoint).title("End Location"));
+
+                                // move map to show the start and end points
+                                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                                // set builder with start and end locations
+                                builder.include(startPoint);
+                                builder.include(endPoint);
+                                LatLngBounds bounds = builder.build();
+                                // construct a cameraUpdate with a buffer of 200
+                                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 200);
+                                // move the camera
+                                map.animateCamera(cameraUpdate);
+
+                            }
+                        }
+                    }
+                });
     }
 
     /**

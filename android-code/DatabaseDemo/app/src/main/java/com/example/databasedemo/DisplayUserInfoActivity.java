@@ -10,11 +10,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,11 +25,19 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.auth.FirebaseUser;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
+import com.squareup.picasso.Picasso;
+
+import java.text.DecimalFormat;
 
 /**
  * Displays user information
@@ -39,6 +50,7 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
     TextView phoneText;
     TextView numRatingsText;
     TextView ratingText;
+    ImageView profilePictureLargeImage;
     FirebaseAuth mAuth;
     FirebaseFirestore db;
 
@@ -56,6 +68,7 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_user_info);
 
+        profilePictureLargeImage = findViewById(R.id.profilePictureLargeImage);
         usernameText = findViewById(R.id.username_text);
         emailText = findViewById(R.id.email_text);
         phoneText = findViewById(R.id.phone_text);
@@ -95,19 +108,64 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
      * @param {@code User}user
      */
     private void displayUser(final User user) {
-        // display the user information
+
+        // Get the user's username
         final String username = user.getUsername();
+
+        // Display profile picture
+        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                boolean hasProfilePicture = false;
+                DatabaseReference reff;
+                if (task.isSuccessful()) {
+                    Rider rider = task.getResult().toObject(Rider.class);
+                    hasProfilePicture = rider.getHasProfilePicture();
+                }
+
+                if (hasProfilePicture) {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
+                } else {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+                }
+                reff.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String url = dataSnapshot.child("imageUrl").getValue().toString();
+                        Log.d("Firebase", url);
+                        Picasso.get().load(url).into(profilePictureLargeImage);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
+        // display the user information
         usernameText.setText(getString(R.string.current_username, username));
         emailText.setText(getString(R.string.current_email, user.getEmail()));
         phoneText.setText(getString(R.string.current_phone, user.getPhone()));
+        phoneText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String uri = "tel:" + user.getPhone().trim();
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse(uri));
+                startActivity(intent);
+            }
+        });
 
         // if the user is a driver display their rating and number of ratings
         if (user.getDriver()) {
-            String rating = String.valueOf(user.getRating());
+            DecimalFormat numberFormat = new DecimalFormat(".00");
+            String rating = String.valueOf(numberFormat.format(user.getRating()));
             ratingText.setText(getString(R.string.current_rating, rating));
-            String numRatings = String.valueOf(user.getNumOfRatings());
+            String numRatings = String.valueOf((int)user.getNumOfRatings());
             numRatingsText.setText(getString(R.string.current_number_of_ratings, numRatings));
-
         }
 
         // if this is the current user allow them to edit their account of sign out

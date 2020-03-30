@@ -53,7 +53,7 @@
     <string name="username_driver_confirm">Nom d\'utilisateur: </string>
     <string name="cancel_pickup_driver_pickup">Annuler le ramassage</string>
     <string name="confirm_pickup_driver_confirm">Confirmez le ramassage</string>
-    <string name="rider_info_driver_confirm">Informations sur le passager:</string>
+    <string name="rider_info_driver_confirm">Information sur le passager:</string>
     <string name="end_ride_driver_end_and_pay">Finissez le conduite</string>
     <string name="please_present_qr_code_to_driver_generate_qr">Veuillez présenter ce code QR à votre conducteur</string>
     <string name="qr_code_generate_qr">Code QR</string>
@@ -65,7 +65,7 @@
     <string name="done_money_screen">Fini</string>
     <string name="hello_firebase_profile_picture_activity">Bonjour</string>
     <string name="done_firebase_profile_photo_activity">Fini</string>
-    <string name="driver_info_rider_confirm_pickup">Informations sur le conducteur:</string>
+    <string name="driver_info_rider_confirm_pickup">Information sur le conducteur:</string>
     <string name="rider_confirm_pickup">Nom d\'utilisateur: </string>
     <string name="rating_rider_confirm_pickup">Note:</string>
     <string name="phone_number_rider_confirm_pickup">Numéro de téléphone:</string>
@@ -131,6 +131,6 @@
     <string name="password_length">Votre mot de passe doit contenir au moins 6 caractères</string>
 
     <string name="notifications_marshmellow_on_way">Votre Marshmellow est en route!</string>
-    <string name="notifications_driver_username">Votre conducteur,  $%1$s, vous a sélectionné et est en route!</string>
+    <string name="notifications_driver_username">Votre conducteur, %1$s, vous a sélectionné et est en route!</string>
 
 </resources>
