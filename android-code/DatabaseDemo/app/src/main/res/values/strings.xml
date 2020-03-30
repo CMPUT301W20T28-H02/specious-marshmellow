@@ -132,4 +132,9 @@
     <string name="notifications_marshmellow_on_way">Your Marshmellow is on its way!</string>
     <string name="notifications_driver_username">Your driver, %1$s, has selected you and is on their way to you!</string>
 
+    <string name="startup_quote_0">Toasting some marshmellows...</string>
+    <string name="startup_quote_1">Lighting the fire...</string>
+    <string name="startup_quote_2">Telling stories around the campfire...</string>
+
+
 </resources>

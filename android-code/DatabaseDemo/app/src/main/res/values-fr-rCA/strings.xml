@@ -133,4 +133,8 @@
     <string name="notifications_marshmellow_on_way">Votre Marshmellow est en route!</string>
     <string name="notifications_driver_username">Votre conducteur, %1$s, vous a sélectionné et est en route!</string>
 
+    <string name="startup_quote_0">Faisons griller des guimauves...</string>
+    <string name="startup_quote_1">Allumons le feu...</string>
+    <string name="startup_quote_2">Racontons des histoires autour du feu de camp...</string>
+
 </resources>

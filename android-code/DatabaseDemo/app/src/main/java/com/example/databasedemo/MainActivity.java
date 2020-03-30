@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -21,6 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
+import java.util.Random;
 /*
 MainActivity
 Version 1
@@ -36,6 +38,7 @@ public class MainActivity extends AppCompatActivity{
 
     FirebaseAuth mAuth;
     FirebaseFirestore db;
+    TextView funnyStartupQuote;
     private static String TAG = "DISPLAY_USER_ACCOUNT_INFO";
 
     /**
@@ -49,6 +52,9 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        funnyStartupQuote = findViewById(R.id.funnyStartupQuote);
+        funnyStartupQuote.setText(getStartupQuote());
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -222,9 +228,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-
-
-
 //        User currentUser = docRef.get().getResult().toObject(User.class);
 //        Intent intent = new Intent(getBaseContext(), RiderDriverInitialActivity.class);
 //        if (currentUser.getDriver()) {
@@ -233,6 +236,22 @@ public class MainActivity extends AppCompatActivity{
 //            intent.putExtra("driver", false);
 //        }
 //        return true;
+
+    }
+
+    public String getStartupQuote(){
+        Random rand = new Random();
+        // Obtain a number between [0 - 2].
+        int n = rand.nextInt(3);
+        switch (n){
+            case 0:
+                return getString(R.string.startup_quote_0);
+            case 1:
+                return getString(R.string.startup_quote_1);
+            case 2:
+                return getString(R.string.startup_quote_2);
+        }
+        return "";
 
     }
 
