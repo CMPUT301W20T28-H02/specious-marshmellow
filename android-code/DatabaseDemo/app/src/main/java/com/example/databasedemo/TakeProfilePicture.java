@@ -55,10 +55,10 @@ public class TakeProfilePicture extends AppCompatActivity {
     Button mCaptureBtn;
     Button loadImageBtn;
     Button mButtonUpload;
-    Button mShowImageFromFirebaseBtn;
+//    Button mShowImageFromFirebaseBtn;
     Button done_add;
     ProgressBar mProgressBar;
-    EditText mEditTextFileName;
+//    EditText mEditTextFileName;
     private static final int PICK_IMAGE = 100;
 
     ImageView mImageView;
@@ -91,10 +91,10 @@ public class TakeProfilePicture extends AppCompatActivity {
         mImageView = findViewById( R.id.image_view );
         mCaptureBtn = findViewById( R.id.capture_image_btn );
         loadImageBtn = findViewById( R.id.load_image );
-        mShowImageFromFirebaseBtn = findViewById( R.id.show_image_from_firebase );
+//        mShowImageFromFirebaseBtn = findViewById( R.id.show_image_from_firebase );
 
         mButtonUpload = findViewById( R.id.btn_upload_image );
-        mEditTextFileName = findViewById( R.id.edit_image_name );
+//        mEditTextFileName = findViewById( R.id.edit_image_name );
         done_add=findViewById(R.id.done);
 
         mProgressBar = findViewById( R.id.progress_bar );
@@ -168,14 +168,14 @@ public class TakeProfilePicture extends AppCompatActivity {
         });
 
 
-        mShowImageFromFirebaseBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent showImage = new Intent(TakeProfilePicture.this, ProfilePictureFromFirebaseStorage.class);
-                startActivity(showImage);
-
-            }
-        });
+//        mShowImageFromFirebaseBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent showImage = new Intent(TakeProfilePicture.this, ProfilePictureFromFirebaseStorage.class);
+//                startActivity(showImage);
+//
+//            }
+//        });
         /*Takes you back to previous activity*/
         done_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -268,7 +268,7 @@ public class TakeProfilePicture extends AppCompatActivity {
 
                                         DynamicToast.make(TakeProfilePicture.this, getString(R.string.upload_successful), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
-                                        Upload upload = new Upload( mEditTextFileName.getText().toString().trim(),
+                                        Upload upload = new Upload( "Profile Picture",
                                                 thumb_download_url );     // here, need to get a valid uri or a valid url
 
 
