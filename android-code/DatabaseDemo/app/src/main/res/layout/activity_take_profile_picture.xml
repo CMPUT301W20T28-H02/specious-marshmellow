@@ -26,6 +26,7 @@
         <Button
             android:id="@+id/capture_image_btn"
             style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#E38349"
@@ -33,6 +34,7 @@
 
         <Button
             android:id="@+id/load_image"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#E38349"
@@ -46,17 +48,19 @@
 
         <Button
             android:id="@+id/btn_upload_image"
+            android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#E38349"
-            android:text="@string/upload_image_take_picture_activity" />
+            android:text="Confirm" />
 
         <Button
             android:id="@+id/done"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:backgroundTint="#E38349"
-            android:text="@string/done_take_picture_activity" />
+            android:text="Return" />
     </LinearLayout>
 
     <ProgressBar
