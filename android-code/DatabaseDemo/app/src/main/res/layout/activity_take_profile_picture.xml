@@ -41,33 +41,25 @@
             android:text="@string/load_an_image_take_picture_activity" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/btn_upload_image"
+        android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_upload_image"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#E38349"
-            android:text="Confirm" />
-
-        <Button
-            android:id="@+id/done"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#E38349"
-            android:text="Return" />
-    </LinearLayout>
+        android:backgroundTint="#E38349"
+        android:text="Confirm" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="#E38349"/>
+        android:backgroundTint="#E38349" />
+
+    <Button
+        android:id="@+id/done"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:backgroundTint="#E38349"
+        android:text="Return" />
 
 </LinearLayout>
