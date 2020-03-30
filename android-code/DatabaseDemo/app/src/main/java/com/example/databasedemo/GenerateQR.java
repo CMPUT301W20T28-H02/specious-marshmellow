@@ -7,8 +7,10 @@ package com.example.databasedemo;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -21,10 +23,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -55,9 +59,14 @@ public class GenerateQR extends AppCompatActivity{
     Bitmap bitmap;
     String inputValue;
     String username, email;
-    Button start;
+    Button start, thumbs_up, thumbs_down;
     String savePath = Environment.getExternalStorageDirectory().getPath() + "/QRCode/";
     ListenerRegistration registration;
+
+    LinearLayout ratingsLayout;
+
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
 
     /**
      * Called when activity is created
@@ -93,21 +102,7 @@ public class GenerateQR extends AppCompatActivity{
                             if (request.getPaymentComplete()) {
                                 thankYouTextView.setVisibility(View.VISIBLE);
                                 Log.i("Hello", "We have set the TextView to say thank you!");
-                                DocumentReference innerRef = FirebaseFirestore.getInstance().collection("requests").document(username);
-                                innerRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-
-                                        Log.i("Hello", "We have deleted the request from the database");
-                                        Intent intent = new Intent(GenerateQR.this, RiderStartActivity.class);
-                                        intent.putExtra("username", username);
-                                        intent.putExtra("driver", false);
-                                        intent.putExtra("email", email);
-                                        Log.i("Hello", "We are about to start RiderDriverInitialActivity");
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                });
+                                promptRating();
 
                             } else {
 
@@ -143,6 +138,101 @@ public class GenerateQR extends AppCompatActivity{
         }).start();
 
     }
+    // show alert Dialog with thumbs up and thumbs down
+    public void promptRating(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Add the buttons
+        builder.setPositiveButton("Thumbs up", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User thumbs up the driver
+                setDriverRating(5);
+            }
+        });
+        builder.setNegativeButton("Thumbs down", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User thumbs down the driver
+                setDriverRating(0);
+            }
+        });
+
+        // do nothing when user touches area outside dialog
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+
+            }
+        });
+
+
+        builder.setMessage("Don't forget to give your driver a thumbs up or thumbs down!")
+                .setTitle("How Was Your Driver?")
+                .setCancelable(false);
+
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
+        Log.i("rateDriver", "we are inside rateDriver");
+
+
+    }
+    // get Driver from request collection and set new rating locally
+    public void setDriverRating(final double rating){
+        db.collection("requests").document(username)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Request request = documentSnapshot.toObject(Request.class);
+
+                        Driver driver = request.getDriver();
+                        String driver_username = driver.getUsername();
+                        double new_rating = driver.calculateNewRating(rating);
+                        driver.setRating(new_rating);
+
+                        changeDriverRatingFirestore(driver_username, driver);
+
+
+                    }
+                });
+    }
+
+    // update Firestore with new Driver rating and go back to RiderStartActivity
+    public void changeDriverRatingFirestore(String driver_username, Driver driver) {
+
+        db.collection("users").document(driver_username)
+                .set(driver)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i("Driver rating", "new driver rating");
+
+                        DocumentReference innerRef = FirebaseFirestore.getInstance().collection("requests").document(username);
+                        innerRef.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+
+                                Log.i("Hello", "We have deleted the request from the database");
+                                Intent intent = new Intent(GenerateQR.this, RiderStartActivity.class);
+                                intent.putExtra("username", username);
+                                intent.putExtra("driver", false);
+                                intent.putExtra("email", email);
+                                Log.i("Hello", "We are about to start RiderDriverInitialActivity");
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+
+                    }
+                });
+
+
+    }
+
+
 
     @Override
     public void onDestroy(){

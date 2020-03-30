@@ -54,7 +54,7 @@
     <string name="confirm_pickup_driver_confirm">Confirm pickup</string>
     <string name="rider_info_driver_confirm">Rider Info:</string>
     <string name="end_ride_driver_end_and_pay">End Ride</string>
-    <string name="please_present_qr_code_to_driver_generate_qr">Please present QR code to Driver</string>
+    <string name="please_present_qr_code_to_driver_generate_qr">Please Present QR code to Driver</string>
     <string name="qr_code_generate_qr">QR Code</string>
     <string name="wallet_money_screen">Wallet</string>
     <string name="balance_money_screen">Balance:</string>
