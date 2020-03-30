@@ -31,8 +31,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -44,6 +47,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
+import com.squareup.picasso.Picasso;
 
 public class TakeProfilePicture extends AppCompatActivity {
 
@@ -74,6 +78,7 @@ public class TakeProfilePicture extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     String username;
+    DatabaseReference reff;
     boolean hasProfilePicture;
 
 
@@ -122,6 +127,58 @@ public class TakeProfilePicture extends AppCompatActivity {
                 hasProfilePicture = rider.getHasProfilePicture();
             }
         });
+
+
+
+
+
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    Rider rider = task.getResult().toObject(Rider.class);
+                    hasProfilePicture = rider.getHasProfilePicture();
+                }
+
+                if( hasProfilePicture )
+                {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
+                } else {
+                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+                }
+                reff.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String url = dataSnapshot.child("imageUrl").getValue().toString();
+
+
+                        Log.d("Firebase", url);
+                        Picasso.get()
+                                .load( url )
+                                .into( mImageView );
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+
+        });
+
+
+
+
+
+
+
+
+
 
 
         //Button click
