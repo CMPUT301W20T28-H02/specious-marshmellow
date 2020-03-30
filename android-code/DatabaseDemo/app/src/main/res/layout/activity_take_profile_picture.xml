@@ -13,7 +13,8 @@
         android:id="@+id/image_view"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_image_black_24dp"
-        android:layout_width="400dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
         android:layout_height="200dp" />
 
     <!--Button to take pic-->
