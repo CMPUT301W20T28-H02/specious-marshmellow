@@ -75,6 +75,7 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
     FirebaseAuth mAuth;
     double globalBound = 10000;
     ListenerRegistration registration;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

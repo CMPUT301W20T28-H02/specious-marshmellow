@@ -47,6 +47,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
+
 /**
  * Activity shown while ride is ongoing, asks driver to click on button once the ride is done
  * @author Michael Antifaoff, Hussein Warsame
@@ -266,9 +268,10 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
+                            DecimalFormat numberFormat = new DecimalFormat(".00");
                             Driver driver = task.getResult().toObject(Driver.class);
                             Wallet wallet = driver.getWallet();
-                            DynamicToast.make(DriverEndAndPay.this, getString(R.string.your_balance, wallet.getBalance()), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                            DynamicToast.make(DriverEndAndPay.this, getString(R.string.your_balance, String.valueOf(numberFormat.format(wallet.getBalance()))), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                         }
                     }

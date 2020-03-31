@@ -172,15 +172,6 @@ public class TakeProfilePicture extends AppCompatActivity {
         });
 
 
-
-
-
-
-
-
-
-
-
         //Button click
         mCaptureBtn.setOnClickListener( new View.OnClickListener()
         {
@@ -241,14 +232,6 @@ public class TakeProfilePicture extends AppCompatActivity {
             }
         });
     }
-
-
-
-
-
-
-
-
 
     private String getFileExtension( Uri uri )
     {
@@ -325,8 +308,7 @@ public class TakeProfilePicture extends AppCompatActivity {
 
                                         DynamicToast.make(TakeProfilePicture.this, getString(R.string.upload_successful), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
-                                        Upload upload = new Upload( "Profile Picture",
-                                                thumb_download_url );     // here, need to get a valid uri or a valid url
+                                        Upload upload = new Upload( "Profile Picture", thumb_download_url );     // here, need to get a valid uri or a valid url
 
 
 
@@ -339,16 +321,25 @@ public class TakeProfilePicture extends AppCompatActivity {
 
                                         mDatabaseRef.child(username).setValue(upload);
 
-
-
                                         final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
                                         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if(task.isSuccessful()){
-                                                    Rider rider = task.getResult().toObject(Rider.class);
-                                                    rider.setHasProfilePicture( true );
-                                                    docRef.set(rider);
+                                                    User user = task.getResult().toObject(User.class);
+                                                    Driver driver;
+                                                    Rider rider;
+                                                    if(user.getDriver()){
+                                                        driver = new Driver(user);
+                                                        driver.setHasProfilePicture( true );
+                                                        docRef.set(driver);
+                                                    } else {
+                                                        Log.i("Hello", "We are about to cast " + user.getUsername() + " to a Rider");
+                                                        rider = new Rider(user);
+                                                        Log.i("Hello", "We just cast " + rider.getUsername() + " to a Rider");
+                                                        rider.setHasProfilePicture( true );
+                                                        docRef.set(rider);
+                                                    }
                                                 }
                                             }
                                         });
@@ -381,19 +372,6 @@ public class TakeProfilePicture extends AppCompatActivity {
         }
     }
     //----------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

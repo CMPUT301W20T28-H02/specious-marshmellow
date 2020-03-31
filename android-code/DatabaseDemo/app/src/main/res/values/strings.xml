@@ -28,19 +28,19 @@
     <string name="confirm_request">Confirm Request</string>
     <string name="cancel_request">Cancel Request</string>
 
-    <string name="driver_confirm_rider_username">Rider Username: %1$s</string>
+    <string name="driver_confirm_rider_username"><u>Rider Username:</u> %1$s</string>
     <string name="driver_confirm_ride_fare">Ride Fare: %1$s Dollars</string>
     <string name="driver_to_rider_distance">Distance to Rider: %1$s Kilometers</string>
     <string name="driver_confirm_ride_distance">Ride Distance: %1$s Kilometers</string>
 
-    <string name="rider_confirm_driver_username">Username: %1$s</string>
+    <string name="rider_confirm_driver_username"><u>Username: %1$s</u></string>
     <string name="rider_confirm_driver_rating">Rating: %1$s</string>
-    <string name="rider_confirm_driver_phone_number">Phone Number: %1$s</string>
+    <string name="rider_confirm_driver_phone_number"><u>Phone Number: %1$s</u></string>
     <string name="rider_confirm_driver_email">Email: %1$s</string>
 
     <string name="show_username">Username: %1$s</string>
     <string name="show_email">Email: %1$s</string>
-    <string name="show_phone">Phone Number: %1$s</string>
+    <string name="show_phone"><u>Phone Number: %1$s</u></string>
     <string name="show_address">Address: %1$s</string>
     <string name="show_rating">Rating: %1$s</string>
     <string name="make_request">Make Request</string>
@@ -56,7 +56,7 @@
     <string name="end_ride_driver_end_and_pay">End Ride</string>
     <string name="please_present_qr_code_to_driver_generate_qr">Please Present QR code to Driver</string>
     <string name="qr_code_generate_qr">QR Code</string>
-    <string name="wallet_money_screen">Wallet</string>
+    <string name="wallet_money_screen">Marshmoney</string>
     <string name="balance_money_screen">Balance:</string>
     <string name="add_5_money_screen">ADD $5</string>
     <string name="add_25_money_screen">ADD $25</string>
@@ -96,13 +96,13 @@
     <string name="query_start_location">Start Location</string>
     <string name="query_end_location">End Location</string>
 
-    <string name="add_qr_bucks_drawer_menu">Add QR Bucks</string>
+    <string name="add_qr_bucks_drawer_menu">ADD MARSHMONEY</string>
     <string name="sign_out_drawer_menu">SIGN OUT</string>
     <string name="edit_contact_info_drawer_menu">EDIT CONTACT INFO</string>
     <string name="check_balance_driver_drawer_menu">CHECK BALANCE</string>
     <string name="sign_out_driver_drawer_menu">SIGN OUT</string>
     <string name="edit_contact_info_driver_drawer_menu">EDIT CONTACT INFO</string>
-    <string name="add_qr_bucks_money_drawer">Add QR Bucks</string>
+    <string name="add_qr_bucks_money_drawer">ADD MARSHMONEY</string>
     <string name="edit_contact_info_money_drawer">EDIT CONTACT INFO</string>
 
     <string name="no_location_permissions">
@@ -113,12 +113,13 @@
     <string name="cancel_request_and_try_again">Action restricted, cancel your request and try again</string>
     <string name="already_in_money_screen">Action restricted, Already in Money Screen</string>
     <string name="rider_has_cancelled_request">%1$s has cancelled their request</string>
+    <string name="driver_has_cancelled_pickup">%1$s is no longer able to pick you up</string>
     <string name="internet">Please check your internet connection and try again once you have a strong connection</string>
     <string name="internet_and_valid_location">Please check that your internet connection is secure and that you have entered a valid location.</string>
     <string name="username_not_unique">Username is not unique</string>
     <string name="is_required">%1$s is required</string>
     <string name="authentication_failed">Authentication failed</string>
-    <string name="your_balance">Your Balance: %1$f</string>
+    <string name="your_balance">Your Balance: $%1$s</string>
     <string name="no_camera_permissions">Permission denied, please provide camera access to continue</string>
     <string name="driver_no_camera_permissions">Please grant camera permission to use the QR Scanner</string>
     <string name="no_file_selected">No file selected</string>

@@ -52,6 +52,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
@@ -65,7 +66,7 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
     private static String TAG = "Hello";
     LatLng latLng, latLngDriver;
     TextView usrNameText,usrEmailText;
-    ImageView profile;
+    CircularImageView profile;
     DatabaseReference reff;
     FirebaseAuth mAuth;
     boolean hasProfilePicture;
@@ -78,8 +79,9 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
         setContentView(R.layout.rider_initial);
         makeRequestButton = findViewById(R.id.make_request_button);
         mAuth = FirebaseAuth.getInstance();
-        Intent intent = getIntent();
+
         //NavigationView navi = findViewById(R.id.nav_view);
+        Intent intent = getIntent();
         final String username = intent.getStringExtra("username");
         final String email = intent.getStringExtra("email");
         NavigationView navi = findViewById(R.id.nav_view);
@@ -90,41 +92,35 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
         usrNameText.setText(username);
         usrEmailText.setText(email);
         profile = headerview.findViewById(R.id.profilepic);
-        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+        Log.i("Hello", "0");
+
+        makeRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    Rider rider = task.getResult().toObject(Rider.class);
-                    hasProfilePicture = rider.getHasProfilePicture();
-                }
+            public void onClick(View view) {
+                // DynamicToast.make(RiderStartActivity.this, "Make Request", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
-                if( hasProfilePicture )
-                {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
-                } else {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
-                }
-                reff.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String url = dataSnapshot.child("imageUrl").getValue().toString();
-                        Log.d("Firebase", url);
-                        Picasso.get()
-                                .load( url )
-                                .into( profile );
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
+                Log.i("Hello", "Rider Driver Initial Activity: inside make request button onItemClickListener");
+                Intent intent = new Intent(getBaseContext(), RiderNewRequestActivity.class);
+                intent.putExtra("username", username);
+                intent.putExtra("email", email );
+                startActivity(intent);
+                finish();
             }
-
-
         });
 
+        Log.i("Hello", "1");
 
+        //ImageLoader.loadImage(profile, username);
 
+        registration = FirebaseFirestore.getInstance().collection("users").document(username).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                ImageLoader.loadImage(profile, username);
+            }
+        });
+
+        Log.i("Hello", "2");
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,6 +131,8 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
+        Log.i("Hello", "3");
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -144,6 +142,9 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
         if(ActivityCompat.checkSelfPermission(RiderStartActivity.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
+        Log.i("Hello", "4");
+
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderStartActivity.this, new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
@@ -156,20 +157,14 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
             }
         });
 
-        makeRequestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // DynamicToast.make(RiderStartActivity.this, "Make Request", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+        Log.i("Hello", "5");
 
-                Log.i("Hello", "Rider Driver Initial Activity: inside make request button onItemClickListener");
-                Intent intent = new Intent(getBaseContext(), RiderNewRequestActivity.class);
-                intent.putExtra("username", username);
-                intent.putExtra("email", email );
-                startActivity(intent);
-                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
-                finish();
-            }
-        });
+    }
+
+    @Override
+    public void onDestroy(){
+        registration.remove();
+        super.onDestroy();
     }
 
     private void requestPermission(){
@@ -220,10 +215,12 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+
         switch (menuItem.getItemId()) {
             case R.id.nav_money:
                 Intent intent = new Intent(getBaseContext(), moneyScreen.class);
                 intent.putExtra("username", username);
+                intent.putExtra("activity",currentRequest.class.toString());
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 break;
@@ -234,13 +231,17 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
                 startActivity(intent_2);
                 overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 finish();
+
                 break;
             case R.id.contact_info:
                 Intent intent1 = new Intent(getBaseContext(),EditContactInformationActivity.class);
                 intent1.putExtra("username", username);
                 startActivity(intent1);
                 overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+
                 break;
+
+
         }
         return false;
     }

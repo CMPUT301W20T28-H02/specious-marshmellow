@@ -18,6 +18,9 @@ import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,6 +56,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
@@ -73,12 +77,10 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
     boolean riderReady = false;
     ListenerRegistration registration;
     TextView usrNameText,usrEmailText;
-    ImageView profile;
-    DatabaseReference reff;
-    String url;
-    boolean hasProfilePicture;
-    String username;
-
+    CircularImageView profile;
+    boolean driverCancelled = true;
+    String username, email, driverUsername;
+    CircularImageView driverProfilePic;
 
     /**
      * Called when activity is created
@@ -100,8 +102,8 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
         navi.setNavigationItemSelectedListener(this);
         usrNameText = headerview.findViewById(R.id.usrNameText);
         usrEmailText=headerview.findViewById(R.id.usrEmailText);
-
         waiting = findViewById(R.id.waiting_for_driver);
+        driverProfilePic = findViewById(R.id.rider_confirm_driver_profile_pic);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.rider_pickup_map);
@@ -127,48 +129,11 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
         username = i.getStringExtra("username");
         Log.i("Hello", "RCP: The username is " + username);
         // TODO: Email is null here: Check to see if email is passed through MainActivity
-        final String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         usrNameText.setText(username);
         usrEmailText.setText(email);
         profile = headerview.findViewById(R.id.profilepic);
-        final DocumentReference docRef_p= FirebaseFirestore.getInstance().collection("users").document(username);
-        docRef_p.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    Rider rider = task.getResult().toObject(Rider.class);
-                    hasProfilePicture = rider.getHasProfilePicture();
-                }
 
-                if( hasProfilePicture )
-                {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
-                } else {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
-                }
-                reff.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        url = dataSnapshot.child("imageUrl").getValue().toString();
-
-
-                        Log.d("Firebase", url);
-                        Picasso.get()
-                                .load( url )
-                                .into( profile );
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-
-        });
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,6 +171,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
         cancelRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                driverCancelled = false;
 
                 NotificationManager notificationManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.cancel(22);
@@ -258,7 +224,9 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                 if (documentSnapshot.exists()) {
                     final Request request = documentSnapshot.toObject(Request.class);
-                    driverUsernameTextView.setText(getString(R.string.rider_confirm_driver_username, request.getDriver().getUsername()));
+                    driverUsername = request.getDriver().getUsername();
+                    driverUsernameTextView.setText(getString(R.string.rider_confirm_driver_username, driverUsername));
+                    setUnderLineText(driverUsernameTextView, request.getDriver().getUsername());
                     // Take user to info activity telling them about the driver
                     driverUsernameTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -271,6 +239,8 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                     DecimalFormat numberFormat = new DecimalFormat("#.00");
                     driverRatingTextView.setText(getString(R.string.rider_confirm_driver_rating, numberFormat.format(request.getDriver().getRating())));
                     driverPhoneNumberTextView.setText(getString(R.string.rider_confirm_driver_phone_number, request.getDriver().getPhone()));
+                    setUnderLineText(driverPhoneNumberTextView, request.getDriver().getPhone());
+                    // Take user to phone dialer so they can call or SMS the driver
                     driverPhoneNumberTextView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -324,6 +294,20 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 200);
                     // move the camera
                     map.animateCamera(cameraUpdate);
+
+                    ImageLoader.loadImage(profile, username);
+                    Log.i("Hello", "In RiderConfirmPickup, the driver username is " + driverUsername);
+                    ImageLoader.loadImage(driverProfilePic, driverUsername);
+
+                } else {
+                    if (driverCancelled) {
+                        DynamicToast.make(RiderConfirmPickup.this, getString(R.string.driver_has_cancelled_pickup, driverUsername), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                    }
+                    Intent i = new Intent(RiderConfirmPickup.this, RiderStartActivity.class);
+                    // TODO need to fix intents
+                    i.putExtra("username", username);
+                    i.putExtra("email", email);
+                    startActivity(i);
                 }
             }
         });
@@ -361,5 +345,23 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
 
         }
         return false;
+    }
+
+    // Taken from: https://code.i-harness.com/en/q/248b37
+    public void setUnderLineText(TextView tv, String textToUnderLine) {
+        String tvt = tv.getText().toString();
+        int ofe = tvt.indexOf(textToUnderLine, 0);
+
+        UnderlineSpan underlineSpan = new UnderlineSpan();
+        SpannableString wordToSpan = new SpannableString(tv.getText());
+        for (int ofs = 0; ofs < tvt.length() && ofe != -1; ofs = ofe + 1) {
+            ofe = tvt.indexOf(textToUnderLine, ofs);
+            if (ofe == -1)
+                break;
+            else {
+                wordToSpan.setSpan(underlineSpan, ofe, ofe + textToUnderLine.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tv.setText(wordToSpan, TextView.BufferType.SPANNABLE);
+            }
+        }
     }
 }

@@ -167,7 +167,6 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
             public void onClick(View view) {
                 Intent intent = new Intent(currentRequest.this, TakeProfilePicture.class);
                 startActivity(intent);
-
             }
         });
 
@@ -206,7 +205,6 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                                 intent.putExtra("driver", false);
                                 intent.putExtra("username", username);
                                 intent.putExtra("email", email);
-
                                 startActivity(intent);
                                 finish();
                             }

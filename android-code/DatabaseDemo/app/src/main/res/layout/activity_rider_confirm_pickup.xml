@@ -21,47 +21,85 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
-        <TextView
-            android:id="@+id/driver_rider_confirm_pickup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="22dp"
-            android:text="@string/driver_info_rider_confirm_pickup" />
 
-        <TextView
-            android:id="@+id/driver_username_rider_confirm_pickup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="22dp"
-            android:text="@string/rider_confirm_pickup"
-            android:clickable="true"/>
 
-        <TextView
-            android:id="@+id/driver_rating_rider_confirm_pickup"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="22dp"
-            android:text="@string/rating_rider_confirm_pickup"
-            android:clickable="true"/>
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/driver_phone_number_rider_confirm_pickup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="22dp"
-            android:text="@string/phone_number_rider_confirm_pickup" />
 
-        <TextView
-            android:id="@+id/driver_email_rider_confirm_pickup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="22dp"
-            android:text="@string/email_rider_confirm_pickup" />
+
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/rider_confirm_driver_profile_pic"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/marshmellow"
+                android:scaleType="centerCrop"
+                app:civ_border_color="#E38349"
+                app:civ_border_width="0dp"></com.mikhaellopez.circularimageview.CircularImageView>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:background="@android:color/darker_gray"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/driver_rider_confirm_pickup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="17sp"
+                    android:layout_margin="5dp"
+                    android:text="@string/driver_info_rider_confirm_pickup" />
+
+                <TextView
+                    android:id="@+id/driver_username_rider_confirm_pickup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textStart"
+                    android:textSize="17sp"
+                    android:layout_margin="5dp"
+                    android:text="@string/rider_confirm_pickup"
+                    android:clickable="true"/>
+
+                <TextView
+                    android:id="@+id/driver_rating_rider_confirm_pickup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textStart"
+                    android:textSize="17sp"
+                    android:layout_margin="5dp"
+                    android:text="@string/rating_rider_confirm_pickup"
+                    android:clickable="true"/>
+
+                <TextView
+                    android:id="@+id/driver_phone_number_rider_confirm_pickup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textStart"
+                    android:textSize="17sp"
+                    android:layout_margin="5dp"
+                    android:text="@string/phone_number_rider_confirm_pickup" />
+
+                <TextView
+                    android:id="@+id/driver_email_rider_confirm_pickup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textStart"
+                    android:textSize="17sp"
+                    android:layout_margin="5dp"
+                    android:text="@string/email_rider_confirm_pickup" />
+            </LinearLayout>
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -101,6 +139,7 @@
 
         </FrameLayout>
     </LinearLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
