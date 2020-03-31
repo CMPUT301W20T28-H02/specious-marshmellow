@@ -403,6 +403,7 @@ public class TakeProfilePicture extends AppCompatActivity {
     {
         Intent gallery = new Intent( Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI );
         startActivityForResult( gallery, PICK_IMAGE );
+        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
     }
 
 
