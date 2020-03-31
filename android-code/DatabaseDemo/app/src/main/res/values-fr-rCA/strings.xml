@@ -57,12 +57,12 @@
     <string name="end_ride_driver_end_and_pay">Finissez le conduite</string>
     <string name="please_present_qr_code_to_driver_generate_qr">Veuillez présenter ce code QR à votre conducteur</string>
     <string name="qr_code_generate_qr">Code QR</string>
-    <string name="wallet_money_screen">Portefeuille</string>
+    <string name="wallet_money_screen">Marshmoney</string>
     <string name="balance_money_screen">Solde:</string>
-    <string name="add_5_money_screen">Ajoutez $5</string>
-    <string name="add_25_money_screen">Ajoutez $25</string>
-    <string name="add_50_money_screen">Ajoutez $50</string>
-    <string name="done_money_screen">Fini</string>
+    <string name="add_5_money_screen">AJOUTEZ $5</string>
+    <string name="add_25_money_screen">AJOUTEZ $25</string>
+    <string name="add_50_money_screen">AJOUTEZ $50</string>
+    <string name="done_money_screen">FINI</string>
     <string name="hello_firebase_profile_picture_activity">Bonjour</string>
     <string name="done_firebase_profile_photo_activity">Fini</string>
     <string name="driver_info_rider_confirm_pickup">Information sur le conducteur:</string>
@@ -97,13 +97,13 @@
     <string name="query_start_location">Emplacement de Départ</string>
     <string name="query_end_location">Emplacement Final</string>
 
-    <string name="add_qr_bucks_drawer_menu">Ajoutez QR Bucks</string>
+    <string name="add_qr_bucks_drawer_menu">AJOUTEZ MARSHMONEY</string>
     <string name="sign_out_drawer_menu">Déconnectez-vous</string>
     <string name="edit_contact_info_drawer_menu">Modifiez votre profil</string>
     <string name="check_balance_driver_drawer_menu">Vérifiez votre solde</string>
     <string name="sign_out_driver_drawer_menu">Déconnectez-vous</string>
     <string name="edit_contact_info_driver_drawer_menu">Modifiez votre profil</string>
-    <string name="add_qr_bucks_money_drawer">Ajoutez QR Bucks</string>
+    <string name="add_qr_bucks_money_drawer">AJOUTEZ MARSHMONEY</string>
     <string name="edit_contact_info_money_drawer">Modifiez votre profil</string>
 
     <string name="no_location_permissions">
@@ -120,7 +120,7 @@
     <string name="username_not_unique">Nom d\'utilisateur n\'est pas unique</string>
     <string name="is_required">%1$s est requis</string>
     <string name="authentication_failed">Authentification échouée</string>
-    <string name="your_balance">Votre solde: %1$f</string>
+    <string name="your_balance">Votre solde: $%1$s</string>
     <string name="no_camera_permissions">L\'autorisation a été refusée, veuillez activer l\'autorisation de caméra pour continuer</string>
     <string name="driver_no_camera_permissions">Veuillez activer l\'autorisation de caméra pour utiliser le scanner QR</string>
     <string name="no_file_selected">Aucun fichier sélectionné</string>
