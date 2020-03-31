@@ -80,6 +80,7 @@ public class GenerateQR extends AppCompatActivity{
 
         Intent i = getIntent();
         username = i.getStringExtra("username");
+        email = i.getStringExtra("email");
 
         qrImage = (ImageView) findViewById(R.id.QR_Image);
         thankYouTextView = findViewById(R.id.thank_you_TextView);

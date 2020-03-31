@@ -71,7 +71,7 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rider_end_and_pay);
         riderEndAndPayButton = findViewById(R.id.rider_end_and_pay_button);
-        String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        final String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         NavigationView navi = findViewById(R.id.nav_view);
         View headerview = navi.getHeaderView(0);
         navi.setNavigationItemSelectedListener(this);
@@ -134,6 +134,7 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
             public void onClick(View view) {
                 Intent i = new Intent(RiderEndAndPay.this, GenerateQR.class);
                 i.putExtra("username", username);
+                i.putExtra("email", email);
                 startActivity(i);
                 finish();
 

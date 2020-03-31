@@ -53,6 +53,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -368,9 +369,12 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
+                            DecimalFormat numberFormat = new DecimalFormat(".00");
                             Driver driver = task.getResult().toObject(Driver.class);
                             Wallet wallet = driver.getWallet();
-                            DynamicToast.make(getBaseContext(), getString(R.string.your_balance, wallet.getBalance()), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                            DynamicToast.make(getBaseContext(), getString(R.string.your_balance,
+                                    String.valueOf(numberFormat.format(wallet.getBalance()))), Color.parseColor("#E38249"),
+                                    Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
