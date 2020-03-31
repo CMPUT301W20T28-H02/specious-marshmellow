@@ -232,4 +232,11 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
         }
         return false;
     }
+
+    public void startGame(View view){
+        String username = getIntent().getStringExtra("username");
+        Intent i = new Intent(getBaseContext(), TicTacToeActivity.class);
+        i.putExtra("username", username);
+        startActivity(i);
+    }
 }
