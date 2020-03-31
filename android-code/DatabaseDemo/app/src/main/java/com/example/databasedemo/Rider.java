@@ -33,6 +33,10 @@ public class Rider extends User {
     super(username, email, wallet, phone, rating, numOfRatings, driver, hasProfilePicture);  // driver should be false
   }
 
+  public Rider(User user){
+    super(user.getUsername(), user.getEmail(), user.getWallet(), user.getPhone(), user.getRating(), user.getNumOfRatings(), user.getDriver(), user.getHasProfilePicture());
+  }
+
   /**
    * adds request to requests array based on start and end location
    * returns newly created request

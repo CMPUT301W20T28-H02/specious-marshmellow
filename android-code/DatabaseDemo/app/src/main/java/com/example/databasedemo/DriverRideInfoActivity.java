@@ -8,6 +8,9 @@ package com.example.databasedemo;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -156,6 +159,8 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
 
         riderUsernameTextView = findViewById(R.id.rider_username_TextView);
         riderUsernameTextView.setText(getString(R.string.driver_confirm_rider_username, riderUsername));
+        setUnderLineText(riderUsernameTextView, riderUsername);
+
 
         rideFareTextView = findViewById(R.id.ride_fare_TextView);
 
@@ -308,9 +313,10 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
+                            DecimalFormat numberFormat = new DecimalFormat(".00");
                             Driver driver = task.getResult().toObject(Driver.class);
                             Wallet wallet = driver.getWallet();
-                            DynamicToast.make(DriverRideInfoActivity.this, getString(R.string.your_balance, wallet.getBalance()), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
+                            DynamicToast.make(DriverRideInfoActivity.this, getString(R.string.your_balance, String.valueOf(numberFormat.format(wallet.getBalance()))), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -320,16 +326,36 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
                 finish();
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
                 startActivity(intent_2);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 break;
             case R.id.contact_info:
                 Intent intent1 = new Intent(getBaseContext(),EditContactInformationActivity.class);
                 intent1.putExtra("username", driverUsername);
                 startActivity(intent1);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 
                 break;
 
 
         }
         return false;
+    }
+
+    // Taken from: https://code.i-harness.com/en/q/248b37
+    public void setUnderLineText(TextView tv, String textToUnderLine) {
+        String tvt = tv.getText().toString();
+        int ofe = tvt.indexOf(textToUnderLine, 0);
+
+        UnderlineSpan underlineSpan = new UnderlineSpan();
+        SpannableString wordToSpan = new SpannableString(tv.getText());
+        for (int ofs = 0; ofs < tvt.length() && ofe != -1; ofs = ofe + 1) {
+            ofe = tvt.indexOf(textToUnderLine, ofs);
+            if (ofe == -1)
+                break;
+            else {
+                wordToSpan.setSpan(underlineSpan, ofe, ofe + textToUnderLine.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tv.setText(wordToSpan, TextView.BufferType.SPANNABLE);
+            }
+        }
     }
 }

@@ -12,6 +12,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -149,6 +152,7 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
         usernameText.setText(getString(R.string.current_username, username));
         emailText.setText(getString(R.string.current_email, user.getEmail()));
         phoneText.setText(getString(R.string.current_phone, user.getPhone()));
+        setUnderLineText(phoneText, user.getPhone());
         phoneText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -215,6 +219,24 @@ public class DisplayUserInfoActivity extends AppCompatActivity {
                 layout.addView(signOut);
             }
 
+        }
+    }
+
+    // Taken from: https://code.i-harness.com/en/q/248b37
+    public void setUnderLineText(TextView tv, String textToUnderLine) {
+        String tvt = tv.getText().toString();
+        int ofe = tvt.indexOf(textToUnderLine, 0);
+
+        UnderlineSpan underlineSpan = new UnderlineSpan();
+        SpannableString wordToSpan = new SpannableString(tv.getText());
+        for (int ofs = 0; ofs < tvt.length() && ofe != -1; ofs = ofe + 1) {
+            ofe = tvt.indexOf(textToUnderLine, ofs);
+            if (ofe == -1)
+                break;
+            else {
+                wordToSpan.setSpan(underlineSpan, ofe, ofe + textToUnderLine.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                tv.setText(wordToSpan, TextView.BufferType.SPANNABLE);
+            }
         }
     }
 }

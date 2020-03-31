@@ -28,32 +28,32 @@
             android:id="@+id/rider_username_TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_margin="10dp"
+            android:textSize="17sp"
+            android:layout_margin="5dp"
             android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/ride_fare_TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_margin="10dp"
+            android:textSize="17sp"
+            android:layout_margin="5dp"
             android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/distance_to_rider_TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_margin="10dp"
+            android:textSize="17sp"
+            android:layout_margin="5dp"
             android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/ride_distance_TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_margin="10dp"
+            android:textSize="17sp"
+            android:layout_margin="5dp"
             android:textAlignment="center"/>
 
         <Button
@@ -70,6 +70,7 @@
             android:text="@string/cancel_request"
             android:backgroundTint="#E38349"/>
     </LinearLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

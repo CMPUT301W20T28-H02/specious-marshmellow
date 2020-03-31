@@ -471,6 +471,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
 //                ConfirmedRequest.putExtra("Latitude", latLng.latitude);
 //                ConfirmedRequest.putExtra("Longitude", latLng.longitude);
         startActivity(ConfirmedRequest);
+        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
         finish();
     }
 
@@ -506,6 +507,7 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 Intent intent = new Intent(RiderNewRequestActivity.this, moneyScreen.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 break;
             case R.id.sign_out_tab:
                 mAuth.signOut();
@@ -513,12 +515,14 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
                 Intent intent_2 = new Intent(RiderNewRequestActivity.this, SignInActivity.class);
                 intent_2.putExtra("activity",moneyScreen.class.toString());
                 startActivity(intent_2);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 finish();
                 break;
             case R.id.contact_info:
                 Intent intent1 = new Intent(RiderNewRequestActivity.this,EditContactInformationActivity.class);
                 intent1.putExtra("username", username);
                 startActivity(intent1);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 break;
 
         }
