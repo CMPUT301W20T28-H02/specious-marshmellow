@@ -330,11 +330,13 @@ public class TakeProfilePicture extends AppCompatActivity {
                                                     Driver driver;
                                                     Rider rider;
                                                     if(user.getDriver()){
-                                                        driver = (Driver) user;
+                                                        driver = new Driver(user);
                                                         driver.setHasProfilePicture( true );
                                                         docRef.set(driver);
                                                     } else {
-                                                        rider = (Rider) user;
+                                                        Log.i("Hello", "We are about to cast " + user.getUsername() + " to a Rider");
+                                                        rider = new Rider(user);
+                                                        Log.i("Hello", "We just cast " + rider.getUsername() + " to a Rider");
                                                         rider.setHasProfilePicture( true );
                                                         docRef.set(rider);
                                                     }
@@ -370,19 +372,6 @@ public class TakeProfilePicture extends AppCompatActivity {
         }
     }
     //----------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -125,7 +125,7 @@ public class User {
 	 * gets number of ratings
 	 * @return{@code int} numOfRatings
 	 */
-	public double getNumOfRatings() {
+	public int getNumOfRatings() {
 		return this.numOfRatings;
 	}
 

@@ -93,38 +93,7 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
         usrEmailText.setText(email);
         profile = headerview.findViewById(R.id.profilepic);
 
-        ImageLoader.loadImage(profile, username);
-
-
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getBaseContext(), TakeProfilePicture.class);
-                startActivity(intent);
-
-            }
-        });
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        if(ActivityCompat.checkSelfPermission(RiderStartActivity.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderStartActivity.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if(location != null){
-                    latLng = new LatLng(location.getLatitude(),location.getLongitude());
-                    MarkerOptions p3 = new MarkerOptions().position(latLng);
-                    map.setMyLocationEnabled(true);
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
-                }
-            }
-        });
+        Log.i("Hello", "0");
 
         makeRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,6 +108,63 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
                 finish();
             }
         });
+
+        Log.i("Hello", "1");
+
+        //ImageLoader.loadImage(profile, username);
+
+        registration = FirebaseFirestore.getInstance().collection("users").document(username).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                ImageLoader.loadImage(profile, username);
+            }
+        });
+
+        Log.i("Hello", "2");
+
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getBaseContext(), TakeProfilePicture.class);
+                startActivity(intent);
+
+            }
+        });
+
+        Log.i("Hello", "3");
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if(ActivityCompat.checkSelfPermission(RiderStartActivity.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        Log.i("Hello", "4");
+
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(RiderStartActivity.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null){
+                    latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                    MarkerOptions p3 = new MarkerOptions().position(latLng);
+                    map.setMyLocationEnabled(true);
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+                }
+            }
+        });
+
+        Log.i("Hello", "5");
+
+    }
+
+    @Override
+    public void onDestroy(){
+        registration.remove();
+        super.onDestroy();
     }
 
     private void requestPermission(){

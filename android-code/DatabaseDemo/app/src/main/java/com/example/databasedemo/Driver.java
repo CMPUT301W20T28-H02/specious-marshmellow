@@ -32,6 +32,10 @@ public class Driver extends User {
     super(username, email, wallet, phone, rating, numOfRatings, driver, hasProfilePicture);
   }
 
+  public Driver(User user){
+    super(user.getUsername(), user.getEmail(), user.getWallet(), user.getPhone(), user.getRating(), user.getNumOfRatings(), user.getDriver(), user.getHasProfilePicture());
+  }
+
   /*public ArrayList<Request> searchRequests(Location driverLocation, ArrayList<Request> requestsToBeSorted) {
     // Calculate the distance from driverLocation to each Request's startLocation in our global arraylist of requests
     // Sort an arraylist of distances, based on smallest first
