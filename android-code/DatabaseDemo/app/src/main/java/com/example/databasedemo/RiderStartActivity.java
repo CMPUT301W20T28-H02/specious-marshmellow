@@ -222,19 +222,22 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
                 intent.putExtra("username", username);
                 intent.putExtra("activity",currentRequest.class.toString());
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 break;
             case R.id.sign_out_tab:
                 mAuth.signOut();
                 finish();
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
                 startActivity(intent_2);
-               finish();
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+                finish();
 
                 break;
             case R.id.contact_info:
                 Intent intent1 = new Intent(getBaseContext(),EditContactInformationActivity.class);
                 intent1.putExtra("username", username);
                 startActivity(intent1);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 
                 break;
 

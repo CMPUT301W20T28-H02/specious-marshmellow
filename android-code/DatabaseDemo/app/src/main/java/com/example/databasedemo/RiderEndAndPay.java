@@ -210,6 +210,7 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
                 intent.putExtra("username", username);
                 intent.putExtra("activity",currentRequest.class.toString());
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 break;
             case R.id.sign_out_tab:
                 /*mAuth.signOut();
@@ -225,11 +226,19 @@ public class RiderEndAndPay extends AppCompatActivity implements OnMapReadyCallb
                 Intent intent1 = new Intent(getBaseContext(),EditContactInformationActivity.class);
                 intent1.putExtra("username", username);
                 startActivity(intent1);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 
                 break;
 
 
         }
         return false;
+    }
+
+    public void startGame(View view){
+        String username = getIntent().getStringExtra("username");
+        Intent i = new Intent(getBaseContext(), TicTacToeActivity.class);
+        i.putExtra("username", username);
+        startActivity(i);
     }
 }

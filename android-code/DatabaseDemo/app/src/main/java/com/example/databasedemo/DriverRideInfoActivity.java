@@ -326,11 +326,13 @@ public class DriverRideInfoActivity extends FragmentActivity implements OnMapRea
                 finish();
                 Intent intent_2 = new Intent(getBaseContext(), SignInActivity.class);
                 startActivity(intent_2);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 break;
             case R.id.contact_info:
                 Intent intent1 = new Intent(getBaseContext(),EditContactInformationActivity.class);
                 intent1.putExtra("username", driverUsername);
                 startActivity(intent1);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 
                 break;
 

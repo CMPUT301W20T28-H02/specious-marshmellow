@@ -248,6 +248,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                             Intent intent = new Intent(Intent.ACTION_DIAL);
                             intent.setData(Uri.parse(uri));
                             startActivity(intent);
+                            overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                         }
                     });
                     driverEmailTextView.setText(getString(R.string.rider_confirm_driver_email, request.getDriver().getEmail()));
@@ -261,6 +262,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                         Intent i = new Intent(RiderConfirmPickup.this, RiderEndAndPay.class);
                         i.putExtra("username", username);
                         startActivity(i);
+                        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                         finish();
                     }
                     if (request.getRiderConfirmation()) {
@@ -321,6 +323,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                 intent.putExtra("username", username);
                 intent.putExtra("activity",RiderConfirmPickup.class.toString());
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 break;
             case R.id.sign_out_tab:
                 /*mAuth.signOut();
@@ -335,6 +338,7 @@ public class RiderConfirmPickup extends AppCompatActivity implements OnMapReadyC
                 Intent intent1 = new Intent(getBaseContext(),EditContactInformationActivity.class);
                 intent1.putExtra("username", username);
                 startActivity(intent1);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 
                 break;
 

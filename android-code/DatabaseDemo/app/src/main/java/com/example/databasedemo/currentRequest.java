@@ -396,6 +396,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 intent.putExtra("username", username);
                 intent.putExtra("activity",currentRequest.class.toString());
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 break;
             case R.id.sign_out_tab:
                 /*mAuth.signOut();
@@ -411,6 +412,7 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 Intent intent1 = new Intent(currentRequest.this,EditContactInformationActivity.class);
                 intent1.putExtra("username", username);
                 startActivity(intent1);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
 
                 break;
 

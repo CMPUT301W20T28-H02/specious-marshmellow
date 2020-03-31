@@ -89,6 +89,7 @@ public class SignInActivity extends AppCompatActivity {
                                         Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(intent);
+                                        overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                                         finish();
                                     } else {
                                         DynamicToast.make(SignInActivity.this, getString(R.string.authentication_failed), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
@@ -117,6 +118,7 @@ public class SignInActivity extends AppCompatActivity {
                 Intent intent = new Intent(SignInActivity.this, CreateAccount.class);
                 //intent.putExtra("DATABASE", db);
                 startActivity(intent);
+                overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
                 finish();
             }
         });
