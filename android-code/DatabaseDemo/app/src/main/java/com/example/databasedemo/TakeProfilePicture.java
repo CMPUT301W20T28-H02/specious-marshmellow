@@ -49,77 +49,67 @@ import com.google.firebase.storage.UploadTask;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
+/**
+ * Adds profile picture functionality to the app. Adds a image the user can set
+ * to be associated with their profile and stores the image in the Firebase Storage
+ * with a Firebase Realtime Database key referring to the logged in user and their
+ * profile picture.
+ * @author Johnas Wong
+ */
 public class TakeProfilePicture extends AppCompatActivity {
-
-
-
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
 
     Button mCaptureBtn;
     Button loadImageBtn;
     Button mButtonUpload;
-//    Button mShowImageFromFirebaseBtn;
     Button done_add;
     ProgressBar mProgressBar;
-//    EditText mEditTextFileName;
     private static final int PICK_IMAGE = 100;
-
     ImageView mImageView;
-
-    // this for take image
     Uri image_uri;
-
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
-
     StorageTask mUploadTask;
     String thumb_download_url;
-
     FirebaseAuth mAuth;
     String username;
     DatabaseReference reff;
     boolean hasProfilePicture;
 
 
+    /**
+     * Called when activity is created
+     * Accesses the user object stored in database to retrieve their username and check whether
+     * the user already has a profile picture or not. If user does not have a profile picture set,
+     * their picture is set as the app default using the app logo.  Calls
+     * {@link TakeProfilePicture#uploadFile() uploadFile()} when user selects an image to upload
+     * as their picture.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_profile_picture);
 
-//        FirebaseApp.initializeApp(this);
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-        Log.d("Before ids", "Before");
-
         mImageView = findViewById( R.id.image_view );
         mCaptureBtn = findViewById( R.id.capture_image_btn );
         loadImageBtn = findViewById( R.id.load_image );
-//        mShowImageFromFirebaseBtn = findViewById( R.id.show_image_from_firebase );
-
         mButtonUpload = findViewById( R.id.btn_upload_image );
-//        mEditTextFileName = findViewById( R.id.edit_image_name );
         done_add=findViewById(R.id.done);
-
         mProgressBar = findViewById( R.id.progress_bar );
-
-        Log.d("After ids", "after");
-
         mStorageRef = FirebaseStorage.getInstance().getReference("Profile pictures");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Profile pictures");
-
-        Log.d("After ids", "after everything");
-
-
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();
         username = user.getDisplayName();
-//        hasProfilePicture = FirebaseAuth.getInstance().getCurrentUser().get();
-
         final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
 
 
+        /**
+         * Create temporary rider object simply to retrieve hasProfilePicture boolean of the user
+         */
         docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -129,10 +119,11 @@ public class TakeProfilePicture extends AppCompatActivity {
         });
 
 
-
-
-
-
+        /**
+         * On completion of grabbing data from the database. If the user already has a profile
+         * picture, sets the image view as their current picture. Otherwise, sets the image view
+         * as the app default picture.
+         */
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -151,28 +142,24 @@ public class TakeProfilePicture extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String url = dataSnapshot.child("imageUrl").getValue().toString();
-
-
-                        Log.d("Firebase", url);
                         Picasso.get()
                                 .load( url )
                                 .into( mImageView );
-
-
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
                     }
                 });
             }
-
-
         });
 
 
-        //Button click
+        /**
+         * "Take a picture" button was selected. Checks the current set permissions of the device
+         * first. If camera functionality was not previously allowed, prompts user to allow to
+         * continue with the take picture functionality. If already allowed, continue.
+         */
         mCaptureBtn.setOnClickListener( new View.OnClickListener()
         {
             @Override
@@ -185,21 +172,25 @@ public class TakeProfilePicture extends AppCompatActivity {
                             checkSelfPermission( Manifest.permission.WRITE_EXTERNAL_STORAGE ) ==
                                     PackageManager.PERMISSION_DENIED )
                     {
-                        // permission not enabled, request it
+                        // Permission not enabled, request it
                         String[] permission = { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE };
-                        // show popup to request permsision
+                        // Show popup to request permission
                         requestPermissions( permission, PERMISSION_CODE );
                     } else {
-                        //permsision already granted
+                        // permission already granted
                         openCamera();
                     }
                 } else {
-                    // system os < marshamallow
+                    // System os < marshmallow, can continue
                 }
             }
         });
 
 
+        /**
+         * "Load a picture" button was selected. Opens current device's gallery to choose
+         * a photo to upload.
+         */
         loadImageBtn.setOnClickListener( new View.OnClickListener()
         {
             @Override
@@ -208,6 +199,10 @@ public class TakeProfilePicture extends AppCompatActivity {
             }
         });
 
+
+        /**
+         * Upload picture button.
+         */
         mButtonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -216,15 +211,9 @@ public class TakeProfilePicture extends AppCompatActivity {
         });
 
 
-//        mShowImageFromFirebaseBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent showImage = new Intent(TakeProfilePicture.this, ProfilePictureFromFirebaseStorage.class);
-//                startActivity(showImage);
-//
-//            }
-//        });
-        /*Takes you back to previous activity*/
+        /**
+         * "Return" Button. Returns you to the previous activity
+         */
         done_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -233,6 +222,12 @@ public class TakeProfilePicture extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * Gets the extension of the file to upload
+     * @param uri
+     * @return extension type of file
+     */
     private String getFileExtension( Uri uri )
     {
         ContentResolver cR = getContentResolver();
@@ -241,7 +236,10 @@ public class TakeProfilePicture extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Prepares the selected image for uploading and uploads it to the Firebase Storage as well as
+     * to the Firebase Realtime Database
+     */
     private void uploadFile()
     {
         //----------------------------------------------------------------------------------
@@ -254,82 +252,57 @@ public class TakeProfilePicture extends AppCompatActivity {
                     + "." + getFileExtension(image_uri));
 
             mUploadTask = fileReference.putFile(image_uri)
-//                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                            Handler handler = new Handler();
-//                            handler.postDelayed(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    mProgressBar.setProgress(0);
-//                                }
-//                            }, 500);
-//
-//                            DynamicToast.make(TakeProfilePhoto.this, "Upload successful", Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
-//
-//                            Upload upload = new Upload(mEditTextFileName.getText().toString().trim(),
-//                                    mStorageRef.getDownloadUrl().toString());     // here, need to get a valid uri or a valid url
-//                            String uploadId = mDatabaseRef.push().getKey();
-//                            String uploadId = "Hi";     // this will be username of person
-//                            mDatabaseRef.child(uploadId).setValue(upload);
-//                        }
-//                    })
-
-
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                             mUploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+
                                 @Override
                                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                                     if (!task.isSuccessful()) {
                                         throw task.getException();
-
                                     }
                                     // Continue with the task to get the download URL
                                     return fileReference.getDownloadUrl();
-
                                 }
                             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+
                                 @Override
                                 public void onComplete(@NonNull Task<Uri> task) {
+
                                     if (task.isSuccessful()) {
+
+                                        // Get and convert to string the image online URL
                                         thumb_download_url = task.getResult().toString();
-
-
                                         Handler handler = new Handler();
                                         handler.postDelayed(new Runnable() {
+
                                             @Override
                                             public void run() {
                                                 mProgressBar.setProgress(0);
                                             }
                                         }, 500);
-
                                         DynamicToast.make(TakeProfilePicture.this, getString(R.string.upload_successful), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
 
                                         Upload upload = new Upload( "Profile Picture", thumb_download_url );     // here, need to get a valid uri or a valid url
-
-
-
-//                            String uploadId = mDatabaseRef.push().getKey();
-//                                        String uploadId = "Will_be_username";     // this will be username of person
-//                                String uploadId = String.valueOf( tempCounter );
-//                                tempCounter++;
-
-
-
                                         mDatabaseRef.child(username).setValue(upload);
-
                                         final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
+
                                         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                                                // Update the user to 'has a profile picture'
                                                 if(task.isSuccessful()){
+
                                                     User user = task.getResult().toObject(User.class);
                                                     Driver driver;
                                                     Rider rider;
                                                     if(user.getDriver()){
+
                                                         driver = new Driver(user);
                                                         driver.setHasProfilePicture( true );
                                                         docRef.set(driver);
@@ -343,23 +316,20 @@ public class TakeProfilePicture extends AppCompatActivity {
                                                 }
                                             }
                                         });
-
-
                                     }
                                 }
                             });
-
                         }
                     })
-
-
                     .addOnFailureListener(new OnFailureListener() {
+
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             DynamicToast.make(TakeProfilePicture.this, e.getMessage(), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
@@ -368,15 +338,14 @@ public class TakeProfilePicture extends AppCompatActivity {
                     });
         } else {
             DynamicToast.make(TakeProfilePicture.this, getString(R.string.no_file_selected), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
-
         }
     }
     //----------------------------------------------------------------------------------
 
 
-
-
-
+    /**
+     * Open device's image gallery
+     */
     private void openGallery()
     {
         Intent gallery = new Intent( Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI );
@@ -385,13 +354,9 @@ public class TakeProfilePicture extends AppCompatActivity {
     }
 
 
-//    @Override
-//    protected void onLoadImageActivityResult( int requestCode, int resultCode, Intent data )
-//    {
-//        super.onLoadImageActivityResult( requestCode, resultCode, data );
-//    }
-
-
+    /**
+     * Access device's camera
+     */
     private void openCamera()
     {
         ContentValues values = new ContentValues();
@@ -405,7 +370,12 @@ public class TakeProfilePicture extends AppCompatActivity {
     }
 
 
-    // handling permsission result
+    /**
+     * Handle device's permissions
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
@@ -418,7 +388,7 @@ public class TakeProfilePicture extends AppCompatActivity {
                     // permission from popup was granted
                     openCamera();
                 } else {
-                    //permission from popup denied
+                    // permission from popup denied
                     DynamicToast.make(TakeProfilePicture.this, getString(R.string.no_camera_permissions), Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
                 }
             }
@@ -426,6 +396,12 @@ public class TakeProfilePicture extends AppCompatActivity {
     }
 
 
+    /**
+     * Called when an image is taken after the "take an image" functionality selected
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
     {
@@ -439,9 +415,7 @@ public class TakeProfilePicture extends AppCompatActivity {
 
         } else if ( resultCode == RESULT_OK ) {
             // set image captured to our image view
-
             mImageView.setImageURI( image_uri );
         }
     }
-
 }
