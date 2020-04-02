@@ -176,21 +176,9 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync((OnMapReadyCallback) this);
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
         requestPermission();
-        if(ActivityCompat.checkSelfPermission(currentRequest.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(currentRequest.this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                if(location != null){
-                    latLng = new LatLng(location.getLatitude(),location.getLongitude());
-                    MarkerOptions p3 = new MarkerOptions().position(latLng);
-                    map.setMyLocationEnabled(true);
-                    //map.addMarker(p3.title("Current Location"));
-                }
-            }
-        });
+
         can_Request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -238,6 +226,21 @@ public class currentRequest extends FragmentActivity implements OnMapReadyCallba
                         finish();
                     }
 
+                }
+            }
+        });
+
+        if(ActivityCompat.checkSelfPermission(currentRequest.this, ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.getLastLocation().addOnSuccessListener(currentRequest.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if(location != null){
+                    latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                    MarkerOptions p3 = new MarkerOptions().position(latLng);
+                    map.setMyLocationEnabled(true);
+                    //map.addMarker(p3.title("Current Location"));
                 }
             }
         });

@@ -20,7 +20,7 @@ public class Request
     private double fare;
     private Boolean requestStatus;  // False when open, becomes true when driver matches with rider
                                             // True means the request is in progress
-    private static double fareMultiplier = 2;
+    private static double fareMultiplier = 0.20;
     private static double fareScaler = 5.0;
 
     private boolean riderConfirmation = false;
