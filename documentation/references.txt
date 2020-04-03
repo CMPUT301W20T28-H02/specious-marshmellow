@@ -1,0 +1,19 @@
+CMPUT 301 : REFERENCES
+AUTHOR : SIRJAN CHAWLA
+
+
+//KEEP TRACK OF ACTIVITIES//
+
+https://stackoverflow.com/questions/23577827/how-to-pass-images-through-intent
+https://stackoverflow.com/questions/8017374/how-to-pass-a-uri-to-an-intent
+
+// CREATING SIDEBAR NAVIGATION MENU//
+https://www.youtube.com/watch?v=fGcMLu1GJEc&t
+https://www.youtube.com/watch?v=zYVEMCiDcmY
+https://www.youtube.com/watch?v=bjYstsO1PgI&t
+
+//GOOGLE MAPS AND SEARCH VIEWS//
+https://www.youtube.com/watch?v=iWYsBDCGhGw&t
+
+//Intent transition //
+https://stackoverflow.com/questions/20690764/overridependingtransition-for-sliding-activities-in-and-out-smoothly
