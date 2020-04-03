@@ -125,45 +125,49 @@ public class RiderNewRequestActivity extends FragmentActivity implements OnMapRe
         usrEmailText=headerView.findViewById(R.id.usrEmailText);
         profile=headerView.findViewById(R.id.profilepic);
 
-        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    Rider rider = task.getResult().toObject(Rider.class);
-                    hasProfilePicture = rider.getHasProfilePicture();
-                }
+        /* null check is only to enable UI testing, since any intent extras will be null
+          when testing an activity in isolation.
+         */
+        if (username != null) {
 
-                if( hasProfilePicture )
-                {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
-                } else {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
-                }
-                reff.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String url = dataSnapshot.child("imageUrl").getValue().toString();
-
-
-                        Log.d("Firebase", url);
-                        Picasso.get()
-                                .load( url )
-                                .into( profile );
-
-
+            final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        Rider rider = task.getResult().toObject(Rider.class);
+                        hasProfilePicture = rider.getHasProfilePicture();
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    if (hasProfilePicture) {
+                        reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
+                    } else {
+                        reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
                     }
-                });
-            }
+                    reff.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String url = dataSnapshot.child("imageUrl").getValue().toString();
 
 
-        });
+                            Log.d("Firebase", url);
+                            Picasso.get()
+                                    .load(url)
+                                    .into(profile);
 
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+
+            });
+        }
 
 
 

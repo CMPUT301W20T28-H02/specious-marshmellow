@@ -57,7 +57,11 @@ import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-
+/**
+ * The activity that Rider begins with. It has a GoogleMap view and a Button that will take them
+ * to {@code RiderNewRequestActivity}.
+ * @author Michael Antifaoff, Sirjan Chawla, Johnas Wong, Rafaella Grana, Hussein Warsame, Marcus Balir
+ */
 public class RiderStartActivity extends FragmentActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
     GoogleMap map;
     Button makeRequestButton;
@@ -73,6 +77,11 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
     double globalBound = 10000;
     ListenerRegistration registration;
 
+    /**
+     * Called when activity is created
+     * Displays intitial activity for rider, allows them to click button to enable new request.
+     * @param {@code Bundle}savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,15 +170,26 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
 
     }
 
+    /**
+     * Removes listener registration
+     *
+     */
+
     @Override
     public void onDestroy(){
         registration.remove();
         super.onDestroy();
     }
-
+    /**
+     * requests permission to access location services
+     */
     private void requestPermission(){
         ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION},1);
     }
+    /**
+     * when map is loaded, assign it to the map attribute
+     * @param {@code GoogleMap}googleMap Map Object
+     */
     @Override
     public void onMapReady(GoogleMap googleMap){
         map = googleMap;
@@ -211,6 +231,12 @@ public class RiderStartActivity extends FragmentActivity implements OnMapReadyCa
                     Color.parseColor("#E38249"), Color.parseColor("#000000"), Toast.LENGTH_LONG).show();
         }
     }
+
+    /**
+     * Shows items in the sidebar
+     * @param {@code MenuItem}menuItem Item in the menu
+     * @return {@code Boolean}
+     */
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

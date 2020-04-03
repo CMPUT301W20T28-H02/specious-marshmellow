@@ -11,6 +11,7 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.test.espresso.intent.rule.IntentsTestRule;
 import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,6 +35,7 @@ import static androidx.test.espresso.action.ViewActions.clearText;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.pressKey;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intending;
@@ -66,7 +68,7 @@ public class DriverStartActivityTest {
     private String address = "Hogwarts";
 
     @Rule
-    public IntentsTestRule<DriverStartActivity> DriverStartIntentsTestRule =
+    public  IntentsTestRule<DriverStartActivity> DriverStartIntentsTestRule =
             new IntentsTestRule<>(DriverStartActivity.class);
     @Before
     public void setUp() throws Exception {
@@ -138,6 +140,7 @@ public class DriverStartActivityTest {
         onView(withId(R.id.driver_initial)).check(matches(isDisplayed()));
         onView(withId(R.id.global_bounds_EditText))
                 .perform(clearText(), typeText(String.valueOf(100000)), pressKey(KeyEvent.KEYCODE_ENTER), closeSoftKeyboard());
+
 
         onView(withId(R.id.requestListView)).check(matches(withRider("TestRider")));
 

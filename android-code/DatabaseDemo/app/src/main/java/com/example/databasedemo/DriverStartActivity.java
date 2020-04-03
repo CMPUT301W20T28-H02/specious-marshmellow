@@ -50,6 +50,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import com.pranavpandey.android.dynamic.toasts.DynamicToast;
 import com.squareup.picasso.Picasso;
 
@@ -60,6 +61,10 @@ import java.util.Comparator;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
+/**
+ * The activity that the Driver begins with. It has a GoogleMap view and a Requests ListView.
+ * @author Michael Antifaoff, Sirjan Chawla, Johnas Wong, Rafaella Grana, Hussein Warsame, Marcus Blair
+ */
 public class DriverStartActivity extends FragmentActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
     GoogleMap map;
     EditText globalBoundsEditText;
@@ -70,13 +75,17 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
     ArrayAdapter<Request> requestArrayAdapter;
     ArrayList<Request> requestArrayList;
     TextView usrNameText,usrEmailText;
-    ImageView profile;
+    CircularImageView profile;
     boolean hasProfilePicture;
     DatabaseReference reff;
     FirebaseAuth mAuth;
     double globalBound = 10000;
     ListenerRegistration registration;
-
+    /**
+     * Called when activity is created
+     * Displays intitial activity for driver, displays requests based on distance and lets them choose one.
+     * @param {@code Bundle}savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,39 +103,46 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
         usrNameText.setText(username);
         usrEmailText.setText(email);
         profile = headerview.findViewById(R.id.profilepic);
-        final DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    Rider rider = task.getResult().toObject(Rider.class);
-                    hasProfilePicture = rider.getHasProfilePicture();
-                }
 
-                if( hasProfilePicture )
-                {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
-                } else {
-                    reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
-                }
-                reff.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String url = dataSnapshot.child("imageUrl").getValue().toString();
+        /* null check is only to enable UI testing, since any intent extras will be null
+          when testing an activity in isolation.
+         */
+        if (username != null) {
 
+            DocumentReference docRef = FirebaseFirestore.getInstance().collection("users").document(username);
 
-                        Log.d("Firebase", url);
-                        Picasso.get()
-                                .load( url )
-                                .into( profile );
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        Rider rider = task.getResult().toObject(Rider.class);
+                        hasProfilePicture = rider.getHasProfilePicture();
                     }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
-            }
-        });
 
+                    if (hasProfilePicture) {
+                        reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child(username);
+                    } else {
+                        reff = FirebaseDatabase.getInstance().getReference().child("Profile pictures").child("Will_be_username");
+                    }
+                    reff.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            String url = dataSnapshot.child("imageUrl").getValue().toString();
+
+
+                            Log.d("Firebase", url);
+                            Picasso.get()
+                                    .load(url)
+                                    .into(profile);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                        }
+                    });
+                }
+            });
+        }
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,7 +185,6 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
                     myRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
-
 
 
 
@@ -249,6 +264,10 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
 
     }
 
+    /**
+     * add request to request array sorted by distance
+     * @param {@code Request}request
+     */
     public void addRequest(Request request){
         requestArrayList.add(request);
         Collections.sort(requestArrayList, new Comparator<Request>() {
@@ -261,16 +280,29 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
         });
         requestArrayAdapter.notifyDataSetChanged();
     }
-
+    /**
+     * requests permission to access location services
+     */
     private void requestPermission(){
         ActivityCompat.requestPermissions(this,new String[]{ACCESS_FINE_LOCATION},1);
     }
+
+    /**
+     * when map is loaded, assign it to the map attribute
+     * @param {@code GoogleMap}googleMap Map Object
+     */
     @Override
     public void onMapReady(GoogleMap googleMap){
         map = googleMap;
         requestPermission();
 
     }
+
+    /**
+     * Removes listener registration
+     *
+     */
+
     public void onDestroy(){
         registration.remove();
         super.onDestroy();
@@ -357,6 +389,12 @@ public class DriverStartActivity extends FragmentActivity implements OnMapReadyC
             }
         });
     }
+
+    /**
+     * Shows items in the sidebar
+     * @param {@code MenuItem}menuItem Item in the menu
+     * @return {@code Boolean}
+     */
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
