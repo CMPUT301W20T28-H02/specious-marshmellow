@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Format used to read QR code
- * @author Hussein Warsame */
+ * @author Hussein Warsame
+ * Please see https://github.com/dm77/barcodescanner. This class has been built on
+ * this ZXING barcode library.
+ */
 public class BarcodeFormat {
     private int mId;
     private String mName;

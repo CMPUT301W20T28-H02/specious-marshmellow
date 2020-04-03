@@ -22,6 +22,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 /**
  * Scans code using the camera
  * @author Hussein Warsame
+ * @deprecated
  */
 public class SimpleScannerActivity extends BaseScannerActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;

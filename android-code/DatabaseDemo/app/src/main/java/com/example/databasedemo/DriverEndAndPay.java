@@ -52,6 +52,8 @@ import java.text.DecimalFormat;
 /**
  * Activity shown while ride is ongoing, asks driver to click on button once the ride is done
  * @author Michael Antifaoff, Hussein Warsame
+ * Please see https://github.com/dm77/barcodescanner. This class has been built on
+ * this ZXING barcode library.
  */
 public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
@@ -256,6 +258,12 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
     }
     // Sets intent for different button on the sidebar
     // Can change profile pic, Contact info
+
+    /**
+     * Creates different intents depending on the NavigationItem that is selected in NavigationMenu.
+     * Allows for the changing of the user profile picture and contact information.
+     * @param {@code MenuItem} menuItem
+     */
     
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

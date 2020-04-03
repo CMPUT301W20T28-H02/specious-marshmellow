@@ -69,7 +69,7 @@ import java.util.Comparator;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 /**
- *
+ * @deprecated
  */
 public class RiderDriverInitialActivity extends FragmentActivity implements OnMapReadyCallback{
 
