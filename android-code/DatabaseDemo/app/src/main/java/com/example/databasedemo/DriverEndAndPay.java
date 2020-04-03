@@ -260,11 +260,10 @@ public class DriverEndAndPay extends AppCompatActivity implements OnMapReadyCall
     // Can change profile pic, Contact info
 
     /**
-     * Creates different intents depending on the NavigationItem that is selected in NavigationMenu.
-     * Allows for the changing of the user profile picture and contact information.
-     * @param {@code MenuItem} menuItem
+     * Shows items in the sidebar
+     * @param {@code MenuItem}menuItem Item in the menu
+     * @return {@code Boolean}
      */
-    
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         String driverUsername = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
