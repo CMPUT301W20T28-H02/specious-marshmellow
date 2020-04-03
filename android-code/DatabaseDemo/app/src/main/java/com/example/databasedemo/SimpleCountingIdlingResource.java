@@ -6,7 +6,8 @@ import androidx.test.espresso.IdlingResource;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Author: Ihor Klimov
+ * @author Ihor Klimov
+ * Used for Espresso UI testing. Wait for certain UI processes to finish in order to enable testing.
  * github: https://github.com/IhorKlimov/AndroidTests/tree/master/app/src/main/java/com/myhexaville/androidtests/util
  * Youtube:https://www.youtube.com/watch?v=_V3N4YHRbkA&t=273s
  */

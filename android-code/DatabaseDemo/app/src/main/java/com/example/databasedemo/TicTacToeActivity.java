@@ -9,11 +9,17 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+/**
+ * TicTacToe minigame that Rider can play during a ride.
+ * Please see The Complete Android N Developer Course by Rob Percival.
+ * This Tic Tac Toe mini-game is a modified version of the Connect 3 game made by him.
+ * @author Hussein Warsame, Rob Percival (Udemy.com)
+ */
 
 public class TicTacToeActivity extends AppCompatActivity {
 
 
-    // 0 = goku, 1 = vegeta
+    // 0 = clear logo, 1 = bold logo
     int activePlayer = 0;
 
     // keeps track of whether or not to allow additional moves, depending on whether
@@ -53,9 +59,11 @@ public class TicTacToeActivity extends AppCompatActivity {
             sprite.setTranslationY(-1000f);
 
             if (activePlayer == 0) {
+                // set clear logo
                 sprite.setImageResource(R.mipmap.marshmellow_transparent_m);
                 activePlayer = 1;
             } else {
+                // set bolder logo
                 sprite.setImageResource(R.mipmap.marshmellow_transparent);
                 activePlayer = 0;
             }
@@ -92,12 +100,14 @@ public class TicTacToeActivity extends AppCompatActivity {
 
                     boolean gameIsOver = true;
 
+                    // check if all positions on board are empty
                     for (int counterState : gameState) {
 
 
                         if (counterState == 2) gameIsOver = false;
                     }
 
+                    // draw condition
                     if (gameIsOver) {
 
                         TextView winnerMessage = findViewById(R.id.winnerMessage);

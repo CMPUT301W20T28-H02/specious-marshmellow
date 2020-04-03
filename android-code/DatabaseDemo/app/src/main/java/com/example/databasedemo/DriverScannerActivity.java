@@ -31,8 +31,11 @@ import java.text.DecimalFormat;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
- * Uses camera to scan QR code given by rider
- * @author Hussein Warsame
+ * Uses camera to scan QR code given by rider.
+ * Please see https://github.com/dm77/barcodescanner. This class has been built on
+ * this ZXING barcode library.
+ * @author Hussein Warsame, Micheal Antifaoff
+ *
  */
 public class DriverScannerActivity extends BaseScannerActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
@@ -50,6 +53,8 @@ public class DriverScannerActivity extends BaseScannerActivity implements ZXingS
         super.onCreate(savedInstanceState);
         mScannerView = new ZXingScannerView(this);
         setContentView(R.layout.activity_driver_scanner);
+
+        // get rider and driver usernames
         Intent i = getIntent();
         riderUsername = i.getStringExtra("riderUsername");
         driverUsername = i.getStringExtra("driverUsername");

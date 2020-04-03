@@ -14,7 +14,10 @@ import android.view.MenuItem;
 
 /**
  * Basic scanner activity
+ * Please see https://github.com/dm77/barcodescanner. This class has been built on
+ * this ZXING barcode library.
  * @author Hussein Warsame
+ * @deprecated
  * */
 public class BaseScannerActivity extends AppCompatActivity {
     /*public void setupToolbar() {

@@ -6,7 +6,9 @@ Date March 13 2020
 package com.example.databasedemo;
 
 /**
- * helper class for Barcode Format
+ * helper class for Barcode Format.
+ * Please see https://github.com/dm77/barcodescanner. This class has been built on
+ * this ZXING barcode library.
  * @see BarcodeFormat
  * @author Hussein Warsame
  */

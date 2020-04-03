@@ -50,7 +50,10 @@ import androidmads.library.qrgenearator.QRGSaver;
 /**
  *
  * Generates QR code and displays it on screen
- * @author Michael Antifaoff, Hussein Warsame
+ * @author Michael Antifaoff, Hussein Warsame, Aanand Shekhar Roy.
+ * Please see this medium post:
+ * https://medium.com/@aanandshekharroy/generate-barcode-in-android-app-using-zxing-64c076a5d83a.
+ * The article helped us enable QR Generation via ZXING barcode library.
  */
 public class GenerateQR extends AppCompatActivity{
     TextView thankYouTextView;
@@ -139,7 +142,12 @@ public class GenerateQR extends AppCompatActivity{
         }).start();
 
     }
-    // show alert Dialog with thumbs up and thumbs down
+
+    /**
+     *  Shows AlertDialog with thumbs up and thumbs down options
+     *  to rate {@code Driver}.
+     */
+    //
     public void promptRating(){
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -180,7 +188,12 @@ public class GenerateQR extends AppCompatActivity{
 
 
     }
-    // get Driver from request collection and set new rating locally
+    /**
+     *   get {@code Driver} object from {@code Request} collection in Firestore database
+     *   and sets new driver rating locally.
+     *
+     */
+    //
     public void setDriverRating(final double rating){
         db.collection("requests").document(username)
                 .get()
@@ -201,7 +214,11 @@ public class GenerateQR extends AppCompatActivity{
                 });
     }
 
-    // update Firestore with new Driver rating and go back to RiderStartActivity
+    /**
+     *   Changes {@code Driver} rating in Firestore and moves to
+     *  {@code RiderStartActivity}.
+     */
+    //
     public void changeDriverRatingFirestore(String driver_username, Driver driver) {
 
         db.collection("users").document(driver_username)

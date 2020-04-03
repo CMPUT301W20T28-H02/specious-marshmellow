@@ -6,7 +6,9 @@ Date March 13 2020
 package com.example.databasedemo;
 
 /**
- * Handles and recognized what kind of barcode format is received
+ * Handles and recognized what kind of barcode format is received.
+ * Please see https://github.com/dm77/barcodescanner. This class has been built on
+ * this ZXING barcode library.
  * @author Hussein Warsame
  */
 public class Result {
